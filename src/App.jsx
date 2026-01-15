@@ -147,10 +147,35 @@ function App() {
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
       )
-      .fromTo(".swiper",
+      .fromTo(".section-services .swiper",
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, ease: "power2.out" },
         "-=0.4"
+      );
+
+      // NCUK Title Drawing Animation
+      const ncukTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".section-ncuk",
+          start: "top 75%",
+        }
+      });
+      ncukTl.fromTo(".ncuk-title .char", 
+        { 
+          opacity: 0, 
+          scale: 0.8,
+          clipPath: "inset(0 100% 0 0)",
+          x: -10
+        }, 
+        { 
+          opacity: 1, 
+          scale: 1, 
+          clipPath: "inset(0 0% 0 0)",
+          x: 0,
+          duration: 0.4, 
+          stagger: 0.03, 
+          ease: "none"
+        }
       );
 
       // Hero Title Drawing Animation
@@ -348,7 +373,7 @@ function App() {
         <img
           className="hero-video-bg"
           alt="Global Network"
-          src="https://storage.googleapis.com/banani-generated-images/generated-images/0081fbf7-1a78-4c29-8b7a-c3f8907322d2.jpg"
+          src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80"
         />
         <div className="hero-overlay"></div>
 
@@ -399,10 +424,18 @@ function App() {
               <div style={{ width: '10px', height: '10px', background: 'var(--primary-orange)', borderRadius: '50%' }}></div>
               <span>98% Visa Success Rate</span>
             </div>
-            <svg width="400" height="400" viewBox="0 0 400 400" fill="none" style={{ opacity: 0.3 }}>
-              <circle cx="200" cy="200" r="199" stroke="white" strokeWidth="1" strokeDasharray="10 10"></circle>
-              <circle cx="200" cy="200" r="140" stroke="var(--primary-orange)" strokeWidth="1"></circle>
-            </svg>
+            <img 
+              src="https://plus.unsplash.com/premium_photo-1681681082293-07cd7e103fe4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+              alt="International Studies" 
+              style={{
+                width: '450px',
+                height: '450px',
+                objectFit: 'cover',
+                borderRadius: '50%',
+                boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)',
+                border: '4px solid rgba(255, 255, 255, 0.1)'
+              }}
+            />
           </div>
         </div>
       </header>
@@ -441,6 +474,56 @@ function App() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Why NCUK Section */}
+      <section className="section-ncuk">
+        <div className="container">
+          <div className="ncuk-header">
+            <h2 className="section-title ncuk-title" style={{ color: 'white', textAlign: 'center' }}>
+              {"Why study with ".split('').map((char, i) => (
+                <span key={`t-${i}`} className="char" style={{display: 'inline-block', whiteSpace: 'pre'}}>{char}</span>
+              ))}
+              <span className="text-gradient-orange" style={{display: 'inline-block'}}>
+                {"MATSOLS?".split('').map((char, i) => (
+                  <span key={`n-${i}`} className="char" style={{display: 'inline-block'}}>{char}</span>
+                ))}
+              </span>
+            </h2>
+          </div>
+
+          <Swiper
+            centeredSlides={true}
+            initialSlide={0}
+            slidesPerView={'auto'}
+            spaceBetween={30}
+            pagination={{ clickable: true }}
+            modules={[Pagination]}
+            className="ncuk-swiper"
+            breakpoints={{
+              640: { spaceBetween: 40 },
+              1024: { spaceBetween: 60 }
+            }}
+          >
+            {[
+              { num: '50,000+', text: 'students progressed to world-leading universities', icon: 'line-md:clipboard-check' },
+              { num: '135+', text: 'Study Centres in 40+ countries', icon: 'line-md:map-marker' },
+              { num: '120+', text: 'nationalities represented our programmes each year', icon: 'line-md:person' },
+              { num: '89%*', text: 'of students achieve a 2:1 or higher at university', icon: 'line-md:star' },
+              { num: '70+', text: 'university partners, with 21 ranked in the QS World Top 200', icon: 'line-md:account' }
+            ].map((stat, idx) => (
+              <SwiperSlide key={idx} className="ncuk-slide">
+                <div className="ncuk-card">
+                  <div className="ncuk-icon">
+                    <iconify-icon icon={stat.icon} width="48"></iconify-icon>
+                  </div>
+                  <h3 className="ncuk-num">{stat.num}</h3>
+                  <p className="ncuk-text">{stat.text}</p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </section>
 
@@ -535,20 +618,20 @@ function App() {
                 Connecting you to 30+ countries with local support teams in every major hub.
               </p>
               <div style={{ marginTop: '60px' }}>
-                <img alt="Map" style={{ opacity: 0.2, width: '100%' }} src="https://storage.googleapis.com/banani-generated-images/generated-images/ff826544-75c9-4157-86d2-dff08f187335.jpg" />
+                <img alt="International Students" style={{ opacity: 1, width: '100%', borderRadius: '16px' }} src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" />
               </div>
             </div>
 
             <div className="b-card b-tall">
               <h3 style={{ fontSize: '1.5rem' }}>Success Rate</h3>
               <div className="stat-ring"></div>
-              <p style={{ color: '#666' }}>Visa Approval</p>
+              <p style={{ color: 'white' }}>Visa Approval</p>
             </div>
 
             <div className="b-card b-small b-confidential">
               <div className="card-top-row">
                 <h3 style={{ fontSize: '1.5rem' }}>Confidential</h3>
-                <svg className="card-icon" width="32" height="32" viewBox="0 0 24 24" fill="var(--primary-blue)">
+                <svg className="card-icon" width="32" height="32" viewBox="0 0 24 24" fill="white">
                   <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 11.99H7V10.99H17V11.99H12Z"></path>
                 </svg>
               </div>
@@ -682,39 +765,57 @@ function App() {
             <p className="section-subtitle">Real results from ambitious students who dared to dream bigger.</p>
           </div>
 
-          <div className="stories-grid">
-            <div className="story-card animate-entry">
-              <div className="story-quote">"The AI matchmaker found the exact PhD program I was looking for. Matsols handled my visa with zero stress."</div>
-              <div className="story-user">
-                <img src="https://storage.googleapis.com/banani-generated-images/generated-images/ff826544-75c9-4157-86d2-dff08f187335.jpg" alt="Student" />
-                <div>
-                  <div className="user-name">Sarah Jenkins</div>
-                  <div className="user-meta">Oxford University • MSc Data Science</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="story-card animate-entry" style={{ animationDelay: '0.2s' }}>
-              <div className="story-quote">"Elite service from start to finish. I'm now studying at my dream Ivy League school thanks to their consultants."</div>
-              <div className="story-user">
-                <img src="https://storage.googleapis.com/banani-generated-images/generated-images/0081fbf7-1a78-4c29-8b7a-c3f8907322d2.jpg" alt="Student" />
-                <div>
-                  <div className="user-name">David Chen</div>
-                  <div className="user-meta">Harvard University • MBA</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="story-card animate-entry" style={{ animationDelay: '0.4s' }}>
-              <div className="story-quote">"The level of detail in their strategic roadmapping is unmatched. Highly recommend for serious applicants."</div>
-              <div className="story-user">
-                <img src="https://storage.googleapis.com/banani-generated-images/generated-images/ee17499d-cc53-46e4-90cf-1165877d8493.jpg" alt="Student" />
-                <div>
-                  <div className="user-name">Aisha Rahman</div>
-                  <div className="user-meta">U of Toronto • Engineering</div>
-                </div>
-              </div>
-            </div>
+          <div className="stories-slider-wrapper animate-entry">
+            <Swiper
+              modules={[Pagination, Autoplay]}
+              spaceBetween={30}
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 5000, disableOnInteraction: false }}
+              className="stories-swiper"
+            >
+              {[
+                {
+                  quote: "The AI matchmaker found the exact PhD program I was looking for. Matsols handled my visa with zero stress.",
+                  name: "Sarah Jenkins",
+                  uni: "Oxford University",
+                  course: "MSc Data Science",
+                  img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&q=80"
+                },
+                {
+                  quote: "Elite service from start to finish. I'm now studying at my dream Ivy League school thanks to their consultants.",
+                  name: "David Chen",
+                  uni: "Harvard University",
+                  course: "MBA",
+                  img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80"
+                },
+                {
+                  quote: "The level of detail in their strategic roadmapping is unmatched. Highly recommend for serious applicants.",
+                  name: "Aisha Rahman",
+                  uni: "U of Toronto",
+                  course: "Engineering",
+                  img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80"
+                }
+              ].map((story, idx) => (
+                <SwiperSlide key={idx} className="testi-slide">
+                  <div className="testi-card">
+                    <div className="testi-image-side">
+                      <div className="testi-image-circle">
+                         <img src={story.img} alt={story.name} />
+                      </div>
+                    </div>
+                    <div className="testi-content-side">
+                      <iconify-icon icon="ri:double-quotes-l" className="quote-icon"></iconify-icon>
+                      <p className="testi-quote">{story.quote}</p>
+                      <div className="testi-author">
+                        <h4>{story.name}</h4>
+                        <p>{story.uni} • {story.course}</p>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       </section>

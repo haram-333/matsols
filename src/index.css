@@ -524,6 +524,262 @@ img {
   }
 }
 
+
+
+/* NCUK Section */
+.section-ncuk {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  overflow: hidden;
+}
+
+.ncuk-header {
+  margin-bottom: 60px;
+}
+
+.text-gradient-orange {
+  background: linear-gradient(135deg, #ff863c 0%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+/* Ensure children inherit transparency for gradient to show */
+.text-gradient-orange .char {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.swiper.ncuk-swiper {
+  width: 100%;
+  padding: 60px 0 80px 0 !important;
+  overflow: visible !important;
+}
+
+.ncuk-slide {
+  width: 320px !important; /* Fixed width for correct auto-centering */
+  height: auto;
+  transition: all 0.4s ease;
+  opacity: 0.5;
+  transform: scale(0.9);
+  display: flex;
+  justify-content: center;
+}
+
+.swiper-slide-active.ncuk-slide {
+  transform: scale(1.15); /* Zoom active */
+  z-index: 10;
+  opacity: 1;
+}
+
+.ncuk-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 40px 30px;
+  text-align: center;
+  width: 100%; /* Fill slide */
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Deep, premium shadow */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Orange Accent Line at bottom */
+.ncuk-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--primary-orange);
+}
+
+@keyframes iconPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1.3); }
+}
+
+.ncuk-icon {
+  color: var(--primary-orange);
+  margin-bottom: 24px;
+  display: inline-block;
+  /* Remove transition here to let animation take over on active */
+}
+
+.swiper-slide-active .ncuk-icon {
+  animation: iconPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  color: #ff4d00;
+  filter: drop-shadow(0 0 15px rgba(255, 134, 60, 0.6));
+}
+
+.ncuk-num {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 16px;
+}
+
+/* --- Testimonial Redesign --- */
+.stories-slider-wrapper {
+  max-width: 1200px; /* Increased width */
+  margin: 40px auto 0;
+  padding-bottom: 50px;
+}
+
+.stories-swiper {
+  overflow: visible !important;
+}
+
+.testi-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-orange) 100%); /* Blue to Orange Gradient */
+  border-radius: 200px;
+  box-shadow: 0 30px 60px rgba(0, 64, 137, 0.3);
+  padding: 0;
+  margin: 20px 10px;
+  position: relative;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+}
+
+.testi-image-side {
+  flex: 0 0 320px;
+  position: relative;
+}
+
+.testi-image-circle {
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 8px solid rgba(255,255,255,0.1); /* Subtle border for gradient blend */
+  outline: 4px solid rgba(255,255,255,0.2);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  margin-left: -40px;
+  position: relative;
+  z-index: 2;
+  background: #000;
+}
+
+.testi-image-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testi-content-side {
+  flex: 1;
+  padding: 50px 80px 50px 40px;
+  color: #fff;
+  text-align: left;
+}
+
+.quote-icon {
+  font-size: 5rem;
+  color: rgba(255,255,255,0.2); /* Subtle white instead of orange to not clash with bg */
+  opacity: 1;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.testi-quote {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  line-height: 1.4;
+  margin-bottom: 30px;
+  font-style: italic;
+  font-weight: 400;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.testi-author h4 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.testi-author p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .testi-card {
+    flex-direction: column;
+    border-radius: 30px;
+    margin: 0;
+    text-align: center;
+    padding-bottom: 40px;
+    background: linear-gradient(180deg, var(--primary-blue) 0%, var(--primary-orange) 100%); /* Vertical gradient on mobile */
+  }
+  
+  .testi-image-side {
+    flex: 0 0 auto;
+    margin-bottom: -40px;
+    z-index: 2;
+  }
+  
+  .testi-image-circle {
+    width: 160px; /* Slightly smaller image */
+    height: 160px;
+    margin: -50px auto 0;
+    border-width: 4px;
+    outline-width: 2px;
+  }
+
+  .testi-content-side {
+    padding: 50px 24px 20px; /* Reduced padding */
+    text-align: center;
+  }
+
+  .quote-icon {
+    font-size: 3rem; /* Smaller icon */
+    margin-bottom: 16px;
+  }
+
+  .testi-quote {
+    font-size: 1.1rem; /* Much smaller font for mobile */
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .testi-author h4 {
+    font-size: 1.1rem;
+  }
+
+  .testi-author p {
+    font-size: 0.8rem;
+  }
+  
+  .stories-slider-wrapper {
+    margin-top: 60px;
+  }
+}
+
+.ncuk-text {
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
 /* Bento Grid */
 .section-bento {
   padding: 120px 0;
@@ -539,21 +795,28 @@ img {
 }
 
 .b-card {
-  background: white;
+  background: var(--primary-blue);
   border-radius: 32px;
   padding: 40px;
   position: relative;
   overflow: hidden;
   transition: all 0.4s var(--ease-out);
-  border: 1px solid rgba(0, 0, 0, 0.03);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 64, 137, 0.3);
   display: flex;
   flex-direction: column;
+  color: white;
+}
+
+.b-card h3,
+.b-card p,
+.b-card .card-desc {
+  color: white;
 }
 
 .b-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 64, 137, 0.5);
 }
 
 .b-tall,
@@ -577,7 +840,7 @@ img {
 .b-large {
   grid-column: 1;
   grid-row: 1 / span 2;
-  background: var(--primary-dark);
+  background: var(--primary-blue);
   color: white;
 }
 
@@ -610,7 +873,7 @@ img {
 
 .card-desc {
   font-size: 14px;
-  color: #666;
+  color: white;
   margin-top: 12px;
   transition: color 0.4s;
 }
@@ -1028,7 +1291,7 @@ img {
 }
 
 .faq-item.active .faq-answer {
-  max-height: 200px;
+  max-height: 500px;
   padding-bottom: 30px;
   opacity: 1;
 }
