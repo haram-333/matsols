@@ -653,60 +653,78 @@ function App() {
         </div>
       </section>
 
-      {/* AI Matchmaking Section */}
-      <section className="section-ai">
+      {/* 
+      <section className="section-scholarships">
         <div className="container">
-          <div className="ai-layout">
-            <div className="ai-content-side animate-entry">
-              <div className="section-badge">INTELLIGENCE V3</div>
-              <h2 className="section-title">AI-Powered <span className="text-gradient">Precision Matching.</span></h2>
-              <p className="section-subtitle">
-                Beyond traditional consulting. Our neural matching engine analyzes 50+ data points—from academic synergy to cultural fit—to find your perfect university destination.
-              </p>
-              
-              <div className="ai-features">
-                <div className="ai-feature-card">
-                  <div className="ai-card-icon">
-                    <iconify-icon icon="line-md:clipboard-check" width="28"></iconify-icon>
-                  </div>
-                  <div>
-                    <h4>Profile Analysis</h4>
-                    <p>Quantitative mapping of your GPA, test scores, and research interests.</p>
-                  </div>
+          <div className="scholarship-header animate-entry">
+            <div className="section-badge center-badge">CORPORATE ASSET ALLOCATION</div>
+            <h2 className="section-title centered">Strategic <span className="text-gradient">Financial Optimization.</span></h2>
+            <p className="section-subtitle centered">
+              Leveraging global institutional synergies to drive sustainable academic throughput. Our robust financial infrastructure ensures optimized resource distribution across the scholarship lifecycle for maximum stakeholder value.
+            </p>
+          </div>
+
+          <div className="grant-registry-grid animate-entry">
+            {[
+              { 
+                title: "Academic Excellence Portfolio", 
+                location: "Tier-1 Institutional Asset", 
+                amount: "98th Percentile Yield", 
+                tag: "Q1 2026 Pipeline", 
+                icon: "ri:bank-card-line" 
+              },
+              { 
+                title: "Strategic Human Capital Grant", 
+                location: "Global Leadership Stream", 
+                amount: "Full Asset Coverage", 
+                tag: "High-Priority Stream", 
+                icon: "ri:briefcase-line" 
+              },
+              { 
+                title: "Innovative R&D Investment", 
+                location: "Systemic Knowledge Transfer", 
+                amount: "Milestone-Based Fund", 
+                tag: "Performance Indexed", 
+                icon: "ri:pie-chart-line" 
+              }
+            ].map((grant, idx) => (
+              <div key={idx} className="grant-card luxury-glass">
+                <div className="grant-card-glow"></div>
+                <div className="grant-icon-wrapper">
+                  <iconify-icon icon={grant.icon} width="40"></iconify-icon>
                 </div>
-                <div className="ai-feature-card">
-                  <div className="ai-card-icon">
-                    <iconify-icon icon="line-md:cog-loop" width="28"></iconify-icon>
-                  </div>
-                  <div>
-                    <h4>Live Adaptation</h4>
-                    <p>Real-time updates based on changing university quotas and requirements.</p>
+                <div className="grant-body">
+                  <div className="grant-tag">{grant.tag}</div>
+                  <h3>{grant.title}</h3>
+                  <p className="grant-location">{grant.location}</p>
+                  <div className="grant-footer">
+                    <span className="grant-amount">{grant.amount}</span>
+                    <a href="#" className="grant-link">Execute Compliance →</a>
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
 
-              <a href="#" className="btn btn-primary" style={{ marginTop: '40px' }}>Try AI Matchmaker</a>
+          <div className="funding-ticker-wrapper animate-entry">
+            <div className="funding-ticker">
+              <span className="ticker-label">Cumulative Capital Outflow:</span>
+              <span className="ticker-value">$12.4M ACV</span>
+              <div className="ticker-divider"></div>
+              <span className="ticker-label">Key Stakeholders:</span>
+              <span className="ticker-value">2,840+</span>
+              <div className="ticker-divider"></div>
+              <span className="ticker-label">Project Yield Metric:</span>
+              <span className="ticker-value">98.2%</span>
             </div>
+          </div>
 
-            <div className="ai-visual-side">
-              <div className="neural-grid">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className={`neural-node node-${i}`}>
-                    <div className="node-pulse"></div>
-                    <img alt="Uni" src={`https://storage.googleapis.com/banani-generated-images/generated-images/${i === 1 ? 'ee17499d-cc53-46e4-90cf-1165877d8493' : i === 2 ? '4f95ce3a-7fbe-4e49-9201-29c22d1d80df' : 'ee7c2dce-4c7f-4225-b955-abf95a74d492'}.jpg`} />
-                  </div>
-                ))}
-                <div className="center-orb">
-                  <iconify-icon icon="line-md:loading-loop" width="48"></iconify-icon>
-                </div>
-                <svg className="neural-lines" viewBox="0 0 500 500">
-                  <path d="M100 100 L250 250 M400 100 L250 250 M100 400 L250 250 M400 400 L250 250" stroke="var(--primary-orange)" strokeWidth="1" strokeDasharray="5 5" opacity="0.3" />
-                </svg>
-              </div>
-            </div>
+          <div style={{ textAlign: 'center', marginTop: '60px' }}>
+            <a href="#" className="btn btn-primary">Initialize Asset Allocation</a>
           </div>
         </div>
       </section>
+      */}
 
       {/* Destinations 3D */}
       <section className="section-dest" ref={destRef}>
@@ -770,6 +788,9 @@ function App() {
               modules={[Pagination, Autoplay]}
               spaceBetween={30}
               slidesPerView={1}
+              loop={false}
+              rewind={true}
+              centeredSlides={true}
               pagination={{ clickable: true }}
               autoplay={{ delay: 5000, disableOnInteraction: false }}
               className="stories-swiper"
@@ -805,11 +826,12 @@ function App() {
                       </div>
                     </div>
                     <div className="testi-content-side">
-                      <iconify-icon icon="ri:double-quotes-l" className="quote-icon"></iconify-icon>
+                      <iconify-icon icon="ri:double-quotes-l" className="quote-icon quote-left"></iconify-icon>
                       <p className="testi-quote">{story.quote}</p>
+                      <iconify-icon icon="ri:double-quotes-r" className="quote-icon quote-right"></iconify-icon>
                       <div className="testi-author">
                         <h4>{story.name}</h4>
-                        <p>{story.uni} • {story.course}</p>
+                        <p>{story.uni} | {story.course}</p>
                       </div>
                     </div>
                   </div>
