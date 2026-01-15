@@ -780,6 +780,38 @@ img {
   font-weight: 500;
 }
 
+/* Mobile Responsive for NCUK Cards */
+@media (max-width: 768px) {
+  .swiper.ncuk-swiper {
+    padding: 40px 20px 60px 20px !important; /* Add horizontal padding */
+  }
+
+  .ncuk-slide {
+    width: 280px !important; /* Smaller card width for mobile */
+  }
+
+  .swiper-slide-active.ncuk-slide {
+    transform: scale(1.05); /* Less zoom on mobile */
+  }
+
+  .ncuk-card {
+    padding: 30px 20px; /* Reduce internal padding */
+    min-height: 300px; /* Reduce height */
+  }
+
+  .ncuk-icon {
+    font-size: 3rem; /* Smaller icon */
+  }
+
+  .ncuk-number {
+    font-size: 2.5rem; /* Smaller number */
+  }
+
+  .ncuk-text {
+    font-size: 0.9rem; /* Smaller text */
+  }
+}
+
 /* Bento Grid */
 .section-bento {
   padding: 120px 0;
