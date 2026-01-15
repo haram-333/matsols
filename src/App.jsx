@@ -61,30 +61,80 @@ function App() {
     // GSAP Animations
     const ctx = gsap.context(() => {
       // Bento Animation
-      const bentoTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: bentoRef.current,
-          start: "top 75%",
-        }
-      });
-
-      bentoTl.fromTo(".bento-header",
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
-      )
-      .fromTo(".b-card", 
-        { y: 50, opacity: 0 },
+      // Bento Grid Entrance Scrub
+      gsap.fromTo(".b-card", 
+        { y: 60, opacity: 0 },
         { 
           y: 0, 
           opacity: 1, 
-          duration: 0.8, 
-          stagger: 0.15, 
-          ease: "power2.out",
-          onComplete: () => {
-            gsap.set(".b-card", { clearProps: "transform" });
+          stagger: 0.2, 
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".bento-grid",
+            start: "top 90%",
+            end: "0% 40%",
+            scrub: 1.5,
           }
-        },
-        "-=0.4"
+        }
+      );
+
+      // Section Header Scrub
+      gsap.fromTo(".animate-bento-header",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.2,
+          scrollTrigger: {
+            trigger: ".section-bento",
+            start: "top 40%",
+            end: "25% 70%",
+            scrub: 1,
+          }
+        }
+      );
+
+      // Abstract Background Parallax Scrub
+      gsap.fromTo(".bento-abstract-container svg",
+        { y: -30 },
+        {
+          y: 30,
+          scrollTrigger: {
+            trigger: ".section-bento",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          }
+        }
+      );
+
+      // Success Circle Animation (96%)
+      // Path length is ~283 (2 * PI * 45)
+      // 96% of 283 is 271.68. Offset should be 283 - 271.68 = 11.32
+      gsap.to(".animate-success-circle", {
+        strokeDashoffset: 11.32,
+        duration: 2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".success-circle-container",
+          start: "top 85%",
+          toggleActions: "play none none none",
+        }
+      });
+
+      // Pathway Bar Animation
+      gsap.fromTo(".animate-pathway-bar",
+        { width: "0%" },
+        {
+          width: "92%",
+          duration: 1.5,
+          ease: "power2.inOut",
+          scrollTrigger: {
+            trigger: ".b-wide",
+            start: "top 90%",
+            toggleActions: "play none none none",
+          }
+        }
       );
 
       // Destinations
@@ -153,14 +203,37 @@ function App() {
         "-=0.4"
       );
 
-      // NCUK Title Drawing Animation
-      const ncukTl = gsap.timeline({
+      // MATSOLS Why Study Section Grid Scrub
+      gsap.fromTo(".animate-matsols-card", 
+        { 
+          y: 100, 
+          opacity: 0,
+          scale: 0.8
+        },
+        { 
+          y: 0, 
+          opacity: 1, 
+          scale: 1,
+          duration: 1.2, 
+          stagger: 0.2, 
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".matsols-grid",
+            start: "10% 95%",
+            end: "bottom 70%",
+            scrub: 1,
+          }
+        }
+      );
+
+      // MATSOLS Title Drawing Animation
+      const matsolsTl = gsap.timeline({
         scrollTrigger: {
-          trigger: ".section-ncuk",
+          trigger: ".section-matsols",
           start: "top 75%",
         }
       });
-      ncukTl.fromTo(".ncuk-title .char", 
+      matsolsTl.fromTo(".matsols-title .char", 
         { 
           opacity: 0, 
           scale: 0.8,
@@ -249,32 +322,71 @@ function App() {
         ease: "power2.out"
       });
 
-      // Path Zigzag Animation
-      gsap.fromTo(".zigzag-path",
-        { strokeDasharray: 3000, strokeDashoffset: 3000 },
-        {
-          strokeDashoffset: 0,
-          duration: 3,
-          ease: "none",
+      // Path Section Universal Scrub Overhaul
+      // 1. Path Header Scrub (Parallax Lift)
+      gsap.fromTo(".path-header", 
+        { y: 80, opacity: 0 },
+        { 
+          y: -40, 
+          opacity: 1,
           scrollTrigger: {
-            trigger: pathRef.current,
-            start: "top center",
-            end: "bottom center",
-            scrub: 1.5
+            trigger: ".path-header",
+            start: "top bottom",
+            end: "bottom 50%",
+            scrub: 3,
           }
         }
       );
 
-      gsap.from(".path-step", {
-        scrollTrigger: {
-          trigger: pathRef.current,
-          start: "top 40%",
-        },
-        y: 80,
-        opacity: 0,
-        duration: 1.2,
-        stagger: 0.4,
-        ease: "power4.out"
+      // 2. Path Zigzag Animation (Reset to top-left)
+      gsap.fromTo(".zigzag-path", 
+        { strokeDasharray: 8000, strokeDashoffset: 8000 },
+        { 
+          strokeDashoffset: 0,
+          scrollTrigger: {
+            trigger: pathRef.current,
+            start: "top 35%",
+            end: "75% 35%",
+            scrub: 10,
+          }
+        }
+      );
+
+      // 3. Path Steps Universal Scrub (Fade & Slide)
+      gsap.utils.toArray(".path-step").forEach((step, i) => {
+        const content = step.querySelector(".step-content");
+        const image = step.querySelector(".step-image");
+
+        // Content Scrub
+        gsap.fromTo(content,
+          { x: i % 2 === 0 ? 100 : -100, opacity: 0 },
+          { 
+            x: 0, 
+            opacity: 1,
+            scrollTrigger: {
+              trigger: step,
+              start: "top bottom",
+              end: "30% 60%",
+              scrub: 3,
+            }
+          }
+        );
+
+        // Image Scrub (Zoom & Parallax)
+        gsap.fromTo(image,
+          { scale: 0.7, opacity: 0, rotate: i % 2 === 0 ? -10 : 10 },
+          { 
+            scale: 1, 
+            opacity: 1,
+            rotate: 0,
+            scrollTrigger: {
+              trigger: step,
+              start: "top bottom",
+              end: "30% 60%",
+              scrub: 3,
+            }
+          }
+        );
       });
 
       // Partners Stagger Animation
@@ -477,11 +589,11 @@ function App() {
         </div>
       </section>
 
-      {/* Why NCUK Section */}
-      <section className="section-ncuk">
+      {/* Why MATSOLS Section */}
+      <section className="section-matsols">
         <div className="container">
-          <div className="ncuk-header">
-            <h2 className="section-title ncuk-title" style={{ color: 'white', textAlign: 'center' }}>
+          <div className="matsols-header">
+            <h2 className="section-title matsols-title" style={{ color: 'white', textAlign: 'center' }}>
               {"Why study with ".split('').map((char, i) => (
                 <span key={`t-${i}`} className="char" style={{display: 'inline-block', whiteSpace: 'pre'}}>{char}</span>
               ))}
@@ -493,55 +605,43 @@ function App() {
             </h2>
           </div>
 
-          <Swiper
-            centeredSlides={true}
-            initialSlide={0}
-            slidesPerView={'auto'}
-            spaceBetween={30}
-            pagination={{ clickable: true }}
-            modules={[Pagination]}
-            className="ncuk-swiper"
-            breakpoints={{
-              640: { spaceBetween: 40 },
-              1024: { spaceBetween: 60 }
-            }}
-          >
+          <div className="matsols-grid">
             {[
-              { num: '50,000+', text: 'students progressed to world-leading universities', icon: 'line-md:clipboard-check' },
+              { num: '50,000+', text: 'Students progressed to world-leading universities', icon: 'line-md:clipboard-check' },
               { num: '135+', text: 'Study Centres in 40+ countries', icon: 'line-md:map-marker' },
-              { num: '120+', text: 'nationalities represented our programmes each year', icon: 'line-md:person' },
-              { num: '89%*', text: 'of students achieve a 2:1 or higher at university', icon: 'line-md:star' },
-              { num: '70+', text: 'university partners, with 21 ranked in the QS World Top 200', icon: 'line-md:account' }
+              { num: '120+', text: 'Nationalities represented our programmes each year', icon: 'line-md:person' },
+              { num: '89%*', text: 'Of students achieve a 2:1 or higher at university', icon: 'line-md:star' },
+              { num: '70+', text: 'University partners, with 21 ranked in the QS World Top 200', icon: 'line-md:account' }
             ].map((stat, idx) => (
-              <SwiperSlide key={idx} className="ncuk-slide">
-                <div className="ncuk-card">
-                  <div className="ncuk-icon">
+              <div key={idx} className="matsols-card-wrapper animate-matsols-card">
+                <div className="matsols-card">
+                  <div className="matsols-icon">
                     <iconify-icon icon={stat.icon} width="48"></iconify-icon>
                   </div>
-                  <h3 className="ncuk-num">{stat.num}</h3>
-                  <p className="ncuk-text">{stat.text}</p>
+                  <h3 className="matsols-num">{stat.num}</h3>
+                  <p className="matsols-text">{stat.text}</p>
                 </div>
-              </SwiperSlide>
+              </div>
             ))}
-          </Swiper>
+          </div>
         </div>
       </section>
 
       {/* Path Section */}
       <section className="section-path" ref={pathRef}>
         <div className="zigzag-svg-container">
-          <svg width="100%" height="100%" viewBox="0 0 1400 1200" preserveAspectRatio="none">
+          <svg width="100%" height="100%" viewBox="0 0 1400 1500" preserveAspectRatio="none">
             <path 
               className="zigzag-path" 
-              d="M 200 100 L 1200 450 L 200 850 L 1200 1150" 
+              d="M -100 0 L 1500 450 L -100 900 L 1500 1350" 
             />
           </svg>
         </div>
 
         <div className="path-container">
           <div className="path-header">
-            <h2 className="animate-entry">Your path into global universities</h2>
-            <p className="animate-entry delay-1">We've helped 50,000+ international students get into university.</p>
+            <h2>Your path into global universities</h2>
+            <p>We've helped 50,000+ international students get into university.</p>
           </div>
 
           <div className="path-steps">
@@ -553,7 +653,7 @@ function App() {
                 <span className="step-num">Step 1</span>
                 <h3 className="step-title">Choose your pathway</h3>
                 <p className="step-desc">
-                  Study an NCUK pathway programme in more than 40 countries worldwide. 
+                  Study an MATSOLS pathway programme in more than 40 countries worldwide. 
                   Start your journey locally or study abroad straight away.
                 </p>
                 <a href="#" className="btn-path">
@@ -599,55 +699,180 @@ function App() {
         </div>
       </section>
 
-      {/* Bento Grid Section */}
+      {/* Bento Grid Section (Redesigned for Single Row & White Theme) */}
       <section className="section-bento" ref={bentoRef}>
+        <div className="bento-abstract-container">
+          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+            <defs>
+              <linearGradient id="orangeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.05" />
+              </linearGradient>
+              <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="var(--primary-orange)" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.1" />
+              </linearGradient>
+            </defs>
+
+            {/* Aggressive Organic Blobs */}
+            <path d="M1200,100 Q1400,300 1100,500 T900,900" fill="none" stroke="url(#lineGradient)" strokeWidth="40" strokeLinecap="round" opacity="0.3" />
+            <path d="M-100,200 Q300,400 100,700 T500,1000" fill="none" stroke="url(#lineGradient)" strokeWidth="30" strokeLinecap="round" opacity="0.2" />
+            
+            {/* Glowing Focal Points */}
+            <circle cx="1250" cy="200" r="180" fill="url(#orangeGlow)" />
+            <circle cx="150" cy="850" r="220" fill="url(#orangeGlow)" />
+            
+            {/* Complex Intersecting Lines */}
+            <path d="M0,400 L1400,600" stroke="var(--primary-orange)" strokeWidth="8" opacity="0.4" strokeDasharray="20 40" />
+            <path d="M-100,600 C 400,400 600,800 1500,500" stroke="var(--primary-orange)" strokeWidth="15" fill="none" opacity="0.25" />
+            <path d="M1400,100 C 1000,300 800,0 600,200" stroke="var(--primary-orange)" strokeWidth="12" fill="none" opacity="0.2" />
+
+            {/* Technical Detail Elements */}
+            {[...Array(6)].map((_, i) => (
+              <circle key={i} cx={200 + i * 200} cy={100 + (i % 2) * 800} r="4" fill="var(--primary-orange)" opacity="0.5" />
+            ))}
+            
+            {/* Floating High-Voltage Nodes */}
+            <rect x="1100" y="700" width="160" height="160" rx="30" stroke="var(--primary-orange)" strokeWidth="4" fill="none" opacity="0.2" transform="rotate(15 1180 780)" />
+            <rect x="1120" y="720" width="120" height="120" rx="20" fill="var(--primary-orange)" opacity="0.1" transform="rotate(15 1180 780)" />
+          </svg>
+        </div>
+
         <div className="container">
-          <div className="bento-header" style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
-            <h2 style={{ fontSize: '3rem', marginBottom: '16px', color: 'var(--primary-dark)' }}>
-              Premier Education Consulting
-            </h2>
-            <p style={{ fontSize: '1.1rem', color: '#666' }}>
-              Data-driven approaches to secure your future.
+          <div className="bento-header" style={{ textAlign: 'center', maxWidth: '1000px', margin: '0 auto' }}>
+            <h2 className="animate-bento-header">Premier Education Consulting</h2>
+            <p className="animate-bento-header">
+              Harnessing a decades-long legacy of academic excellence to architect your global future. 
+              Our data-driven strategies and elite institutional partnerships ensure a seamless 
+              transition into the world's most prestigious universities.
             </p>
           </div>
 
           <div className="bento-grid">
+            {/* 1. Global Reach */}
             <div className="b-card b-large">
-              <h3 style={{ fontSize: '2rem', marginBottom: '16px' }}>Global Reach</h3>
-              <p style={{ opacity: 0.8 }}>
-                Connecting you to 30+ countries with local support teams in every major hub.
-              </p>
-              <div style={{ marginTop: '60px' }}>
-                <img alt="International Students" style={{ opacity: 1, width: '100%', borderRadius: '16px' }} src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" />
+              <div className="card-main-content">
+                <div className="card-top-row">
+                  <h3 style={{ fontSize: '1.8rem' }}>Global Reach</h3>
+                  <iconify-icon icon="ri:global-line" width="36" className="card-icon-svg"></iconify-icon>
+                </div>
+                <p>
+                  Connecting you to an expansive network of 30+ countries with localized support infrastructures. 
+                  Our physical presence in every major academic hub ensures that you have expert guidance 
+                  on the ground, from housing logistics to cultural immersion and beyond.
+                </p>
+                <div style={{ marginTop: 'auto', paddingTop: '30px' }}>
+                  <img 
+                    alt="International Students" 
+                    style={{ width: '100%', borderRadius: '20px', boxShadow: '0 15px 30px rgba(0,0,0,0.5)', height: '160px', objectFit: 'cover' }} 
+                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" 
+                  />
+                </div>
+              </div>
+              <div className="card-hover-content">
+                <div className="hover-icon-wrap">
+                  <iconify-icon icon="ri:earth-line" width="60" className="hover-icon"></iconify-icon>
+                </div>
+                <h3>Global Strategy</h3>
+                <p className="hover-desc">
+                  Leverage our systemic reach to bypass local bottlenecks. We provide priority access to institutional data and direct lines to admissions officers in the UK, USA, Canada, and Australia.
+                </p>
               </div>
             </div>
 
+            {/* 2. Success Rate (Circular) */}
             <div className="b-card b-tall">
-              <h3 style={{ fontSize: '1.5rem' }}>Success Rate</h3>
-              <div className="stat-ring"></div>
-              <p style={{ color: 'white' }}>Visa Approval</p>
+              <div className="card-main-content">
+                <div className="card-top-row">
+                  <h3 style={{ fontSize: '1.8rem' }}>Success Rate</h3>
+                  <iconify-icon icon="ri:line-chart-line" width="36" className="card-icon-svg"></iconify-icon>
+                </div>
+                <div className="success-circle-container">
+                  <svg className="success-circle-svg" viewBox="0 0 100 100">
+                    <circle className="circle-bg" cx="50" cy="50" r="45" />
+                    <circle 
+                      className="circle-progress animate-success-circle" 
+                      cx="50" cy="50" r="45" 
+                      strokeDasharray="283" 
+                      strokeDashoffset="283" 
+                    />
+                  </svg>
+                  <div className="percentage-text">
+                    96%
+                    <span>Visa Success</span>
+                  </div>
+                </div>
+                <p style={{ marginTop: 'auto' }}>
+                  A historically verified 96% visa success rate driven by rigorous document auditing 
+                  and AI-powered profile optimization. We ensure every application exceeds institutional benchmarks.
+                </p>
+              </div>
+              <div className="card-hover-content">
+                <div className="hover-icon-wrap">
+                  <iconify-icon icon="ri:verified-badge-line" width="60" className="hover-icon"></iconify-icon>
+                </div>
+                <h3>Elite Standards</h3>
+                <p className="hover-desc">
+                  Our comprehensive compliance framework mitigates risks long before submission. We maintain a zero-tolerance policy for errors, ensuring your academic legacy is protected at every checkpoint.
+                </p>
+              </div>
             </div>
 
-            <div className="b-card b-small b-confidential">
-              <div className="card-top-row">
-                <h3 style={{ fontSize: '1.5rem' }}>Confidential</h3>
-                <svg className="card-icon" width="32" height="32" viewBox="0 0 24 24" fill="white">
-                  <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 11.99H7V10.99H17V11.99H12Z"></path>
-                </svg>
+            {/* 3. Confidential (Small) */}
+            <div className="b-card b-small">
+              <div className="card-main-content">
+                <div className="card-top-row">
+                  <h3 style={{ fontSize: '1.8rem' }}>Confidential</h3>
+                  <iconify-icon icon="ri:shield-user-line" width="36" className="card-icon-svg"></iconify-icon>
+                </div>
+                <p style={{ marginTop: '20px', fontSize: '1rem' }}>
+                  We operate with a "Privacy First" mandate. Every student interaction is secured via 
+                  multi-layer encryption protocols, ensuring your sensitive academic and financial 
+                  background remains strictly confidential throughout the entire consultation lifecycle.
+                </p>
+                <div style={{ marginTop: 'auto', opacity: 0.3 }}>
+                   <iconify-icon icon="ri:fingerprint-line" width="80"></iconify-icon>
+                </div>
               </div>
-              <p className="card-desc">
-                Elite discretion & encrypted data.
-              </p>
+              <div className="card-hover-content">
+                <div className="hover-icon-wrap">
+                  <iconify-icon icon="ri:lock-password-line" width="60" className="hover-icon"></iconify-icon>
+                </div>
+                <h3>Data Sovereignty</h3>
+                <p className="hover-desc">
+                  Your profile is stored in decentralized, tier-4 data centers. We provide military-grade discretion for high-profile placements, ensuring your roadmap to Oxford or Harvard remains strictly between you and us.
+                </p>
+              </div>
             </div>
 
-            <div className="b-card b-wide b-pathways">
-              <h3 style={{ fontSize: '1.5rem' }}>Tailored Pathways</h3>
-              <div className="card-progress-track">
-                <div className="card-progress-bar"></div>
+            {/* 4. Tailored Pathways (Wide) */}
+            <div className="b-card b-wide">
+              <div className="card-main-content">
+                <div className="card-top-row">
+                  <h3 style={{ fontSize: '1.8rem' }}>Tailored Pathways</h3>
+                  <iconify-icon icon="ri:route-line" width="36" className="card-icon-svg"></iconify-icon>
+                </div>
+                <div className="card-progress-track" style={{ background: 'rgba(255,255,255,0.1)', height: '10px', borderRadius: '10px', marginTop: '20px' }}>
+                  <div className="card-progress-bar animate-pathway-bar" style={{ background: 'var(--primary-orange)', height: '100%', borderRadius: '10px' }}></div>
+                </div>
+                <p style={{ marginTop: '30px' }}>
+                  Bespoke academic blueprints engineered for high-yield outcomes. Whether you are aiming 
+                  for specialized PhD research, executive Masters, or elite Undergraduate programs, 
+                  we build the bridges that others can't even see. Our methodology integrates predictive 
+                  modeling to ensure your academic trajectory aligns with global market demands and 
+                  institutional expectations over a 5-year horizon.
+                </p>
               </div>
-              <p className="card-desc">
-                Custom roadmaps for PhD, Masters, and UG.
-              </p>
+              <div className="card-hover-content">
+                <div className="hover-icon-wrap">
+                  <iconify-icon icon="ri:mind-map" width="60" className="hover-icon"></iconify-icon>
+                </div>
+                <h3>Bespoke Logic</h3>
+                <p className="hover-desc">
+                  We don't follow trends; we create them. Our pathways include strategic internship placements, research publication support, and post-study career trajectories that maximize your long-term return on investment.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -786,7 +1011,7 @@ function App() {
           <div className="stories-slider-wrapper animate-entry">
             <Swiper
               modules={[Pagination, Autoplay]}
-              spaceBetween={30}
+              spaceBetween={80}
               slidesPerView={1}
               loop={false}
               rewind={true}
@@ -844,6 +1069,44 @@ function App() {
 
       {/* FAQ Section */}
       <section className="section-faq">
+        <div className="faq-abstract-container">
+          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+            <defs>
+              <linearGradient id="orangeGlowFaq" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.05" />
+              </linearGradient>
+              <linearGradient id="lineGradientFaq" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="var(--primary-orange)" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.1" />
+              </linearGradient>
+            </defs>
+
+            {/* Aggressive Organic Blobs */}
+            <path d="M1200,100 Q1400,300 1100,500 T900,900" fill="none" stroke="url(#lineGradientFaq)" strokeWidth="40" strokeLinecap="round" opacity="0.3" />
+            <path d="M-100,200 Q300,400 100,700 T500,1000" fill="none" stroke="url(#lineGradientFaq)" strokeWidth="30" strokeLinecap="round" opacity="0.2" />
+            
+            {/* Glowing Focal Points */}
+            <circle cx="1250" cy="200" r="180" fill="url(#orangeGlowFaq)" />
+            <circle cx="150" cy="850" r="220" fill="url(#orangeGlowFaq)" />
+            
+            {/* Complex Intersecting Lines */}
+            <path d="M0,400 L1400,600" stroke="var(--primary-orange)" strokeWidth="8" opacity="0.4" strokeDasharray="20 40" />
+            <path d="M-100,600 C 400,400 600,800 1500,500" stroke="var(--primary-orange)" strokeWidth="15" fill="none" opacity="0.25" />
+            <path d="M1400,100 C 1000,300 800,0 600,200" stroke="var(--primary-orange)" strokeWidth="12" fill="none" opacity="0.2" />
+
+            {/* Technical Detail Elements */}
+            {[...Array(6)].map((_, i) => (
+              <circle key={i} cx={200 + i * 200} cy={100 + (i % 2) * 800} r="4" fill="var(--primary-orange)" opacity="0.5" />
+            ))}
+            
+            {/* Floating High-Voltage Nodes */}
+            <rect x="1100" y="700" width="160" height="160" rx="30" stroke="var(--primary-orange)" strokeWidth="4" fill="none" opacity="0.2" transform="rotate(15 1180 780)" />
+            <rect x="1120" y="720" width="120" height="120" rx="20" fill="var(--primary-orange)" opacity="0.1" transform="rotate(15 1180 780)" />
+          </svg>
+        </div>
+        
         <div className="container">
           <div className="faq-layout">
             <div className="faq-info animate-entry">

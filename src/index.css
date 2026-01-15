@@ -181,7 +181,7 @@ img {
 
 .navbar.scrolled,
 .navbar:hover {
-  background: var(--primary-blue);
+  background: #041021; /* Match FAQ section background */
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
 }
 
@@ -526,14 +526,14 @@ img {
 
 
 
-/* NCUK Section */
-.section-ncuk {
+/* matsols Section */
+.section-matsols {
   padding: 100px 0;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   overflow: hidden;
 }
 
-.ncuk-header {
+.matsols-header {
   margin-bottom: 60px;
 }
 
@@ -554,47 +554,44 @@ img {
   display: inline-block;
 }
 
-.swiper.ncuk-swiper {
-  width: 100%;
-  padding: 60px 0 80px 0 !important;
-  overflow: visible !important;
+.matsols-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 40px 0;
 }
 
-.ncuk-slide {
-  width: 320px !important; /* Fixed width for correct auto-centering */
-  height: auto;
-  transition: all 0.4s ease;
-  opacity: 0.5;
-  transform: scale(0.9);
+.matsols-card-wrapper {
+  perspective: 1000px;
   display: flex;
   justify-content: center;
 }
 
-.swiper-slide-active.ncuk-slide {
-  transform: scale(1.15); /* Zoom active */
-  z-index: 10;
-  opacity: 1;
-}
-
-.ncuk-card {
+.matsols-card {
   background: #ffffff;
-  border-radius: 24px;
-  padding: 40px 30px;
+  border-radius: 32px;
+  padding: 50px 35px;
   text-align: center;
-  width: 100%; /* Fill slide */
-  min-height: 340px;
+  width: 100%;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Deep, premium shadow */
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.matsols-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.5);
 }
 
 /* Orange Accent Line at bottom */
-.ncuk-card::after {
+.matsols-card::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -602,6 +599,13 @@ img {
   width: 100%;
   height: 6px;
   background: var(--primary-orange);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+  transform-origin: center;
+}
+
+.matsols-card:hover::after {
+  transform: scaleX(1);
 }
 
 @keyframes iconPop {
@@ -610,20 +614,20 @@ img {
   100% { transform: scale(1.3); }
 }
 
-.ncuk-icon {
+.matsols-icon {
   color: var(--primary-orange);
   margin-bottom: 24px;
   display: inline-block;
   /* Remove transition here to let animation take over on active */
 }
 
-.swiper-slide-active .ncuk-icon {
+.matsols-card:hover .matsols-icon {
   animation: iconPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   color: #ff4d00;
   filter: drop-shadow(0 0 15px rgba(255, 134, 60, 0.6));
 }
 
-.ncuk-num {
+.matsols-num {
   font-size: 3rem;
   font-weight: 800;
   color: var(--primary-dark);
@@ -646,8 +650,8 @@ img {
 
 .stories-slider-wrapper {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px; /* Add padding for breathing room */
 }
 
 .stories-swiper {
@@ -667,12 +671,12 @@ img {
   position: relative;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 100%;
-  max-width: 1150px;
+  width: clamp(900px, 95vw, 1150px); /* Responsive width that scales properly */
   margin: 0 auto;
   color: white;
   text-align: left;
   overflow: hidden;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .testi-image-side {
@@ -764,15 +768,16 @@ img {
 /* Mobile Responsive */
 @media (max-width: 1024px) {
   .stories-slider-wrapper {
-    padding-left: 0;
+    padding: 0; /* No padding for maximum width */
   }
   
   .testi-card {
+    width: 100% !important; /* Full width on mobile */
     border-radius: 40px;
     flex-direction: column !important;
     padding: 60px 24px;
     gap: 30px;
-    margin: 40px 0;
+    margin: 0; /* Remove margin, let swiper handle spacing */
     text-align: center;
     min-height: auto;
     background: linear-gradient(180deg, var(--primary-blue) 0%, var(--primary-orange) 100%);
@@ -812,121 +817,193 @@ img {
   }
 }
 
-.ncuk-text {
+/* Large Screen Optimization */
+@media (min-width: 1600px) {
+  .testi-card {
+    width: 1150px; /* Fixed width on ultra-wide screens */
+    padding: 50px 80px 50px 50px;
+  }
+  
+  .testi-image-circle {
+    width: 350px;
+    height: 350px;
+  }
+  
+  .testi-quote {
+    font-size: 1.5rem;
+  }
+}
+
+.matsols-text {
   font-size: 1rem;
   color: #64748b;
   line-height: 1.5;
   font-weight: 500;
 }
 
-/* Mobile Responsive for NCUK Cards */
+/* Mobile Responsive for matsols Cards */
+@media (max-width: 1024px) {
+  .matsols-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
 @media (max-width: 768px) {
-  .swiper.ncuk-swiper {
-    padding: 40px 20px 60px 20px !important; /* Add horizontal padding */
+  .matsols-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .matsols-card {
+    min-height: 320px;
   }
 
-  .ncuk-slide {
-    width: 280px !important; /* Smaller card width for mobile */
-  }
-
-  .swiper-slide-active.ncuk-slide {
-    transform: scale(1.05); /* Less zoom on mobile */
-  }
-
-  .ncuk-card {
-    padding: 30px 20px; /* Reduce internal padding */
-    min-height: 300px; /* Reduce height */
-  }
-
-  .ncuk-icon {
+  .matsols-icon {
     font-size: 3rem; /* Smaller icon */
   }
 
-  .ncuk-number {
+  .matsols-number {
     font-size: 2.5rem; /* Smaller number */
   }
 
-  .ncuk-text {
+  .matsols-text {
     font-size: 0.9rem; /* Smaller text */
   }
 }
 
 /* Bento Grid */
+/* Bento Grid Redesign (White Theme with Dark Cards) */
 .section-bento {
-  padding: 120px 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+  padding: 160px 0;
+  background: white;
+  position: relative;
+  overflow: hidden;
+  color: var(--primary-dark);
+}
+
+.bento-abstract-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6; /* Increased opacity to make orange SVGs pop on white */
+}
+
+.section-bento .container {
+  position: relative;
+  z-index: 2;
+}
+
+.bento-header {
+  margin-bottom: 80px;
+}
+
+.bento-header h2 {
+  color: var(--primary-dark) !important;
+  font-size: clamp(3.5rem, 6vw, 5.5rem) !important;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+}
+
+.bento-header p {
+  color: #64748b !important;
+  font-size: 1.3rem !important;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .bento-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: 320px 280px;
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  margin-top: 60px;
+  margin-top: 80px;
 }
 
 .b-card {
-  background: var(--primary-blue);
+  background: #041021;
   border-radius: 32px;
-  padding: 40px;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s var(--ease-out);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 64, 137, 0.3);
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   color: white;
+  cursor: pointer;
 }
 
-.b-card h3,
-.b-card p,
-.b-card .card-desc {
+.b-card h3 {
   color: white;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.b-card p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .b-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(0, 64, 137, 0.5);
+  transform: translateY(-12px);
+  border-color: var(--primary-orange);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
 }
 
-.b-tall,
-.b-small,
-.b-wide {
+/* Hover Disclosure Animation */
+.card-main-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+  padding: 40px;
+}
+
+.card-hover-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0a1f44 0%, #041021 100%);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: 5;
 }
 
-.b-card:not(.b-large):hover {
-  background: var(--primary-orange);
+.b-card:hover .card-main-content {
+  transform: translateY(-100%);
+  opacity: 0;
 }
 
-.b-card:not(.b-large):hover h3,
-.b-card:not(.b-large):hover p,
-.b-card:not(.b-large):hover .card-desc {
-  color: white !important;
+.b-card:hover .card-hover-content {
+  transform: translateY(0);
 }
 
-.b-large {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  background: var(--primary-blue);
+.hover-desc {
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: white;
+  margin-top: 15px;
 }
 
-.b-tall {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-}
-
-.b-small {
-  grid-column: 3;
-}
-
-.b-wide {
-  grid-column: 3;
-  grid-row: 2;
+.b-large, .b-tall, .b-small, .b-wide {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-top-row {
@@ -934,81 +1011,102 @@ img {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 24px; /* Fixed "no gap" issue */
 }
 
-.b-small .card-top-row {
-  justify-content: center;
-  gap: 12px;
+/* Ensure no override on card backgrounds */
+.b-large {
+  background: #041021 !important;
 }
 
-.card-desc {
-  font-size: 14px;
-  color: white;
-  margin-top: 12px;
-  transition: color 0.4s;
+.card-icon-svg {
+  color: var(--primary-orange);
+  filter: drop-shadow(0 0 12px rgba(255, 134, 60, 0.4));
+  margin-bottom: 0;
 }
 
-.card-icon {
-  transition: fill 0.4s;
+.hover-icon-wrap {
+  margin-bottom: 50px; /* Reduced from 100px to find the sweet spot */
+  display: block;
 }
 
-.b-card:not(.b-large):hover .card-icon {
-  fill: white !important;
+.hover-icon {
+  color: var(--primary-orange);
 }
 
-.stat-ring {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  border: 12px solid #f0f0f0;
-  border-top-color: var(--primary-orange);
-  border-right-color: var(--primary-orange);
-  transform: rotate(-45deg);
+.card-hover-content h3 {
+  margin-bottom: 24px; /* Space between title and description */
+  font-size: 2rem !important; /* Ensure heading is large enough */
+}
+
+/* SVG Success Circle */
+.success-circle-container {
+  width: 160px;
+  height: 160px;
   margin: 30px auto;
   position: relative;
-  transition: border-color 0.4s;
 }
 
-.stat-ring::after {
-  content: "96%";
+.success-circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 10;
+}
+
+.circle-progress {
+  fill: none;
+  stroke: var(--primary-orange);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.percentage-text {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 1.8rem; /* Reduced from 2.5rem */
   font-weight: 800;
-  transform: rotate(45deg);
-  color: var(--primary-dark);
-  transition: color 0.4s;
-}
-
-.b-card:not(.b-large):hover .stat-ring {
-  border-color: rgba(255, 255, 255, 0.2);
-  border-top-color: white;
-  border-right-color: white;
-}
-
-.b-card:not(.b-large):hover .stat-ring::after {
   color: white;
 }
 
-.card-progress-track {
+.percentage-text span {
+  font-size: 0.7rem; /* Reduced from 0.9rem */
+  font-weight: 600;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  margin-top: -3px;
+}
+
+.card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  height: 6px;
-  background: #eee;
-  border-radius: 4px;
-  margin-top: 30px;
-  overflow: hidden;
-  transition: background 0.4s;
+  margin-bottom: 24px;
+}
+
+.card-icon-svg {
+  color: var(--primary-orange);
+  filter: drop-shadow(0 0 12px rgba(255, 134, 60, 0.4));
 }
 
 .card-progress-bar {
-  width: 75%;
+  width: 0%; /* Initial state for animation */
   height: 100%;
   background: var(--primary-orange);
-  transition: background 0.4s;
+  transition: width 1s ease;
+  transform-origin: left;
 }
 
 .b-card:not(.b-large):hover .card-progress-track {
@@ -1312,8 +1410,26 @@ img {
 /* FAQ Section */
 .section-faq {
   padding: 120px 0;
-  background: #004089;
+  background: #041021; /* Updated to match navbar scrolled state */
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-abstract-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.section-faq .container {
+  position: relative;
+  z-index: 2;
 }
 
 .faq-layout {
@@ -1401,7 +1517,7 @@ img {
 .cards-row {
   display: flex;
   gap: 20px;
-  height: 500px;
+  height: 400px; /* Reduced by 20% from 500px */
   margin-top: 60px;
 }
 
@@ -1750,7 +1866,7 @@ img {
 
 /* Mega Footer */
 .footer {
-  background: var(--primary-orange);
+  background: #041021; /* Match navbar and FAQ section */
   color: rgba(255, 255, 255, 0.8);
   padding: 140px 0 60px;
   position: relative;
@@ -2108,7 +2224,7 @@ img {
 
   /* FAQ Dark Background Fix */
   .section-faq {
-    background: #004089;
+    background: #041021; /* Match desktop */
     padding: 80px 20px;
   }
   .faq-layout {
@@ -2226,10 +2342,10 @@ img {
 
 .zigzag-svg-container {
   position: absolute;
-  top: 300px;
+  top: 0;
   left: 0;
   width: 100%;
-  height: calc(100% - 600px);
+  height: 100%;
   z-index: 1;
   pointer-events: none;
 }
@@ -2237,11 +2353,11 @@ img {
 .zigzag-path {
   fill: none;
   stroke: var(--primary-orange);
-  stroke-width: 70;
+  stroke-width: 60;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.85;
-  filter: drop-shadow(0 0 30px rgba(255, 134, 60, 0.4));
+  opacity: 0.6;
+  filter: drop-shadow(0 0 40px rgba(255, 134, 60, 0.3));
 }
 
 .path-step {
@@ -2284,6 +2400,8 @@ img {
 
 .step-content {
   flex: 1;
+  position: relative;
+  z-index: 5;
 }
 
 .step-num {
