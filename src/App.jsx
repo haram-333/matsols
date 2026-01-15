@@ -8,6 +8,22 @@ import { Autoplay, Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './index.css'
+import pathwayImg from './assets/pathway-1.png'
+import supportImg from './assets/support-2.png'
+import universityImg from './assets/university-3.png'
+
+import manchesterMet from './assets/ubi-logos/1200px-Manchester_Metropolitan_University_logo.svg.png.webp';
+import cardiff from './assets/ubi-logos/Cardiff-Uni.png.webp';
+import lancaster from './assets/ubi-logos/Lancaster-Uni.png.webp';
+import queenMary from './assets/ubi-logos/Queen-Mary-Uni-of-london.png.webp';
+import rmit from './assets/ubi-logos/RMIT.png.webp';
+import birmingham from './assets/ubi-logos/Uni-of-Birmingham.png.webp';
+import leeds from './assets/ubi-logos/Uni-of-Leeds.png.webp';
+import manchester from './assets/ubi-logos/Uni-of-Manchester.png.webp';
+import westernAus from './assets/ubi-logos/Uni-of-Western-Aus.png.webp';
+import bristol from './assets/ubi-logos/University-of-Bristol-Logo-April-24.png.webp';
+import unsw from './assets/ubi-logos/unsw-australia-university-of-new-south-wales-logo.png';
+import sheffieldHallam from './assets/ubi-logos/shu-logo.svg';
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,6 +35,8 @@ function App() {
   const destRef = useRef(null);
   const processRef = useRef(null);
   const servicesRef = useRef(null);
+  const pathRef = useRef(null);
+  const partnersRef = useRef(null);
 
   useEffect(() => {
     // Scroll listener for navbar
@@ -205,6 +223,47 @@ function App() {
         stagger: 0.1,
         ease: "power2.out"
       });
+
+      // Path Zigzag Animation
+      gsap.fromTo(".zigzag-path",
+        { strokeDasharray: 3000, strokeDashoffset: 3000 },
+        {
+          strokeDashoffset: 0,
+          duration: 3,
+          ease: "none",
+          scrollTrigger: {
+            trigger: pathRef.current,
+            start: "top center",
+            end: "bottom center",
+            scrub: 1.5
+          }
+        }
+      );
+
+      gsap.from(".path-step", {
+        scrollTrigger: {
+          trigger: pathRef.current,
+          start: "top 40%",
+        },
+        y: 80,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.4,
+        ease: "power4.out"
+      });
+
+      // Partners Stagger Animation
+      gsap.from(".partner-logo-item", {
+        scrollTrigger: {
+          trigger: partnersRef.current,
+          start: "top 80%"
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power2.out"
+      });
     });
 
     return () => {
@@ -348,21 +407,114 @@ function App() {
         </div>
       </header>
 
-      {/* Marquee */}
-      <div className="marquee-wrap">
-        <div className="marquee-content">
-          <span className="partner-logo">UNIVERSITY OF OXFORD</span>
-          <span className="partner-logo">CAMBRIDGE</span>
-          <span className="partner-logo">HARVARD UNIVERSITY</span>
-          <span className="partner-logo">TORONTO UNIV</span>
-          <span className="partner-logo">MELBOURNE</span>
-          <span className="partner-logo">IMPERIAL COLLEGE</span>
-          <span className="partner-logo">UCLA</span>
-          <span className="partner-logo">SYDNEY UNIV</span>
-          <span className="partner-logo">UNIVERSITY OF OXFORD</span>
-          <span className="partner-logo">CAMBRIDGE</span>
+      {/* Partners Section (Replaced Marquee) */}
+      <section className="section-partners" ref={partnersRef}>
+        <div className="container">
+          <div className="partners-header">
+            <h2 className="section-title">Global Partner <span className="text-gradient">Universities.</span></h2>
+            <p className="section-subtitle">Collaborating with the world's most prestigious institutions to secure your future.</p>
+          </div>
+          
+
+
+
+          <div className="marquee-container">
+            <div className="marquee-track">
+              {/* Duplicate 4 times for seamless infinite scroll on any screen width */}
+              {[...Array(4)].flatMap((_, i) => [
+                { name: 'Manchester Met', logo: manchesterMet },
+                { name: 'Cardiff', logo: cardiff },
+                { name: 'Lancaster', logo: lancaster },
+                { name: 'Queen Mary', logo: queenMary },
+                { name: 'RMIT', logo: rmit },
+                { name: 'Birmingham', logo: birmingham },
+                { name: 'Leeds', logo: leeds },
+                { name: 'Manchester', logo: manchester },
+                { name: 'Western Australia', logo: westernAus },
+                { name: 'Bristol', logo: bristol },
+                { name: 'UNSW', logo: unsw },
+                { name: 'Sheffield Hallam', logo: sheffieldHallam }
+              ]).map((uni, idx) => (
+                <div key={idx} className="partner-logo-item">
+                  <img src={uni.logo} alt={uni.name} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Path Section */}
+      <section className="section-path" ref={pathRef}>
+        <div className="zigzag-svg-container">
+          <svg width="100%" height="100%" viewBox="0 0 1400 1200" preserveAspectRatio="none">
+            <path 
+              className="zigzag-path" 
+              d="M 200 100 L 1200 450 L 200 850 L 1200 1150" 
+            />
+          </svg>
+        </div>
+
+        <div className="path-container">
+          <div className="path-header">
+            <h2 className="animate-entry">Your path into global universities</h2>
+            <p className="animate-entry delay-1">We've helped 50,000+ international students get into university.</p>
+          </div>
+
+          <div className="path-steps">
+            <div className="path-step">
+              <div className="step-image-wrap">
+                <img src={pathwayImg} alt="Choose your pathway" className="step-image" />
+              </div>
+              <div className="step-content">
+                <span className="step-num">Step 1</span>
+                <h3 className="step-title">Choose your pathway</h3>
+                <p className="step-desc">
+                  Study an NCUK pathway programme in more than 40 countries worldwide. 
+                  Start your journey locally or study abroad straight away.
+                </p>
+                <a href="#" className="btn-path">
+                  Our Programmes <span className="arrow">›</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="path-step reversed">
+              <div className="step-image-wrap">
+                <img src={supportImg} alt="Support with every step" className="step-image" />
+              </div>
+              <div className="step-content">
+                <span className="step-num">Step 2</span>
+                <h3 className="step-title">Support with every step</h3>
+                <p className="step-desc">
+                  Our expert student support teams will guide you through every step of your journey 
+                  and help find the best university and course for you.
+                </p>
+                <a href="#" className="btn-path">
+                  How we support you <span className="arrow">›</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="path-step">
+              <div className="step-image-wrap">
+                <img src={universityImg} alt="Gain entry" className="step-image" />
+              </div>
+              <div className="step-content">
+                <span className="step-num">Step 3</span>
+                <h3 className="step-title">Gain entry to your dream university</h3>
+                <p className="step-desc">
+                  Progress to one of 70+ universities – including 10 in the QS World Top 100 – 
+                  across the most popular study destinations.
+                </p>
+                <a href="#" className="btn-path">
+                  Explore universities <span className="arrow">›</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Bento Grid Section */}
       <section className="section-bento" ref={bentoRef}>
