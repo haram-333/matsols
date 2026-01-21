@@ -13,7 +13,6 @@ import path2 from './assets/images/path-2.webp'
 import path3 from './assets/images/path-3.webp'
 import heroBg from './assets/images/hero-bg.webp'
 import heroAvatar from './assets/images/hero-avatar.webp'
-import bentoReach from './assets/images/bento-reach.webp'
 import story1 from './assets/images/story-1.webp'
 import story3 from './assets/images/story-3.webp'
 import supportBg from './assets/images/support-bg.webp'
@@ -791,14 +790,8 @@ function App() {
                   Our physical presence in every major academic hub ensures that you have expert guidance 
                   on the ground, from housing logistics to cultural immersion and beyond.
                 </p>
-                <div style={{ marginTop: 'auto', paddingTop: '30px' }}>
-                  <img 
-                    alt="International Students" 
-                    style={{ width: '100%', borderRadius: '20px', boxShadow: '0 15px 30px rgba(0,0,0,0.5)', height: '160px', objectFit: 'cover' }} 
-                    src={bentoReach} 
-                    loading="lazy"
-                    decoding="async"
-                  />
+                <div style={{ marginTop: 'auto', paddingTop: '30px', opacity: 0.3 }}>
+                   <iconify-icon icon="ri:earth-line" width="80"></iconify-icon>
                 </div>
               </div>
               <div className="card-hover-content">
