@@ -8,9 +8,15 @@ import { Autoplay, Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './index.css'
-import pathwayImg from './assets/pathway-1.png'
-import supportImg from './assets/support-2.png'
-import universityImg from './assets/university-3.png'
+import path1 from './assets/images/graduation-cap-with-globe-digital-art-style-education-day.jpg.jpeg'
+import path2 from './assets/images/low-angle-cheerful-team-students-passed-test-by-preparing-all-together.jpg.jpeg'
+import path3 from './assets/images/glamorous-female-student-red-jacket-sitting-yard-front-college-with-computer.jpg.jpeg'
+import heroBg from './assets/images/people-traveling-without-covid-worries.jpg.jpeg'
+import heroAvatar from './assets/images/medium-shot-smiley-woman-with-passport.jpg.jpeg'
+import bentoReach from './assets/images/smiling-students-standing-with-notepad.jpg.jpeg'
+import story1 from './assets/images/dreamy-teen-girl-with-textbook.jpg.jpeg'
+import story3 from './assets/images/girl-checks-her-tablet-standing-street.jpg.jpeg'
+import supportBg from './assets/images/customer-support.jpg'
 
 import manchesterMet from './assets/ubi-logos/1200px-Manchester_Metropolitan_University_logo.svg.png.webp';
 import cardiff from './assets/ubi-logos/Cardiff-Uni.png.webp';
@@ -153,36 +159,55 @@ function App() {
         }
       );
 
-      // Process
-      const processTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: processRef.current,
-          start: "top 75%",
+      // 3. Process Section - High-Fidelity Terminal Overhaul (Desktop Only)
+      let mm = gsap.matchMedia();
+
+      mm.add("(min-width: 1025px)", () => {
+        const pc = document.querySelector(".process-content");
+        const blueprintCards = gsap.utils.toArray(".blueprint-card");
+        const blueprintItems = gsap.utils.toArray(".step-item");
+        
+        if (pc && processRef.current) {
+          // Master Pin Timeline: Exactly ONE viewport height interaction
+          const mainTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: processRef.current,
+              pin: true,
+              start: "top top",
+              end: "+=150%", 
+              scrub: 0.8,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                const p = self.progress;
+                const idx = Math.min(Math.floor(p * 0.99 * blueprintItems.length), blueprintItems.length - 1);
+                
+                blueprintItems.forEach((item, i) => {
+                  item.classList.toggle("active", i === idx);
+                });
+                blueprintCards.forEach((card, i) => {
+                  card.classList.toggle("active", i === idx);
+                });
+              }
+            }
+          });
+
+          // Technical Parallax Grid
+          mainTl.to(".blueprint-grid", {
+            yPercent: -8,
+            rotateZ: -1.5,
+            ease: "none"
+          }, 0);
         }
       });
 
-      processTl.fromTo(".process-header",
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
-      )
-      .fromTo(".step-item",
-        { x: -20, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power2.out" },
-        "-=0.4"
-      )
-      .fromTo(".process-card", 
-        { x: 50, opacity: 0 },
+      // Pre-pin header reveal (Unified for all devices)
+      gsap.fromTo(".process-header", 
+        { y: 80, opacity: 0, rotateX: -30, transformPerspective: 1200 },
         { 
-          x: 0, 
-          opacity: 1, 
-          duration: 0.8, 
-          stagger: 0.2, 
-          ease: "power2.out",
-          onComplete: () => {
-             gsap.set(".process-card", { clearProps: "transform" });
-          }
-        },
-        "-=0.6"
+          y: 0, opacity: 1, rotateX: 0, 
+          duration: 1.8, ease: "expo.out",
+          scrollTrigger: { trigger: processRef.current, start: "top 85%" }
+        }
       );
 
       // Services Animation
@@ -338,19 +363,23 @@ function App() {
         }
       );
 
-      // 2. Path Zigzag Animation (Reset to top-left)
-      gsap.fromTo(".zigzag-path", 
-        { strokeDasharray: 8000, strokeDashoffset: 8000 },
-        { 
-          strokeDashoffset: 0,
-          scrollTrigger: {
-            trigger: pathRef.current,
-            start: "top 35%",
-            end: "75% 35%",
-            scrub: 10,
+      // 2. Path Zigzag Animation (Dynamic Length)
+      const zigzagPath = document.querySelector(".zigzag-path");
+      if (zigzagPath) {
+        const length = zigzagPath.getTotalLength();
+        gsap.fromTo(zigzagPath, 
+          { strokeDasharray: length, strokeDashoffset: length },
+          { 
+            strokeDashoffset: 0,
+            scrollTrigger: {
+              trigger: pathRef.current,
+              start: "top center",
+              end: "bottom top",
+              scrub: 1.2,
+            }
           }
-        }
-      );
+        );
+      }
 
       // 3. Path Steps Universal Scrub (Fade & Slide)
       gsap.utils.toArray(".path-step").forEach((step, i) => {
@@ -485,7 +514,7 @@ function App() {
         <img
           className="hero-video-bg"
           alt="Global Network"
-          src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80"
+          src={heroBg}
         />
         <div className="hero-overlay"></div>
 
@@ -537,7 +566,7 @@ function App() {
               <span>98% Visa Success Rate</span>
             </div>
             <img 
-              src="https://plus.unsplash.com/premium_photo-1681681082293-07cd7e103fe4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+              src={heroAvatar} 
               alt="International Studies" 
               style={{
                 width: '450px',
@@ -633,7 +662,7 @@ function App() {
           <svg width="100%" height="100%" viewBox="0 0 1400 1500" preserveAspectRatio="none">
             <path 
               className="zigzag-path" 
-              d="M -100 0 L 1500 450 L -100 900 L 1500 1350" 
+              d="M -100 0 L 1500 500 L -100 1000 L 1510 1510" 
             />
           </svg>
         </div>
@@ -647,7 +676,7 @@ function App() {
           <div className="path-steps">
             <div className="path-step">
               <div className="step-image-wrap">
-                <img src={pathwayImg} alt="Choose your pathway" className="step-image" />
+                <img src={path1} alt="Choose your pathway" className="step-image" />
               </div>
               <div className="step-content">
                 <span className="step-num">Step 1</span>
@@ -664,7 +693,7 @@ function App() {
 
             <div className="path-step reversed">
               <div className="step-image-wrap">
-                <img src={supportImg} alt="Support with every step" className="step-image" />
+                <img src={path2} alt="Support with every step" className="step-image" />
               </div>
               <div className="step-content">
                 <span className="step-num">Step 2</span>
@@ -681,7 +710,7 @@ function App() {
 
             <div className="path-step">
               <div className="step-image-wrap">
-                <img src={universityImg} alt="Gain entry" className="step-image" />
+                <img src={path3} alt="Gain entry" className="step-image" />
               </div>
               <div className="step-content">
                 <span className="step-num">Step 3</span>
@@ -766,7 +795,7 @@ function App() {
                   <img 
                     alt="International Students" 
                     style={{ width: '100%', borderRadius: '20px', boxShadow: '0 15px 30px rgba(0,0,0,0.5)', height: '160px', objectFit: 'cover' }} 
-                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" 
+                    src={bentoReach} 
                   />
                 </div>
               </div>
@@ -1026,7 +1055,7 @@ function App() {
                   name: "Sarah Jenkins",
                   uni: "Oxford University",
                   course: "MSc Data Science",
-                  img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&q=80"
+                  img: story1
                 },
                 {
                   quote: "Elite service from start to finish. I'm now studying at my dream Ivy League school thanks to their consultants.",
@@ -1040,7 +1069,7 @@ function App() {
                   name: "Aisha Rahman",
                   uni: "U of Toronto",
                   course: "Engineering",
-                  img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80"
+                  img: story3
                 }
               ].map((story, idx) => (
                 <SwiperSlide key={idx} className="testi-slide">
@@ -1114,7 +1143,7 @@ function App() {
               <h2 className="section-title">Common <span className="text-gradient">Questions.</span></h2>
               <p className="section-subtitle">Everything you need to know about the elite education route.</p>
               <div className="faq-image-box">
-                <img src="https://storage.googleapis.com/banani-generated-images/generated-images/4f95ce3a-7fbe-4e49-9201-29c22d1d80df.jpg" alt="Consultation" />
+                <img src={path3} alt="Consultation" />
               </div>
             </div>
 
@@ -1145,44 +1174,85 @@ function App() {
         </div>
       </section>
 
-      {/* Process Sticky */}
+      {/* Process Sticky - Extreme Overhaul */}
       <section className="section-process" ref={processRef}>
-        <div className="container">
-          <div className="process-layout">
-            <div className="sticky-col">
-              <h2 className="process-header" style={{ fontSize: '3rem', color: 'white', marginBottom: '20px' }}>The Blueprint</h2>
+        <div className="blueprint-grid"></div>
+        
+        <div className="process-layout">
+          <div className="sticky-col">
+
+              <h2 className="process-header">
+                The<br />Blueprint
+              </h2>
+              
               <div className="steps-nav">
-                <div className="step-item active">01. Consultation</div>
-                <div className="step-item">02. Selection</div>
-                <div className="step-item">03. Application</div>
-                <div className="step-item">04. Departure</div>
+                <div className="step-item active" data-step="1">
+                  <div className="step-dot"></div>
+                  <span>01. Strategy</span>
+                </div>
+                <div className="step-item" data-step="2">
+                  <div className="step-dot"></div>
+                  <span>02. Matching</span>
+                </div>
+                <div className="step-item" data-step="3">
+                  <div className="step-dot"></div>
+                  <span>03. Engineering</span>
+                </div>
+                <div className="step-item" data-step="4">
+                  <div className="step-dot"></div>
+                  <span>04. Integration</span>
+                </div>
               </div>
             </div>
+
             <div className="process-content">
-              <div className="process-card">
-                <div className="p-icon">🤝</div>
-                <div>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '12px' }}>Expert Consultation</h3>
-                  <p style={{ color: '#666' }}>We analyze your academic profile and career aspirations to build a winning strategy.</p>
+              {[
+                {
+                  id: 1,
+                  title: "Strategic Blueprint",
+                  desc: "A comprehensive audit of your academic profile to identify high-potential opportunities and mitigate risks before they arise.",
+                  icon: "ri:focus-3-line",
+                  step: "01"
+                },
+                {
+                  id: 2,
+                  title: "Institutional Match",
+                  desc: "Correlating your trajectory with data from 1,850+ global institutions to find the intersection of prestige and acceptance probability.",
+                  icon: "ri:user-search-line",
+                  step: "02"
+                },
+                {
+                  id: 3,
+                  title: "Fidelity Audit",
+                  desc: "Every SOP and recommendation is refined for maximum institutional impact, ensuring documentation meets elite standards.",
+                  icon: "ri:article-line",
+                  step: "03"
+                },
+                {
+                  id: 4,
+                  title: "Success Integration",
+                  desc: "From final submission to pre-departure protocols, we ensure a seamless transition into your global education journey.",
+                  icon: "ri:send-plane-fill",
+                  step: "04"
+                }
+              ].map((step, i) => (
+                <div key={i} className={`blueprint-card ${i === 0 ? 'active' : ''}`} data-step={step.id}>
+                  <div className="card-inner">
+                    <div className="card-header-clean">
+                      <span className="step-label">Step {step.step}</span>
+                      <div className="p-icon-box">
+                        <iconify-icon icon={step.icon} width="40"></iconify-icon>
+                      </div>
+                    </div>
+                    <div className="p-details">
+                      <h3>{step.title}</h3>
+                      <p>{step.desc}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="process-card">
-                <div className="p-icon">📋</div>
-                <div>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '12px' }}>University Selection</h3>
-                  <p style={{ color: '#666' }}>Shortlisting the best-fit institutions from our network of 1,850+ partners.</p>
-                </div>
-              </div>
-              <div className="process-card">
-                <div className="p-icon">✈️</div>
-                <div>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '12px' }}>Application & Visa</h3>
-                  <p style={{ color: '#666' }}>Our team handles the paperwork, SOPs, and visa interviews with 98% success precision.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
       </section>
 
       {/* Services Horizontal */}
