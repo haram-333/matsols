@@ -610,7 +610,7 @@ function App() {
                 { name: 'Sheffield Hallam', logo: sheffieldHallam }
               ]).map((uni, idx) => (
                 <div key={idx} className="partner-logo-item">
-                  <img src={uni.logo} alt={uni.name} />
+                  <img src={uni.logo} alt={uni.name} loading="lazy" decoding="async" />
                 </div>
               ))}
             </div>
@@ -676,7 +676,7 @@ function App() {
           <div className="path-steps">
             <div className="path-step">
               <div className="step-image-wrap">
-                <img src={path1} alt="Choose your pathway" className="step-image" />
+                <img src={path1} alt="Choose your pathway" className="step-image" loading="lazy" decoding="async" />
               </div>
               <div className="step-content">
                 <span className="step-num">Step 1</span>
@@ -693,7 +693,7 @@ function App() {
 
             <div className="path-step reversed">
               <div className="step-image-wrap">
-                <img src={path2} alt="Support with every step" className="step-image" />
+                <img src={path2} alt="Support with every step" className="step-image" loading="lazy" decoding="async" />
               </div>
               <div className="step-content">
                 <span className="step-num">Step 2</span>
@@ -710,7 +710,7 @@ function App() {
 
             <div className="path-step">
               <div className="step-image-wrap">
-                <img src={path3} alt="Gain entry" className="step-image" />
+                <img src={path3} alt="Gain entry" className="step-image" loading="lazy" decoding="async" />
               </div>
               <div className="step-content">
                 <span className="step-num">Step 3</span>
@@ -796,6 +796,8 @@ function App() {
                     alt="International Students" 
                     style={{ width: '100%', borderRadius: '20px', boxShadow: '0 15px 30px rgba(0,0,0,0.5)', height: '160px', objectFit: 'cover' }} 
                     src={bentoReach} 
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -1076,7 +1078,7 @@ function App() {
                   <div className="testi-card">
                     <div className="testi-image-side">
                       <div className="testi-image-circle">
-                         <img src={story.img} alt={story.name} />
+                         <img src={story.img} alt={story.name} loading="lazy" decoding="async" />
                       </div>
                     </div>
                     <div className="testi-content-side">
@@ -1143,7 +1145,7 @@ function App() {
               <h2 className="section-title">Common <span className="text-gradient">Questions.</span></h2>
               <p className="section-subtitle">Everything you need to know about the elite education route.</p>
               <div className="faq-image-box">
-                <img src={path3} alt="Consultation" />
+                <img src={path3} alt="Consultation" loading="lazy" decoding="async" />
               </div>
             </div>
 
@@ -1334,6 +1336,8 @@ function App() {
         <section className="magnet-section">
           <div className="magnet-box">
             <div className="magnet-left">
+              <img src={supportBg} loading="lazy" decoding="async" className="magnet-bg-image" alt="Support Team" />
+              <div className="magnet-overlay"></div>
               <div className="magnet-content">
                 <h2 className="magnet-title">Begin Your Elite Education Journey</h2>
                 <p className="magnet-desc">Schedule a confidential strategy session with our senior consultants to unlock exclusive university pathways and scholarship opportunities.</p>

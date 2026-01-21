@@ -1944,20 +1944,29 @@ img {
 .magnet-left {
   padding: 80px;
   color: white;
-  background: url("./assets/images/customer-support.jpg") center/cover;
   position: relative;
+  overflow: hidden;
 }
 
-.magnet-left::after {
-  content: "";
+.magnet-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.magnet-overlay {
   position: absolute;
   inset: 0;
   background: rgba(35, 97, 180, 0.9);
+  z-index: 2;
 }
 
 .magnet-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .magnet-form-wrap {
