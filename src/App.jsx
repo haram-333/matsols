@@ -180,13 +180,13 @@ function App() {
               trigger: processRef.current,
               pin: true,
               start: "top top",
-              end: "+=150%",
+              end: "+=250%", // Increased buffer after pinning ends
               scrub: 0.8,
               invalidateOnRefresh: true,
               onUpdate: (self) => {
                 const p = self.progress;
                 const idx = Math.min(
-                  Math.floor(p * 0.99 * blueprintItems.length),
+                  Math.floor(p * 1.25 * blueprintItems.length), // Completes at 80% progress
                   blueprintItems.length - 1,
                 );
 
@@ -859,7 +859,7 @@ function App() {
             autoplay={{ delay: 6000, disableOnInteraction: false }}
             slidesPerView={1}
             loop={true}
-            className="cinematic-swiper"
+            className="cinematic-swiper no-nav-buttons"
           >
             {[
               {
@@ -1642,64 +1642,16 @@ function App() {
             </p>
           </div>
 
-          <div className="stories-slider-wrapper animate-entry">
-            {/* Desktop Stack Layout */}
-            <div className="stories-stack">
-              {[
-                {
-                  quote: "Honestly, I was stressed out about applying to universities abroad. I wasn't sure which country or course was right for me, and the whole paperwork thing was overwhelming. Then I reached out to MATSOLS. They walked me through everything-step by step-and helped me figure out a path that made sense for me. Now I'm at SBM Malta studying Business, and it's been amazing. The campus is vibrant, I've met people from over 30 countries, and I feel confident about my career plans. What I loved the most was how personal their support was-they really cared about my goals, not just getting me admitted.",
-                  name: "Emma L.",
-                  uni: "SBM Malta",
-                  course: "Business Administration",
-                  img: story1,
-                },
-                {
-                  quote: "Applying to universities abroad was confusing at first. I didn't know which courses matched my skills or how to handle all the documents and deadlines. MATSOLS helped me map out my path, guided me through my application, and even gave me interview tips. Now I'm at a UK university studying IT, already doing projects that could help me land my first career job. I feel like I have a plan, a direction, and a support system all at once. MATSOLS wasn't just about admissions-they helped me take the first steps toward my career.",
-                  name: "James K.",
-                  uni: "UK University",
-                  course: "Information Technology",
-                  img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80",
-                },
-                {
-                  quote: "I always wanted to study finance abroad, but honestly, I was worried about the cost. Between tuition, living expenses, and travel, it felt impossible on my family's budget. I wasn't sure how I'd make it work. Then I reached out to MATSOLS. They didn't just help me with my university applications-they helped me figure out scholarships, budget-friendly options, and ways to manage living costs abroad. They even helped me plan a realistic financial roadmap for my studies. Fast forward a few months, and I'm now studying Finance in Malta at SBM, surrounded by students from all over the world. I feel confident about my education and my finances, and I know I wouldn't have made it here without MATSOLS. They turned what felt impossible into a real opportunity.",
-                  name: "Sofia R.",
-                  uni: "SBM Malta",
-                  course: "Finance & Accounting",
-                  img: story3,
-                },
-              ].map((story, idx) => (
-                <div key={idx} className="testi-card">
-                  <div className="testi-image-side">
-                    <div className="testi-image-circle">
-                      <img
-                        src={story.img}
-                        alt={story.name}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                  </div>
-                  <div className="testi-content-side">
-                    <iconify-icon icon="ri:double-quotes-l" className="quote-icon quote-left"></iconify-icon>
-                    <p className="testi-quote">{story.quote}</p>
-                    <div className="testi-author">
-                      <h4>{story.name}</h4>
-                      <p>{story.uni} — {story.course}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Mobile Swiper */}
+          <div className="stories-carousel-wrapper animate-entry">
             <Swiper
               modules={[Pagination, Autoplay]}
               spaceBetween={30}
               slidesPerView={1}
-              loop={true}
+              loop={false}
+              rewind={true}
               pagination={{ clickable: true }}
               autoplay={{ delay: 6000, disableOnInteraction: false }}
-              className="stories-swiper"
+              className="stories-carousel"
             >
               {[
                 {
@@ -1724,10 +1676,9 @@ function App() {
                   img: story3,
                 },
               ].map((story, idx) => (
-                <SwiperSlide key={idx} className="testi-slide">
-                  <div className="testi-card luxury-glass">
-                    <div className="testi-glow"></div>
-                    <div className="testi-author-top">
+                <SwiperSlide key={idx}>
+                  <div className="testi-card">
+                    <div className="testi-image-side">
                       <div className="testi-image-circle">
                         <img
                           src={story.img}
@@ -1736,15 +1687,14 @@ function App() {
                           decoding="async"
                         />
                       </div>
-                      <div className="testi-meta">
+                    </div>
+                    <div className="testi-content-side">
+                      <iconify-icon icon="ri:double-quotes-l" className="quote-icon quote-left"></iconify-icon>
+                      <p className="testi-quote">{story.quote}</p>
+                      <div className="testi-author">
                         <h4>{story.name}</h4>
                         <p>{story.uni} — {story.course}</p>
                       </div>
-                    </div>
-                    
-                    <div className="testi-quote-wrap">
-                      <iconify-icon icon="ri:double-quotes-l" className="big-quote"></iconify-icon>
-                      <p className="testi-body">{story.quote}</p>
                     </div>
                   </div>
                 </SwiperSlide>

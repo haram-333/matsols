@@ -409,6 +409,69 @@ img {
   font-weight: 300;
 }
 
+/* Hero Reference Box */
+.hero-ref-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 10px 24px;
+  border-radius: 100px;
+  margin-bottom: 35px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--primary-blue);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+
+.ref-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(0, 64, 137, 0.2);
+}
+
+.ref-part {
+  opacity: 0.9;
+}
+
+/* Swiper Nav Button Hiding */
+.no-nav-buttons .swiper-button-next,
+.no-nav-buttons .swiper-button-prev,
+.no-nav-buttons .swiper-nav-btn {
+  display: none !important;
+}
+
+/* Updates & Insights Section Visuals */
+.section-insights {
+  position: relative;
+  background: #f8fbff; /* Clean light background */
+  overflow: hidden;
+  padding: 120px 0;
+}
+
+.insights-bg-abstract {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-shape {
+  fill: none;
+  stroke-width: 100;
+  filter: blur(100px);
+  stroke-linecap: round;
+}
+
+.bg-shape-outline {
+  fill: none;
+  stroke-width: 1.5;
+  opacity: 0.15;
+}
+
 .hero-btns {
   display: flex;
   gap: 16px;
@@ -689,14 +752,38 @@ img {
   padding: 0 40px;
 }
 
-.stories-swiper {
-  display: none; /* Hide swiper on desktop */
+.stories-carousel-wrapper {
+  max-width: 1250px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
 }
 
-.stories-stack {
+.stories-carousel {
+  padding-bottom: 60px !important;
+  overflow: hidden !important;
+}
+
+
+.stories-carousel .swiper-slide {
   display: flex;
-  flex-direction: column;
-  gap: 60px;
+  justify-content: center;
+  align-items: center;
+  /* Removed forced width to let Swiper handle sizing */
+  box-sizing: border-box;
+}
+
+.stories-carousel .testi-card {
+  width: 100%; /* Standard 100% width */
+  max-width: 1150px;
+  margin: 0 auto;
+  flex-direction: row !important;
+  box-sizing: border-box; /* Critical for preventing padding overflow */
+}
+
+/* Disable alternating layout for carousel slides to match screenshot */
+.stories-carousel .swiper-slide .testi-card {
+  flex-direction: row !important;
 }
 
 .testi-card {
@@ -714,17 +801,6 @@ img {
   position: relative;
   color: white;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.testi-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-}
-
-/* Alternate layout for even cards */
-.testi-card:nth-child(even) {
-  flex-direction: row-reverse;
 }
 
 .testi-image-side {
@@ -768,11 +844,6 @@ img {
   margin-bottom: 24px;
 }
 
-.quote-right {
-  align-self: flex-end;
-  margin-top: -20px;
-}
-
 .testi-quote {
   font-family: "Inter", sans-serif;
   font-size: 1.15rem;
@@ -798,42 +869,32 @@ img {
   letter-spacing: normal;
 }
 
-.stories-swiper .swiper-pagination {
+.stories-carousel .swiper-pagination {
   bottom: 0 !important;
 }
 
-.stories-swiper .swiper-pagination-bullet {
+.stories-carousel .swiper-pagination-bullet {
   width: 14px;
   height: 14px;
   background: #cbd5e1 !important;
   opacity: 1 !important;
 }
 
-.stories-swiper .swiper-pagination-bullet-active {
+.stories-carousel .swiper-pagination-bullet-active {
   background: #ff863c !important;
 }
 
 /* Mobile Responsive */
+/* Tablet Responsive */
 @media (max-width: 1024px) {
-  .stories-slider-wrapper {
-    padding: 0;
+  .stories-carousel-wrapper {
+    padding: 0 20px;
   }
 
-  .stories-stack {
-    display: none; /* Hide stack on mobile */
-  }
-
-  .stories-swiper {
-    display: block !important; /* Show swiper on mobile */
-  }
-
-  .testi-card {
-    width: 100% !important;
-    border-radius: 32px;
+  .stories-carousel .swiper-slide .testi-card {
     flex-direction: column !important;
-    padding: 50px 30px;
+    padding: 40px 30px;
     gap: 30px;
-    margin: 0;
     text-align: center;
     background: linear-gradient(
       180deg,
@@ -842,41 +903,47 @@ img {
     );
   }
 
-  .testi-card:nth-child(even) {
-    flex-direction: column !important;
-  }
-
-  .testi-image-side {
-    margin: 0;
-  }
-
-  .testi-image-circle {
-    width: 220px;
-    height: 220px;
-    border-width: 6px;
-  }
-
+  /* Ensure content side is also column stacked */
   .testi-content-side {
-    padding: 0;
+    display: flex;
+    flex-direction: column !important;
     align-items: center;
     text-align: center;
   }
+}
+
+/* Mobile Responsive - Tighter Padding */
+@media (max-width: 768px) {
+  .stories-carousel-wrapper {
+    padding: 0 15px;
+  }
+
+  .stories-carousel .swiper-slide .testi-card {
+    flex-direction: column !important;
+    padding: 30px 20px; /* Reduced padding as requested */
+    gap: 20px;
+    border-radius: 20px;
+  }
+
+  .testi-image-circle {
+    width: 140px;
+    height: 140px;
+    border-width: 4px;
+  }
 
   .testi-quote {
-    font-size: 1.1rem;
-    margin-bottom: 24px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    line-height: 1.6;
   }
 
   .testi-author h4 {
-    font-size: 1.8rem;
-  }
-
-  .testi-author p {
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
   .quote-icon {
     font-size: 2rem;
+    margin-bottom: 15px;
   }
 }
 
@@ -1684,7 +1751,7 @@ img {
 /* Updates & Insights Section */
 .section-insights {
   padding: 140px 0;
-  background: white;
+  background: #f8fbff; /* Soft brand-tinted background */
   position: relative;
   overflow: hidden;
 }
@@ -1695,23 +1762,23 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 
 .bg-shape {
   fill: none;
-  stroke-width: 150; /* Aggressive strokes */
+  stroke-width: 120; /* Dynamic brand blobs */
   stroke-linecap: round;
-  opacity: 0.2; /* Increased opacity for "cool" factor */
-  filter: blur(80px); 
+  filter: blur(100px);
+  opacity: 0.3;
 }
 
 .bg-shape-outline {
   fill: none;
-  stroke-width: 6;
-  opacity: 0.4;
-  stroke-dasharray: 20 40;
+  stroke-width: 4;
+  opacity: 0.15;
+  stroke-dasharray: 10 30;
 }
 
 .insights-content {
