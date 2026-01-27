@@ -75,6 +75,12 @@ img {
   padding: 0 24px;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px !important;
+  }
+}
+
 /* Glass Card */
 .glass-card {
   background: var(--glass-bg);
@@ -1093,7 +1099,7 @@ img {
   transition:
     transform 0.6s cubic-bezier(0.19, 1, 0.22, 1),
     opacity 0.4s ease;
-  padding: 40px;
+  padding: 20px;
 }
 
 .card-hover-content {
@@ -1103,7 +1109,7 @@ img {
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #0a1f44 0%, #041021 100%);
-  padding: 40px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2774,7 +2780,7 @@ img {
 .magnet-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(35, 97, 180, 0.9);
+  background: hsla(215, 78%, 7%, 0.8); /* Solid brand navy blue with transparency */
   z-index: 2;
 }
 
@@ -3012,7 +3018,22 @@ img {
   visibility: hidden;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
+  .navbar {
+    padding: 0 24px;
+    height: 80px;
+  }
+  .nav-menu,
+  .nav-cta {
+    display: none !important;
+  }
+  .hamburger {
+    display: flex !important;
+  }
+  .nav-logo {
+    font-size: 22px;
+  }
+
   .hero-content {
     grid-template-columns: 1fr;
     text-align: left;
@@ -3047,9 +3068,9 @@ img {
     height: 80px;
   }
   .section-subtitle {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center !important;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left !important;
   }
 
   .stories-grid {
@@ -3068,7 +3089,11 @@ img {
     min-height: 220px;
     grid-column: auto !important;
     grid-row: auto !important;
-    padding: 30px;
+  }
+
+  .card-main-content,
+  .card-hover-content {
+    padding: 20px !important;
   }
 
   .cards-row {
@@ -3107,15 +3132,8 @@ img {
     padding: 0 20px;
   }
   .navbar {
-    padding: 0 20px;
+    padding: 0 12px;
     height: 70px;
-  }
-  .nav-menu,
-  .nav-cta {
-    display: none;
-  }
-  .hamburger {
-    display: flex;
   }
   .nav-logo {
     font-size: 20px;
@@ -3141,12 +3159,16 @@ img {
   .section-badge {
     margin-bottom: 12px;
   }
+  .section-offers,
+  .section-insights,
   .section-ai,
   .section-stories,
   .section-faq,
   .section-process,
+  .section-why-choose,
+  .section-bento,
   .section-services {
-    padding: 60px 0;
+    padding: 60px 0 !important;
   }
 
   .services-header {
@@ -3154,6 +3176,56 @@ img {
     align-items: flex-start;
     gap: 16px;
     text-align: left;
+  }
+
+  .bento-header {
+    margin-bottom: 30px !important;
+  }
+
+  .bento-header h2 {
+    font-size: 2.2rem !important;
+    margin-bottom: 12px !important;
+    letter-spacing: -1px !important;
+  }
+
+  .bento-header p {
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .bento-grid {
+    margin-top: 20px !important;
+    gap: 16px !important;
+  }
+
+  .why-choose-header {
+    margin-bottom: 30px !important;
+  }
+
+  .why-choose-header h2 {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .why-choose-header .section-subtitle {
+    font-size: 0.95rem !important;
+    margin-bottom: 20px !important;
+    max-width: 100% !important;
+  }
+
+  .pillars-grid {
+    margin-bottom: 40px !important;
+    gap: 16px !important;
+  }
+  
+  .pillar-card {
+    padding: 24px !important;
+  }
+
+  .pillar-card p {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
   }
 
   /* Corporate Solutions Mobile Fix */
@@ -3194,10 +3266,24 @@ img {
   /* FAQ Dark Background Fix */
   .section-faq {
     background: #041021; /* Match desktop */
-    padding: 80px 20px;
+    padding: 40px 0 !important;
   }
   .faq-layout {
     max-width: 100%;
+    gap: 20px !important;
+  }
+  .faq-info {
+    margin-bottom: 20px !important;
+  }
+  .faq-question {
+    padding: 12px 16px !important;
+    font-size: 1rem !important;
+  }
+  .faq-answer {
+    padding: 0 16px !important;
+  }
+  .faq-item.active .faq-answer {
+    padding-bottom: 16px !important;
   }
 
   .footer {
@@ -3236,6 +3322,33 @@ img {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
     padding-top: 30px;
+  }
+
+  /* Lead Magnet Mobile Refinements */
+  .magnet-section {
+    margin-top: -40px !important;
+    margin-bottom: 80px !important;
+    padding: 0 !important;
+  }
+  .magnet-box {
+    grid-template-columns: 1fr !important;
+    border-radius: 20px !important;
+  }
+  .magnet-left, .magnet-form-wrap {
+    padding: 30px 16px !important;
+  }
+  .magnet-title {
+    font-size: 1.8rem !important;
+  }
+  .magnet-desc {
+    font-size: 1rem !important;
+    margin-bottom: 20px !important;
+  }
+  .magnet-list {
+    gap: 8px !important;
+  }
+  .magnet-list li {
+    font-size: 0.9rem !important;
   }
 }
 

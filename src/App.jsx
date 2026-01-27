@@ -68,37 +68,40 @@ function App() {
     // GSAP Animations
     const ctx = gsap.context(() => {
       // Bento Animation
-      // Bento Grid Entrance Scrub
-      gsap.fromTo(
-        ".b-card",
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.2,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".bento-grid",
-            start: "top 90%",
-            end: "0% 40%",
-            scrub: 1.5,
+      // Bento Grid Entrance (Alternating Kinetic Scrub)
+      gsap.utils.toArray(".b-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { y: i % 2 === 0 ? 50 : -50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
           },
-        },
-      );
+        );
+      });
 
-      // Section Header Scrub
+      // Bento Section Header (Enhanced Speed)
       gsap.fromTo(
         ".animate-bento-header",
-        { y: 40, opacity: 0 },
+        { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
         {
           y: 0,
           opacity: 1,
-          stagger: 0.2,
+          clipPath: "inset(0 0 0% 0)",
+          stagger: 0.08,
+          duration: 0.5,
+          ease: "power4.out",
           scrollTrigger: {
             trigger: ".section-bento",
-            start: "top 40%",
-            end: "25% 70%",
-            scrub: 1,
+            start: "top 75%",
+            toggleActions: "play none none none",
           },
         },
       );
@@ -121,49 +124,87 @@ function App() {
       // Success Circle Animation (96%)
       // Path length is ~283 (2 * PI * 45)
       // 96% of 283 is 271.68. Offset should be 283 - 271.68 = 11.32
+      // Success Circle Animation (Reactive Draw)
       gsap.to(".animate-success-circle", {
         strokeDashoffset: 11.32,
-        duration: 2,
         ease: "power2.out",
         scrollTrigger: {
           trigger: ".success-circle-container",
-          start: "top 85%",
-          toggleActions: "play none none none",
+          start: "top 75%",
+          end: "top 45%",
+          scrub: 1.5,
         },
       });
 
-      // Pathway Bar Animation
+      // Pathway Bar Animation (Reactive Scale)
       gsap.fromTo(
         ".animate-pathway-bar",
         { width: "0%" },
         {
           width: "92%",
-          duration: 1.5,
           ease: "power2.inOut",
           scrollTrigger: {
             trigger: ".b-wide",
-            start: "top 90%",
+            start: "top 80%",
+            end: "top 40%",
+            scrub: 2,
+          },
+        },
+      );
+
+      // Destinations Header (Enhanced Speed)
+      gsap.fromTo(
+        ".section-dest h2",
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-dest",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+      gsap.fromTo(
+        ".section-dest .section-subtitle",
+        { y: 15, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".section-dest",
+            start: "top 75%",
             toggleActions: "play none none none",
           },
         },
       );
 
-      // Destinations
-      gsap.fromTo(
-        ".dest-card",
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          stagger: 0.15,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: destRef.current,
-            start: "top 80%",
+      // Destination Cards (Instant Reveal)
+      gsap.utils.toArray(".dest-card").forEach((card, i) => {
+        // Row 1 (i < 2) from Left, Row 2 (i >= 2) from Right
+        const posX = i < 2 ? -60 : 60;
+        gsap.fromTo(
+          card,
+          { x: posX, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
           },
-        },
-      );
+        );
+      });
 
       // 3. Process Section - High-Fidelity Terminal Overhaul (Desktop Only)
       let mm = gsap.matchMedia();
@@ -213,83 +254,257 @@ function App() {
         }
       });
 
-      // Pre-pin header reveal (Unified for all devices)
+      // Process Section Header (Scoped Physical Scrub)
       gsap.fromTo(
         ".process-header",
-        { y: 80, opacity: 0, rotateX: -30, transformPerspective: 1200 },
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
         {
           y: 0,
           opacity: 1,
-          rotateX: 0,
-          duration: 1.8,
-          ease: "expo.out",
-          scrollTrigger: { trigger: processRef.current, start: "top 85%" },
-        },
-      );
-
-
-      // MATSOLS Why Study Section Grid (Entry only, no scrub)
-      gsap.fromTo(
-        ".animate-matsols-card",
-        {
-          y: 60,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".pillars-grid",
-            start: "top 85%",
+          clipPath: "inset(0 0 0% 0)",
+          ease: "power4.out",
+          scrollTrigger: { 
+            trigger: processRef.current, 
+            start: "top 60%",
+            end: "top 40%",
+            scrub: 0.8,
           },
         },
       );
 
-      // Impact Deck Section
+
+      // MATSOLS Pillar Section Header (Enhanced Speed)
       gsap.fromTo(
-        ".impact-card",
-        { y: 50, opacity: 0 },
+        ".animate-matsols-header",
+        { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
         {
           y: 0,
           opacity: 1,
-          duration: 1,
-          stagger: 0.2,
-          ease: "power3.out",
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
           scrollTrigger: {
-            trigger: ".impact-deck",
-            start: "top 85%",
+            trigger: ".animate-matsols-header",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          }
+        }
+      );
+
+      // MATSOLS Pillar Section (Instant Reveal)
+      gsap.utils.toArray(".animate-matsols-card").forEach((card, i) => {
+        // Row 1 (i < 3) from Left, Row 2 (i >= 3) from Right
+        const posX = i < 3 ? -60 : 60;
+        gsap.fromTo(
+          card,
+          { x: posX, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          },
+        );
+      });
+
+      // Section Titles for Grid Sections (Instant Reveal & Visibility Hardening)
+      gsap.fromTo(
+        ".offers-header .section-title",
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-offers",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+      gsap.fromTo(
+        ".offers-header .section-subtitle",
+        { y: 15, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".section-offers",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+
+      // MATSOLS Offers Section (Instant Reveal)
+      gsap.utils.toArray(".offer-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { x: i % 2 === 0 ? 80 : -80, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          },
+        );
+        // Icon Pop (Instant Reveal)
+        gsap.from(card.querySelector(".offer-icon-tag"), {
+          scale: 0,
+          rotate: -45,
+          duration: 0.4,
+          scrollTrigger: {
+            trigger: card,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+          ease: "power2.out"
+        });
+      });
+
+      // Global Impact Section Header (Enhanced Speed)
+      gsap.fromTo(
+        ".impact-header .section-title",
+        { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".impact-header",
+            start: "top 75%",
+            toggleActions: "play none none none",
           },
         }
       );
+      gsap.fromTo(
+        ".impact-header .section-subtitle",
+        { y: 15, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".impact-header",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Impact Deck Section (Instant Reveal)
+      gsap.utils.toArray(".impact-card").forEach((card, i) => {
+        // Row 1 (i < 3) from Bottom, Row 2 (i >= 3) from Top
+        const directionY = i < 3 ? 60 : -60;
+        gsap.fromTo(
+          card,
+          { y: directionY, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
 
       // MATSOLS Title Drawing Animation
       const matsolsTl = gsap.timeline({
         scrollTrigger: {
           trigger: ".section-why-choose",
           start: "top 75%",
+          toggleActions: "play none none none",
         },
       });
       matsolsTl.fromTo(
         ".section-why-choose .section-title .char",
         {
           opacity: 0,
-          scale: 0.8,
-          clipPath: "inset(0 100% 0 0)",
-          x: -10,
+          y: 20,
+          clipPath: "inset(0 0 100% 0)",
         },
         {
           opacity: 1,
-          scale: 1,
-          clipPath: "inset(0 0% 0 0)",
-          x: 0,
-          duration: 0.4,
-          stagger: 0.03,
-          ease: "none",
-        },
+          y: 0,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.35,
+          stagger: 0.02,
+          ease: "power4.out",
+        }
       );
+
+      // Section Subtitle Reveals (REMOVED generic conflicting selector)
+      // Generic .why-choose-header .section-subtitle animation was removed to prevent collisions.
+      // Individual sections now handle their own header reveals above.
+
+      // Hero Elements (Reveal Masking & Kinetic Snap)
+      gsap.fromTo(
+        ".hero-text p",
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.7,
+          delay: 0.5,
+          ease: "power4.out",
+        }
+      );
+
+      gsap.from(".hero-btns", {
+        y: 40,
+        opacity: 0,
+        duration: 0.5,
+        delay: 0.8,
+        ease: "back.out(2.5)",
+      });
+
+      gsap.from(".hero-globe", {
+        x: 100,
+        opacity: 0,
+        duration: 0.9,
+        delay: 0.4,
+        ease: "back.out(1.4)",
+      });
+
+      // Hero Floating Badges (Opposite X-Snaps)
+      gsap.from(".badge-1", {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        delay: 1,
+        ease: "back.out(1.7)"
+      });
+
+      gsap.from(".badge-2", {
+        x: 50,
+        opacity: 0,
+        duration: 0.8,
+        delay: 1.2,
+        ease: "back.out(1.7)"
+      });
 
       // Hero Title Drawing Animation
       const heroTl = gsap.timeline();
@@ -297,60 +512,156 @@ function App() {
         ".hero-title .char",
         {
           opacity: 0,
-          scale: 0.8,
-          clipPath: "inset(0 100% 0 0)",
-          x: -10,
+          y: 30,
+          clipPath: "inset(0 0 100% 0)",
         },
         {
           opacity: 1,
-          scale: 1,
-          clipPath: "inset(0 0% 0 0)",
-          x: 0,
-          duration: 0.4,
-          stagger: 0.03,
-          ease: "none", // Linear reveal for "drawing" feel
+          y: 0,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.45,
+          stagger: 0.02,
+          ease: "power4.out",
           delay: 0.5,
         },
       );
 
-      // AI Matchmaking Animation
-      gsap.from(".ai-content-side", {
+      // AI Matchmaking Animation (Instant Reveal)
+      gsap.fromTo(
+        ".ai-content-side",
+        { x: -80, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          x: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-ai",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      gsap.from(".ai-visual-side", {
         scrollTrigger: {
           trigger: ".section-ai",
-          start: "top 80%",
+          start: "top 75%",
+          toggleActions: "play none none none",
         },
-        x: -50,
+        x: 80,
         opacity: 0,
-        duration: 1,
-        ease: "power3.out",
+        duration: 0.6,
+        ease: "power2.out",
       });
 
       gsap.from(".neural-node", {
         scrollTrigger: {
           trigger: ".section-ai",
-          start: "top 60%",
+          start: "top 75%",
+          toggleActions: "play none none none",
         },
         scale: 0,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
+        duration: 0.4,
+        stagger: 0.01,
+        ease: "power2.out",
       });
 
-      // Success Stories Animation
-      gsap.from(".story-card", {
+      // Success Stories Animation (Instant Reveal)
+      gsap.fromTo(
+        ".stories-header",
+        { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-stories",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+
+      gsap.from(".stories-carousel-wrapper", {
         scrollTrigger: {
           trigger: ".section-stories",
-          start: "top 80%",
+          start: "top 75%",
+          toggleActions: "play none none none",
         },
-        y: 50,
+        y: 40,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power3.out",
+        duration: 0.6,
+        ease: "power2.out",
       });
 
-      // Updates & Insights - Aggressive Background Motion
+      // Updates & Insights Header Reveal (Visibility Hardened)
+      gsap.fromTo(
+        ".insights-header .section-title",
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-insights",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+      gsap.fromTo(
+        ".insights-header .section-subtitle",
+        { y: 15, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".section-insights",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+
+      // Updates & Insights Card Blast (Instant Reveal)
+      gsap.utils.toArray(".insight-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { x: i % 2 === 0 ? -60 : 60, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          },
+        );
+        // Inner button snap (Instant Reveal)
+        gsap.from(card.querySelector(".btn-insight"), {
+          y: 15,
+          opacity: 0,
+          duration: 0.4,
+          scrollTrigger: {
+            trigger: card,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+          ease: "power2.out"
+        });
+      });
       gsap.to(".moving-shape", {
         x: "random(-150, 150)",
         y: "random(-150, 150)",
@@ -388,34 +699,91 @@ function App() {
         }
       });
 
-      // FAQ Animation
-      gsap.from(".faq-item", {
-        scrollTrigger: {
-          trigger: ".section-faq",
-          start: "top 80%",
+      // FAQ Header Reveal (Instant Reveal & Visibility Hardening)
+      gsap.fromTo(
+        ".section-faq .section-title",
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-faq",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         },
-        x: 30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power2.out",
+      );
+      gsap.fromTo(
+        ".section-faq .section-subtitle",
+        { y: 15, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".section-faq",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+
+      // FAQ Items (Instant Reveal)
+      gsap.utils.toArray(".faq-item").forEach((item, i) => {
+        gsap.fromTo(
+          item,
+          { x: i % 2 === 0 ? 50 : -50, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.4,
+            delay: i * 0.05,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+          },
+        );
       });
 
       // Path Section Universal Scrub Overhaul
-      // 1. Path Header Scrub (Parallax Lift)
+      // 1. Path Header (Instant Reveal & Visibility Hardening)
       gsap.fromTo(
-        ".path-header",
-        { y: 80, opacity: 0 },
+        ".path-header h2",
+        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
         {
-          y: -40,
+          y: 0,
           opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
           scrollTrigger: {
             trigger: ".path-header",
-            start: "top bottom",
-            end: "bottom 50%",
-            scrub: 3,
-          },
-        },
+            start: "top 80%",
+            toggleActions: "play none none none",
+          }
+        }
+      );
+      gsap.fromTo(
+        ".path-header .section-subtitle",
+        { y: 15, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".path-header",
+            start: "top 75%",
+            toggleActions: "play none none none",
+          }
+        }
       );
 
       // 2. Path Zigzag Animation (Dynamic Length)
@@ -442,52 +810,103 @@ function App() {
         const content = step.querySelector(".step-content");
         const image = step.querySelector(".step-image");
 
-        // Content Scrub
+        // Content (Instant Reveal)
         gsap.fromTo(
           content,
-          { x: i % 2 === 0 ? 100 : -100, opacity: 0 },
+          { x: i % 2 === 0 ? 50 : -50, opacity: 0 },
           {
             x: 0,
             opacity: 1,
+            duration: 0.5,
             scrollTrigger: {
               trigger: step,
-              start: "top bottom",
-              end: "30% 60%",
-              scrub: 3,
+              start: "top 85%",
+              toggleActions: "play none none none",
             },
           },
         );
 
-        // Image Scrub (Zoom & Parallax)
+        // Image (Instant Reveal)
         gsap.fromTo(
           image,
-          { scale: 0.7, opacity: 0, rotate: i % 2 === 0 ? -10 : 10 },
+          { scale: 0.8, opacity: 0, rotate: i % 2 === 0 ? -5 : 5 },
           {
             scale: 1,
             opacity: 1,
             rotate: 0,
+            duration: 0.6,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: step,
-              start: "top bottom",
-              end: "30% 60%",
-              scrub: 3,
+              start: "top 80%",
+              toggleActions: "play none none none",
             },
           },
         );
+
+        // Sub-buttons (Instant Pop)
+        gsap.from(step.querySelector(".btn-path"), {
+          x: i % 2 === 0 ? 30 : -30,
+          opacity: 0,
+          duration: 0.4,
+          scrollTrigger: {
+            trigger: step,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+          ease: "back.out(2)"
+        });
       });
 
-      // Partners Stagger Animation
-      gsap.from(".partner-logo-item", {
-        scrollTrigger: {
-          trigger: partnersRef.current,
-          start: "top 80%",
+      // Lead Magnet Directional Reveals (Instant Reveal)
+      gsap.fromTo(
+        ".magnet-left",
+        { x: -60, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          x: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".section-lead-magnet",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         },
-        y: 30,
+      );
+
+      gsap.from(".magnet-form-wrap", {
+        scrollTrigger: {
+          trigger: ".section-lead-magnet",
+          start: "top 75%",
+          toggleActions: "play none none none",
+        },
+        x: 60,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
+        duration: 0.6,
         ease: "power2.out",
       });
+
+      // Partners Section Reveal (Top-Masked Drop)
+      gsap.fromTo(
+        ".partners-header",
+        { y: -40, opacity: 0, clipPath: "inset(0 0 100% 0)" },
+        {
+          y: 0,
+          opacity: 1,
+          clipPath: "inset(0 0 0% 0)",
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: partnersRef.current,
+            start: "top 70%",
+            end: "top 50%",
+            scrub: 0.8,
+          },
+        }
+      );
+
+      // [REVERTED] Partners Stagger Animation removed as per user request for static/instant marquee feel.
     });
 
     return () => {
@@ -781,27 +1200,28 @@ function App() {
       {/* New Offers Section (Verbatim Content) */}
       <section className="section-offers">
         <div className="container">
-          <div className="why-choose-header">
+          <div className="offers-header" style={{ textAlign: "left" }}>
             <h2 className="section-title">What We <span className="text-gradient">Offer.</span></h2>
+            <p className="section-subtitle" style={{ textAlign: "left", marginLeft: "0" }}>Comprehensive guidance tailored to your academic and career goals.</p>
           </div>
           <div className="offers-grid">
             {[
               {
                 title: "Events",
                 desc: "Stay ahead with MATSOLS' global education events, webinars, and workshops for international students looking to study abroad. Gain insights on university applications, visa guidance, and career pathways, and connect directly with top universities and admissions experts.",
-                cta: "Join Our Next Event",
+                cta: "Join Event",
                 icon: "ri:calendar-event-line"
               },
               {
                 title: "Admissions",
                 desc: "Get expert support with international university admissions and study abroad applications. MATSOLS' experienced consultants guide you through course selection, documentation, SOPs, and visa processes, helping you secure a place at your ideal university abroad.",
-                cta: "Book Your Admissions Consultation",
+                cta: "Book Consultation",
                 icon: "ri:user-star-line"
               },
               {
                 title: "Scholarships",
                 desc: "Access exclusive scholarship opportunities for international students and make your overseas education affordable. MATSOLS helps you identify the right scholarships, prepare applications, and maximize your chances of funding your studies at top global universities.",
-                cta: "Find Your Scholarship Today",
+                cta: "Find Scholarship",
                 icon: "ri:medal-line"
               }
             ].map((offer, idx) => (
@@ -840,7 +1260,7 @@ function App() {
 
         <div className="insights-content">
           <div className="container">
-            <div className="why-choose-header" style={{ marginBottom: '60px' }}>
+            <div className="insights-header" style={{ marginBottom: '60px' }}>
               <h2 className="section-title">Updates & <span className="text-gradient">Insights.</span></h2>
               <p className="section-subtitle">Real-time opportunities, essential notices, and global academic news.</p>
             </div>
@@ -958,6 +1378,7 @@ function App() {
                 ))}
               </span>
             </h2>
+            <p className="section-subtitle">Empowering your academic aspirations with expert guidance and global reach.</p>
           </div>
 
           <div className="pillars-grid">
@@ -994,8 +1415,9 @@ function App() {
             ))}
           </div>
 
-          <div className="why-choose-header" style={{ marginTop: '80px' }}>
+          <div className="impact-header" style={{ marginTop: '80px', textAlign: "left" }}>
             <h2 className="section-title">Our Global <span className="text-gradient">Impact in Numbers</span></h2>
+            <p className="section-subtitle" style={{ textAlign: "left", marginLeft: "0" }}>Quantifying our commitment to international student success worldwide.</p>
           </div>
 
           <div className="impact-deck">
@@ -1281,6 +1703,7 @@ function App() {
               margin: "0 auto",
             }}
           >
+            <div className="section-badge center-badge">ACADEMIC EXCELLENCE</div>
             <h2 className="animate-bento-header">
               Premier Education Consulting
             </h2>
@@ -1554,9 +1977,12 @@ function App() {
       {/* Destinations 3D */}
       <section className="section-dest" ref={destRef}>
         <div className="container">
-          <h2 style={{ fontSize: "3rem", marginBottom: "24px" }}>
+          <h2 style={{ fontSize: "3rem", marginBottom: "12px", textAlign: "left" }}>
             Where Will You Excel?
           </h2>
+          <p className="section-subtitle" style={{ marginBottom: "40px", textAlign: "left", marginLeft: "0" }}>
+            Discover your ideal study destination among the world's leading academic hubs.
+          </p>
           <div className="cards-row">
             <div className="dest-card">
               <img
@@ -1689,7 +2115,6 @@ function App() {
                       </div>
                     </div>
                     <div className="testi-content-side">
-                      <iconify-icon icon="ri:double-quotes-l" className="quote-icon quote-left"></iconify-icon>
                       <p className="testi-quote">{story.quote}</p>
                       <div className="testi-author">
                         <h4>{story.name}</h4>
