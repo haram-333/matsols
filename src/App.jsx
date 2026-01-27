@@ -13,6 +13,7 @@ import path1 from "./assets/images/path-1.webp";
 import path2 from "./assets/images/path-2.webp";
 import path3 from "./assets/images/path-3.webp";
 import heroBg from "./assets/images/hero-bg.webp";
+import heroVideo from "./assets/videos/bg-video.mp4";
 import heroAvatar from "./assets/images/hero-avatar.webp";
 import story1 from "./assets/images/story-1.webp";
 import story3 from "./assets/images/story-3.webp";
@@ -39,11 +40,16 @@ function App() {
   const [scrolled, setScrolled] = useState(false);
   const [faqActive, setFaqActive] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [isVideoMuted, setIsVideoMuted] = useState(true); // MUST start muted for browser autoplay compliance
+  const [videoKey, setVideoKey] = useState(Date.now()); // Hard-reload key
   const bentoRef = useRef(null);
   const destRef = useRef(null);
   const processRef = useRef(null);
   const pathRef = useRef(null);
   const partnersRef = useRef(null);
+  const heroRef = useRef(null);
+  const heroVideoRef = useRef(null);
 
   useEffect(() => {
     // Scroll listener for navbar
@@ -64,6 +70,13 @@ function App() {
       lenis.raf(time * 1000);
     });
     gsap.ticker.lagSmoothing(0);
+
+    // Hero Video Hard-Persistence Effect
+    if (heroVideoRef.current) {
+      heroVideoRef.current.volume = 0.3;
+      heroVideoRef.current.muted = isVideoMuted;
+      heroVideoRef.current.play().catch(e => console.log("Hero video auto-play blocked", e));
+    }
 
     // GSAP Animations
     const ctx = gsap.context(() => {
@@ -459,72 +472,62 @@ function App() {
       // Generic .why-choose-header .section-subtitle animation was removed to prevent collisions.
       // Individual sections now handle their own header reveals above.
 
-      // Hero Elements (Reveal Masking & Kinetic Snap)
-      gsap.fromTo(
-        ".hero-text p",
-        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
-        {
-          y: 0,
-          opacity: 1,
-          clipPath: "inset(0 0 0% 0)",
-          duration: 0.7,
-          delay: 0.5,
-          ease: "power4.out",
-        }
+      // === HERO SCROLL-TRIGGERED FORWARD-ONLY SCRUB ===
+      // Animation progress follows scroll but NEVER reverses
+      
+      const heroAnimTl = gsap.timeline({ paused: true });
+      
+      // 1. Title reveal (Forward Only)
+      heroAnimTl.fromTo(
+        ".hero-parallax-content",
+        { opacity: 0, y: 100 },
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
       );
 
-      gsap.from(".hero-btns", {
-        y: 40,
-        opacity: 0,
-        duration: 0.5,
-        delay: 0.8,
-        ease: "back.out(2.5)",
-      });
-
-      gsap.from(".hero-globe", {
-        x: 100,
-        opacity: 0,
-        duration: 0.9,
-        delay: 0.4,
-        ease: "back.out(1.4)",
-      });
-
-      // Hero Floating Badges (Opposite X-Snaps)
-      gsap.from(".badge-1", {
-        x: -50,
-        opacity: 0,
-        duration: 0.8,
-        delay: 1,
-        ease: "back.out(1.7)"
-      });
-
-      gsap.from(".badge-2", {
-        x: 50,
-        opacity: 0,
-        duration: 0.8,
-        delay: 1.2,
-        ease: "back.out(1.7)"
-      });
-
-      // Hero Title Drawing Animation
-      const heroTl = gsap.timeline();
-      heroTl.fromTo(
+      // 2. Main Heading reveal
+      heroAnimTl.fromTo(
         ".hero-title .char",
-        {
-          opacity: 0,
-          y: 30,
-          clipPath: "inset(0 0 100% 0)",
-        },
-        {
-          opacity: 1,
-          y: 0,
-          clipPath: "inset(0 0 0% 0)",
-          duration: 0.45,
-          stagger: 0.02,
-          ease: "power4.out",
-          delay: 0.5,
-        },
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.02, ease: "power4.out" },
+        "-=0.7"
       );
+
+      // 3. Description & Buttons reveal (Compressed overlaps)
+      heroAnimTl.fromTo(
+        [".hero-desc", ".hero-btns"],
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out" },
+        "-=0.6"
+      );
+
+      // 4. Stats cluster: Orbital reveal (One-Shot, back ease)
+      heroAnimTl.fromTo(".stat-1", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.5");
+      heroAnimTl.fromTo(".stat-2", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.55");
+      heroAnimTl.fromTo(".stat-3", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.55");
+      heroAnimTl.fromTo(".stat-4", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.55");
+
+      // Removed pinning logic to fix section overlap
+      ScrollTrigger.create({
+        trigger: ".hero",
+        start: "top 20%",
+        onEnter: () => heroAnimTl.play(),
+        once: true
+      });
+
+      // Dedicated bridge for unmuting on first interaction
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "10px top",
+        onEnter: () => {
+          if (isVideoMuted) {
+            setIsVideoMuted(false);
+            if (heroVideoRef.current) {
+              heroVideoRef.current.muted = false;
+              heroVideoRef.current.play().catch(e => console.log("Autoplay bridge blocked:", e));
+            }
+          }
+        }
+      });
 
       // AI Matchmaking Animation (Instant Reveal)
       gsap.fromTo(
@@ -1054,15 +1057,22 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <header className="hero">
-        <img className="hero-video-bg" alt="Global Network" src={heroBg} />
+      {/* Hero - Awwwards Parallax Redesign */}
+      <header className="hero" ref={heroRef}>
+        <video
+          ref={heroVideoRef}
+          className="hero-video-bg"
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+        ></video>
         <div className="hero-overlay"></div>
 
-        <div className="hero-content">
+        <div className="hero-content hero-parallax-content">
           <div className="hero-text">
             <h1 className="hero-title">
-              {/* Splitting text for animation with line wraps */}
               <div className="line">
                 <span className="word">
                   {"Unleash".split("").map((char, i) => (
@@ -1096,12 +1106,12 @@ function App() {
                 </span>
               </div>
             </h1>
-            <p className="animate-entry delay-2">
+            <p className="hero-desc">
               Every student's journey begins with a personalized strategy. We
               guide you through global university admissions to help design a
               future that aligns with your career goals.
             </p>
-            <div className="hero-btns animate-entry delay-3">
+            <div className="hero-btns">
               <a href="#" className="btn btn-primary">
                 Start Your Journey
               </a>
@@ -1111,42 +1121,69 @@ function App() {
             </div>
           </div>
 
-          <div className="hero-globe animate-entry delay-3">
-            <div className="floating-badge badge-1">
-              <div
-                style={{
-                  width: "10px",
-                  height: "10px",
-                  background: "#4ade80",
-                  borderRadius: "50%",
-                }}
-              ></div>
-              <span>13,000+ Students Placed</span>
+          {/* Stats Cluster (Circular Orientation) */}
+          <div className="hero-stats-cluster">
+            <div className="stat-badge stat-1">
+              <div className="stat-indicator green"></div>
+              <div className="stat-content">
+                <span className="stat-number">13,000+</span>
+                <span className="stat-label">Students Placed</span>
+              </div>
             </div>
-            <div className="floating-badge badge-2">
-              <div
-                style={{
-                  width: "10px",
-                  height: "10px",
-                  background: "var(--primary-orange)",
-                  borderRadius: "50%",
-                }}
-              ></div>
-              <span>98% Visa Success Rate</span>
+            <div className="stat-badge stat-2">
+              <div className="stat-indicator orange"></div>
+              <div className="stat-content">
+                <span className="stat-number">98%</span>
+                <span className="stat-label">Visa Success Rate</span>
+              </div>
             </div>
-            <img
-              src={heroAvatar}
-              alt="International Studies"
-              style={{
-                width: "450px",
-                height: "450px",
-                objectFit: "cover",
-                borderRadius: "50%",
-                boxShadow: "0 0 60px rgba(0, 0, 0, 0.5)",
-                border: "4px solid rgba(255, 255, 255, 0.1)",
-              }}
-            />
+            <div className="stat-badge stat-3">
+              <div className="stat-indicator blue"></div>
+              <div className="stat-content">
+                <span className="stat-number">70+</span>
+                <span className="stat-label">Partner Universities</span>
+              </div>
+            </div>
+            <div className="stat-badge stat-4">
+              <div className="stat-indicator gold"></div>
+              <div className="stat-content">
+                <span className="stat-number">40+</span>
+                <span className="stat-label">Countries Worldwide</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Video Controls - Bottom Right */}
+        <div className="hero-video-controls">
+          <button
+            className="video-control-btn"
+            onClick={() => {
+              if (heroVideoRef.current) {
+                if (isVideoPlaying) {
+                  heroVideoRef.current.pause();
+                } else {
+                  heroVideoRef.current.play();
+                }
+                setIsVideoPlaying(!isVideoPlaying);
+              }
+            }}
+            aria-label={isVideoPlaying ? "Pause video" : "Play video"}
+          >
+            <iconify-icon icon={isVideoPlaying ? "ri:pause-fill" : "ri:play-fill"}></iconify-icon>
+          </button>
+          <button
+            className="video-control-btn"
+            onClick={() => {
+              if (heroVideoRef.current) {
+                heroVideoRef.current.muted = !isVideoMuted;
+                setIsVideoMuted(!isVideoMuted);
+              }
+            }}
+            aria-label={isVideoMuted ? "Unmute video" : "Mute video"}
+          >
+            <iconify-icon icon={isVideoMuted ? "ri:volume-mute-fill" : "ri:volume-up-fill"}></iconify-icon>
+          </button>
         </div>
       </header>
 

@@ -400,7 +400,6 @@ img {
 .hero-title .char {
   display: inline-block;
   transform-origin: center center;
-  clip-path: inset(0 100% 0 0); /* Initial hidden state for reveal */
 }
 
 .hero-title .highlighted {
@@ -517,6 +516,146 @@ img {
   bottom: 15%;
   left: -5%;
   animation-delay: 2s;
+}
+
+/* Hero Stats Cluster (Awwwards Redesign) */
+.hero-stats-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 20px 32px;
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  min-width: 280px;
+}
+
+.stat-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stat-indicator.green { background: #4ade80; box-shadow: 0 0 12px rgba(74, 222, 128, 0.5); }
+.stat-indicator.orange { background: var(--primary-orange); box-shadow: 0 0 12px rgba(255, 134, 60, 0.5); }
+.stat-indicator.blue { background: #3b82f6; box-shadow: 0 0 12px rgba(59, 130, 246, 0.5); }
+.stat-indicator.gold { background: #fbbf24; box-shadow: 0 0 12px rgba(251, 191, 36, 0.5); }
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* Parallax Initial State - Content starts invisible */
+.hero-parallax-content {
+  opacity: 0;
+}
+
+.hero-desc {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  max-width: 600px;
+  font-weight: 300;
+}
+
+/* Video Controls - Bottom Right */
+.hero-video-controls {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
+  display: flex;
+  gap: 12px;
+}
+
+.video-control-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.video-control-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Stats Cluster - Orbital Arc Orientation */
+.hero-stats-cluster {
+  position: relative;
+  width: 550px;
+  height: 550px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 16px 24px; /* Slightly tighter padding */
+  border-radius: 24px;
+  color: white;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  min-width: 240px;
+  z-index: 10;
+}
+
+/* Orbital Arc positioning - Refined for a tighter, more symmetrical curve */
+.stat-1 { top: 5%; right: 12%; }
+.stat-2 { top: 30%; right: -8%; }
+.stat-3 { top: 60%; right: -8%; }
+.stat-4 { top: 85%; right: 12%; }
+
+/* Animation Initial State: from bottom */
+.hero-parallax-content {
+  opacity: 0;
+  transform: translateY(100px); /* Start lower */
 }
 
 /* Partners Section */
@@ -1552,11 +1691,12 @@ img {
 
 /* FAQ Section */
 .section-faq {
-  padding: 120px 0;
-  background: #041021; /* Updated to match navbar scrolled state */
+  padding: 140px 0;
+  background: #020617; /* Hard dark background */
   color: white;
   position: relative;
   overflow: hidden;
+  z-index: 5; /* Ensure it stays below pinned sections but above flow */
 }
 
 .faq-abstract-container {
@@ -2379,6 +2519,7 @@ img {
   justify-content: flex-start; /* Space for navbar top */
   perspective: 3000px;
   padding-top: 90px; /* Exact Navbar height */
+  z-index: 10; /* Stack on top of following flow but below pinned header */
 }
 
 /* Abstract Dot Mesh Overlay */
