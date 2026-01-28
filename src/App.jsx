@@ -1500,9 +1500,9 @@ function App() {
       </section>
 
       {/* Impact Section - High Fidelity Schematic Restoration */}
-      <section className="section-impact-new" style={{ padding: '140px 0', background: '#f8fafc', position: 'relative', overflow: 'hidden' }}>
+      <section className="section-impact-new">
         <div className="blueprint-bg-container">
-          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
             <defs>
               <pattern id="impactGrid" width="80" height="80" patternUnits="userSpaceOnUse">
                 <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(0, 64, 137, 0.08)" strokeWidth="0.5"/>

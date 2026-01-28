@@ -1761,6 +1761,25 @@ img {
   align-items: center;
 }
 
+.section-impact-new {
+  padding: 140px 0;
+  background: #f8fafc;
+  position: relative;
+  overflow: hidden;
+}
+
+.blueprint-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1 !important; /* Force visibility */
+  display: block !important;
+}
+
 .why-matsols-container {
   width: 100%;
   margin: 0 auto;
@@ -1987,14 +2006,17 @@ img {
     gap: 40px !important;
   }
   .impact-header-new h2 {
-    font-size: 2.5rem !important;
+    font-size: 2.2rem !important; /* Reduced further */
+  }
+  .impact-header-new p {
+    font-size: 1rem !important;
   }
   .impact-main-card {
     padding: 60px 40px !important;
   }
 
-  /* Why Choose Mobile Hardening */
-  .why-matsols-section {
+  /* Why Choose & Impact Mobile Hardening */
+  .why-matsols-section, .section-impact-new {
     padding: 80px 0 60px;
   }
   .why-matsols-container {
@@ -2012,12 +2034,12 @@ img {
     text-align: center;
   }
   .why-matsols-title {
-    font-size: 2.8rem;
+    font-size: 2.4rem; /* Reduced from 2.8rem */
     text-align: center;
     margin-bottom: 20px;
   }
   .why-matsols-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem; /* Reduced from 1.1rem */
     text-align: center;
     margin: 0 auto;
   }
@@ -2032,10 +2054,13 @@ img {
 
 @media (max-width: 768px) {
   .why-matsols-container {
-    padding: 0 15px; /* Aggressive reduction of horizontal padding */
+    padding: 0 15px;
   }
   .why-matsols-title {
-    font-size: 2.2rem;
+    font-size: 2rem; /* Reduced from 2.2rem */
+  }
+  .impact-header-new h2 {
+    font-size: 1.8rem !important;
   }
   .why-matsols-stair-layout {
     flex-direction: column;
@@ -2046,13 +2071,40 @@ img {
     width: 100%;
     align-items: center;
     gap: 20px;
-    margin-top: 0 !important; /* Flatten the stair on mobile */
+    margin-top: 0 !important;
   }
   .why-matsols-card {
     width: 100%;
-    max-width: 340px; /* Limit width for readability but allow scaling */
+    max-width: 340px;
     height: auto;
     aspect-ratio: 1/1;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-matsols-section, .section-impact-new {
+    padding: 60px 0 40px; /* Further crushed for very small screens */
+  }
+  .why-matsols-title {
+    font-size: 1.7rem; /* Even smaller for very narrow devices */
+  }
+  .why-matsols-subtitle {
+    font-size: 0.9rem;
+  }
+  .impact-header-new h2 {
+    font-size: 1.5rem !important;
+  }
+  .impact-header-new p {
+    font-size: 0.9rem !important;
+  }
+  .impact-num {
+    font-size: 2.2rem !important; /* Shrunk from 3.5rem */
+  }
+  .impact-title {
+    font-size: 1.1rem !important;
+  }
+  .impact-main-card {
+    padding: 40px 20px !important;
   }
 }
 
