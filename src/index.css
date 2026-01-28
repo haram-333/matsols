@@ -889,6 +889,30 @@ img {
   overflow: hidden !important; /* FIXED: Prevents adjacent cards from showing */
 }
 
+/* Schematic / Blueprint Backgrounds */
+.blueprint-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.blueprint-grid {
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+}
+
+.blueprint-lines {
+  stroke: var(--primary-blue);
+  stroke-width: 1;
+  stroke-dasharray: 5 10;
+}
+
 /* Desktop: Vertical Stack Layout */
 .stories-slider-wrapper {
   width: 100%;
@@ -1724,63 +1748,350 @@ img {
   margin: 0 auto;
 }
 
-/* Redesigned Why Choose MATSOLS Section */
-.section-why-choose {
-  padding: 140px 0;
-  background: white;
-  color: var(--primary-dark);
+/* Why Choose MATSOLS (Specific Redesign Classes) */
+.why-matsols-section {
+  width: 100%;
+  min-height: 100vh;
+  background: #020617; /* Deep Dark Theme Background */
+  color: white;
+  position: relative;
+  overflow: hidden;
+  padding: 140px 0 100px;
+  display: flex;
+  align-items: center;
 }
 
-.why-choose-header {
-  text-align: center;
-  margin-bottom: 80px;
+.why-matsols-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 50px;
+  position: relative;
+  z-index: 2;
+  max-width: 1440px;
 }
 
-.why-choose-header h2 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  margin-bottom: 24px;
-}
-
-/* Strategic Pillars Grid */
-.pillars-grid {
+.why-matsols-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 30px;
-  margin-bottom: 100px;
+  grid-template-columns: 1fr 1.2fr; /* Balanced split to allow text expansion */
+  gap: 40px; /* Reduced gap as requested */
+  align-items: center;
+  width: 100%;
 }
 
-.pillar-card {
-  padding: 40px;
-  background: #0f172a;
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.4s var(--ease-out);
+.why-matsols-left {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  color: white;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
 }
 
-.pillar-card:hover {
-  transform: translateY(-8px);
+.why-matsols-header {
+  text-align: left;
+}
+
+.why-matsols-title {
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-family: "Playfair Display", serif !important;
+  color: white;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.why-matsols-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Inter", sans-serif !important;
+  line-height: 1.6;
+  text-align: left;
+  /* max-width removed to allow more width */
+}
+
+.why-matsols-right {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 2;
+}
+
+.why-matsols-stair-layout {
+  display: flex;
+  gap: 20px; /* Further reduced gap between cards */
+  align-items: flex-start;
+}
+
+.why-matsols-column {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.why-matsols-column-1 { margin-top: 140px; }
+.why-matsols-column-2 { margin-top: 70px; }
+.why-matsols-column-3 { margin-top: 0; }
+
+/* Isolated Why Choose Cards to prevent collisions */
+.why-matsols-card {
+  position: relative;
+  width: 272.94px;
+  height: 272.94px;
+  border-radius: 32px; /* Smoother radius to match modern aesthetic */
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   background: #1e293b;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-  border-color: var(--primary-orange);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.pillar-card h3 {
-  font-family: "Playfair Display", serif;
-  font-size: 1.8rem;
-  font-weight: 900;
-  margin-bottom: 20px;
+.why-matsols-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--primary-orange);
+}
+
+.why-matsols-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.6s ease;
+}
+
+.why-matsols-card:hover .why-matsols-card-bg {
+  transform: scale(1.1);
+}
+
+.why-matsols-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg,
+    rgba(15, 23, 42, 0.85) 0%,
+    rgba(15, 23, 42, 0.4) 100%);
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.why-matsols-card:hover .why-matsols-card-overlay {
+  background: linear-gradient(135deg,
+    rgba(0, 64, 137, 0.7) 0%,
+    rgba(255, 115, 36, 0.4) 100%);
+}
+
+.why-matsols-card-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.why-matsols-card-category {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-orange);
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.why-matsols-card-title {
   color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
   line-height: 1.2;
 }
 
-.pillar-card p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.7);
+.why-matsols-card-description {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Schematic / Blueprint Backgrounds */
+.blueprint-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* New Impact Section Styling */
+.section-impact-new {
+  position: relative;
+  z-index: 5;
+}
+
+.impact-main-card {
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.impact-main-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 50px 120px rgba(15, 23, 42, 0.3);
+}
+
+.impact-item-new {
+  transition: transform 0.3s ease;
+}
+
+.impact-item-new:hover {
+  transform: translateX(10px);
+}
+
+.why-matsols-section {
+  position: relative;
+  background: #020617;
+  overflow: hidden;
+}
+
+.why-matsols-bg-circle {
+  position: absolute;
+  bottom: -400px;
+  right: -400px;
+  width: 1000px;
+  height: 1000px;
+  background: radial-gradient(circle, rgba(0, 64, 137, 0.15) 0%, rgba(255, 115, 36, 0.05) 50%, transparent 70%);
+  border-radius: 50%;
+  z-index: 1;
+  filter: blur(80px);
+}
+
+@media (max-width: 1024px) {
+  .impact-grid-new {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .impact-header-new h2 {
+    font-size: 2.5rem !important;
+  }
+  .impact-main-card {
+    padding: 60px 40px !important;
+  }
+
+  /* Why Choose Mobile Hardening */
+  .why-matsols-section {
+    padding: 80px 0 60px;
+  }
+  .why-matsols-container {
+    padding: 0 30px;
+  }
+  .why-matsols-content {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  .why-matsols-left {
+    text-align: center;
+    align-items: center;
+  }
+  .why-matsols-header {
+    text-align: center;
+  }
+  .why-matsols-title {
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .why-matsols-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .why-matsols-right {
+    justify-content: center;
+  }
+  .why-matsols-stair-layout {
+    gap: 20px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .why-matsols-container {
+    padding: 0 15px; /* Aggressive reduction of horizontal padding */
+  }
+  .why-matsols-title {
+    font-size: 2.2rem;
+  }
+  .why-matsols-stair-layout {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .why-matsols-column {
+    width: 100%;
+    align-items: center;
+    gap: 20px;
+    margin-top: 0 !important; /* Flatten the stair on mobile */
+  }
+  .why-matsols-card {
+    width: 100%;
+    max-width: 340px; /* Limit width for readability but allow scaling */
+    height: auto;
+    aspect-ratio: 1/1;
+  }
+}
+
+/* Redesign Responsiveness */
+@media (max-width: 1024px) {
+  .pillars-container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .pillars-left {
+    position: static;
+    text-align: center;
+    padding-right: 0;
+    margin-bottom: 40px;
+  }
+  .section-why-choose .why-choose-header {
+    text-align: center !important; 
+    margin-bottom: 0;
+  }
+  .section-why-choose .why-choose-header .section-subtitle {
+     text-align: center !important;
+     margin-left: auto;
+     margin-right: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .pillars-stair-layout {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .pillars-column.col-1,
+  .pillars-column.col-2,
+  .pillars-column.col-3 {
+    margin-top: 0;
+  }
+  .pillar-card-new {
+    height: 300px;
+  }
 }
 
 /* Global Impact Deck (Stats with Text) */
@@ -1820,20 +2131,10 @@ img {
   opacity: 0.7;
 }
 
-@media (max-width: 1024px) {
-  .impact-deck {
-    grid-template-columns: 1fr;
-    padding: 60px 40px;
-  }
-}
-
 @media (max-width: 768px) {
   .impact-deck {
     padding: 40px 24px;
     border-radius: 32px;
-  }
-  .pillars-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1853,7 +2154,7 @@ img {
   background: white;
   padding: 50px 40px;
   border-radius: 40px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--primary-blue);
   display: flex;
   flex-direction: column;
   transition: all 0.4s ease;
@@ -2135,14 +2436,14 @@ img {
 
 .insight-card {
   background: white;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #004089; /* Dark blue border as requested */
   border-radius: 24px;
   padding: 32px;
   display: flex;
   flex-direction: column;
   transition: all 0.4s var(--ease-out);
   position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px rgba(0, 64, 137, 0.05);
 }
 
 .insight-card:hover {
@@ -3842,6 +4143,7 @@ img {
   .offer-card,
   .b-card,
   .dest-card,
+  .section-dest h2,
   .section-title,
   .section-subtitle,
   .impact-header,
@@ -3857,6 +4159,16 @@ img {
   
   .offer-icon-tag, .insight-badge {
     margin: 0 auto 15px auto !important;
+  }
+
+  /* 6. Mobile Heading Sizing Fix */
+  .why-choose-header h2,
+  .section-dest h2,
+  .path-header h2,
+  .section-title {
+    font-size: 2rem !important; /* Standardized Mobile Size */
+    line-height: 1.2;
+    word-wrap: break-word; /* Prevent overflow */
   }
 }
 
@@ -3932,7 +4244,7 @@ img {
   }
 }
 
-.anim-up.in-view {
+.anim-up.in-view, .anim-bottom.in-view {
   animation: heavyFadeUp 1s ease-out forwards;
 }
 

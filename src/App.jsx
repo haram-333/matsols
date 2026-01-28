@@ -50,7 +50,14 @@ function App() {
   const partnersRef = useRef(null);
   const heroRef = useRef(null);
   const heroVideoRef = useRef(null);
+
   const hasBeenAutoUnmuted = useRef(false);
+  
+  // Why Choose Redesign Refs
+  const whyChooseRef = useRef(null);
+  const col1Ref = useRef(null);
+  const col2Ref = useRef(null);
+  const col3Ref = useRef(null);
 
   useEffect(() => {
     // Scroll listener for navbar
@@ -68,7 +75,7 @@ function App() {
       });
     }, { 
       threshold: 0.2,
-      rootMargin: "0px 0px -30% 0px" // Only trigger when element is 30% up the viewport (near center)
+      rootMargin: "0px 0px 0px 0px" // Trigger immediately when element enters viewport
     });
 
     document.querySelectorAll('.anim-hidden').forEach((el) => observer.observe(el));
@@ -284,36 +291,7 @@ function App() {
         },
       );
 
-      // MATSOLS Offers Section (Instant Reveal)
-      gsap.utils.toArray(".offer-card").forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { x: i % 2 === 0 ? 80 : -80, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-        // Icon Pop (Instant Reveal)
-        gsap.from(card.querySelector(".offer-icon-tag"), {
-          scale: 0,
-          rotate: -45,
-          duration: 0.4,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-          ease: "power2.out"
-        });
-      });
+      // MATSOLS Offers Section (Removed GSAP to favour CSS)
 
       // Global Impact Section Header (Enhanced Speed)
       gsap.fromTo(
@@ -393,6 +371,50 @@ function App() {
           ease: "power4.out",
         }
       );
+
+      // --- NEW WHY CHOOSE PARALLAX (Stair Layout) ---
+      // Column 1 - moves up detailed
+      if (col1Ref.current && whyChooseRef.current) {
+        gsap.to(col1Ref.current, {
+           y: -150,
+          ease: "none",
+          scrollTrigger: {
+            trigger: whyChooseRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+      }
+      
+      // Column 2 - moves up slower
+      if (col2Ref.current && whyChooseRef.current) {
+        gsap.to(col2Ref.current, {
+          y: -100,
+          ease: "none",
+          scrollTrigger: {
+            trigger: whyChooseRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+      }
+
+      // Floating Abstract Elements
+      const bgCircle = whyChooseRef.current?.querySelector('.why-matsols-bg-circle');
+      if (bgCircle) {
+        gsap.to(bgCircle, {
+          y: -100,
+          ease: "none",
+          scrollTrigger: {
+            trigger: whyChooseRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+      }
 
       // Section Subtitle Reveals (REMOVED generic conflicting selector)
       // Generic .why-choose-header .section-subtitle animation was removed to prevent collisions.
@@ -562,36 +584,7 @@ function App() {
         },
       );
 
-      // Updates & Insights Card Blast (Instant Reveal)
-      gsap.utils.toArray(".insight-card").forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { x: i % 2 === 0 ? -60 : 60, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-        // Inner button snap (Instant Reveal)
-        gsap.from(card.querySelector(".btn-insight"), {
-          y: 15,
-          opacity: 0,
-          duration: 0.4,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-          ease: "power2.out"
-        });
-      });
+      // Updates & Insights Card Blast (Removed GSAP to favour CSS)
       gsap.to(".moving-shape", {
         x: "random(-150, 150)",
         y: "random(-150, 150)",
@@ -1362,159 +1355,258 @@ function App() {
           </div>
       </section>
 
-      <section className="section-why-choose" style={{ position: 'relative', overflow: 'hidden', background: '#fff' }}>
-        {/* Background Layer - Z-Index 1 */}
-        <div className="why-choose-bg-abstract" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1, opacity: 1 }}>
-            <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
-              <defs>
-                <pattern id="heavyGrid" width="100" height="100" patternUnits="userSpaceOnUse">
-                  <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#004089" strokeWidth="2" opacity="0.08"/>
-                </pattern>
-                <pattern id="diagonalHatch" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                   <line x1="0" y1="0" x2="0" y2="20" stroke="#ff6600" strokeWidth="2" opacity="0.1" />
-                </pattern>
-              </defs>
-              
-              {/* 1. Base Grid (Dark Blue) */}
-              <rect width="1400" height="1000" fill="url(#heavyGrid)" />
-              
-              {/* 2. Structural Bars (Thick & Visible) */}
-              <rect x="50" y="50" width="1300" height="900" fill="none" stroke="#004089" strokeWidth="6" opacity="0.1" />
-              <line x1="700" y1="50" x2="700" y2="950" stroke="#004089" strokeWidth="4" opacity="0.1" />
-              
-              {/* 3. Orange Accent Zones */}
-              <rect x="100" y="100" width="300" height="200" fill="url(#diagonalHatch)" />
-              <rect x="1000" y="700" width="300" height="200" fill="url(#diagonalHatch)" />
-              
-              {/* 4. Circuit/Node Connectors (Solid) */}
-              <circle cx="700" cy="500" r="150" fill="none" stroke="#004089" strokeWidth="2" strokeDasharray="20 10" opacity="0.2" />
-              <circle cx="700" cy="500" r="140" fill="none" stroke="#ff6600" strokeWidth="4" opacity="0.1" />
-              
-              <line x1="50" y1="500" x2="1350" y2="500" stroke="#004089" strokeWidth="2" opacity="0.15" />
-              <line x1="700" y1="50" x2="700" y2="950" stroke="#004089" strokeWidth="2" opacity="0.15" />
-              
-              {/* 5. Hard Corners */}
-              <rect x="40" y="40" width="40" height="40" fill="#004089" opacity="0.2" />
-              <rect x="1320" y="40" width="40" height="40" fill="#004089" opacity="0.2" />
-              <rect x="40" y="920" width="40" height="40" fill="#004089" opacity="0.2" />
-              <rect x="1320" y="920" width="40" height="40" fill="#004089" opacity="0.2" />
-              <rect x="1320" y="920" width="40" height="40" fill="#004089" opacity="0.2" />
-
-              {/* World Map Abstract Texture */}
-              {[...Array(20)].map((_, i) => (
-                <circle 
-                  key={`dot-${i}`}
-                  cx={Math.random() * 1400} 
-                  cy={Math.random() * 1000} 
-                  r={Math.random() * 3 + 2} 
-                  fill="#004089" 
-                  opacity="0.1" 
-                />
-              ))}
-              
-              {/* Large Geometric Watermark */}
-              <circle cx="1200" cy="200" r="350" fill="url(#blueOracle)" opacity="0.4" />
-              <path d="M1200,200 L1200,800" stroke="#004089" strokeWidth="1" opacity="0.1" />
-              <path d="M900,200 L1500,200" stroke="#004089" strokeWidth="1" opacity="0.1" />
-            </svg>
+      {/* NEW: Why Choose / Analysis Section (Stair Layout) */}
+      {/* Why Choose MATSOLS Section (Redesigned Stair Layout) */}
+      <section className="why-matsols-section" ref={whyChooseRef}>
+        <div className="blueprint-bg-container">
+          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+            <defs>
+              <pattern id="whyMatsolsGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5"/>
+              </pattern>
+              <linearGradient id="whyMatsolsOrangeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.0" />
+              </linearGradient>
+            </defs>
+            <rect width="1400" height="1000" fill="url(#whyMatsolsGrid)" />
+            
+            {/* Aggressive Organic Background Elements */}
+            <path d="M1200,100 Q1400,300 1100,500 T900,900" fill="none" stroke="var(--primary-orange)" strokeWidth="40" strokeLinecap="round" opacity="0.15" />
+            <path d="M-100,200 Q300,400 100,700 T500,1000" fill="none" stroke="var(--primary-orange)" strokeWidth="30" strokeLinecap="round" opacity="0.1" />
+            
+            {/* Complex Intersecting Schematic Lines */}
+            <path d="M0,400 L1400,600" stroke="var(--primary-orange)" strokeWidth="8" opacity="0.2" strokeDasharray="20 40" />
+            <path d="M-100,600 C 400,400 600,800 1500,500" stroke="var(--primary-orange)" strokeWidth="15" fill="none" opacity="0.15" />
+            
+            {/* Technical Detail Nodes */}
+            {[...Array(5)].map((_, i) => (
+              <circle key={`node-${i}`} cx={300 + i * 250} cy={200 + (i % 2) * 600} r="4" fill="var(--primary-orange)" opacity="0.4" />
+            ))}
+            
+            {/* Floating Technical Nodes */}
+            <rect x="1100" y="700" width="160" height="160" rx="30" stroke="var(--primary-orange)" strokeWidth="4" fill="none" opacity="0.1" transform="rotate(15 1180 780)" />
+            
+            {/* Focal Glow */}
+            <circle cx="1250" cy="200" r="220" fill="url(#whyMatsolsOrangeGlow)" />
+          </svg>
         </div>
-
-
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="why-choose-header anim-hidden anim-up">
-            <h2 className="section-title">
-              {"Why Choose ".split("").map((char, i) => (
-                <span key={`wc-${i}`} className="char" style={{ display: "inline-block", whiteSpace: "pre" }}>{char}</span>
-              ))}
-              <span className="text-gradient">
-                {"MATSOLS?".split("").map((char, i) => (
-                  <span key={`ms-${i}`} className="char" style={{ display: "inline-block" }}>{char}</span>
-                ))}
-              </span>
-            </h2>
-            <p className="section-subtitle">Empowering your academic aspirations with expert guidance and global reach.</p>
-          </div>
-
-          <div className="pillars-grid" style={{ perspective: '1000px' }}>
-            {[
-              {
-                title: "Personalized Global Education Pathways",
-                desc: "At MATSOLS, every student's journey begins with a personalized strategy. As a leading international education consultancy, we guide students through global university admissions and help design study plans that align with their long-term academic and career goals. Whether you want to study abroad in the UK, Malta, or Turkey, our experts ensure you choose the best program for your aspirations."
-              },
-              {
-                title: "International Opportunities with Local Guidance",
-                desc: "We connect students to top universities abroad while offering one-to-one support throughout the application process. With MATSOLS, international students benefit from study abroad guidance tailored to their location, time zone, and unique needs, ensuring a smooth and confident transition to global education opportunities."
-              },
-              {
-                title: "Expert Consultants in Global Admissions",
-                desc: "Our team of study abroad consultants specializes in international university applications. They provide practical advice, help strengthen student profiles, and ensure applications meet global standards, giving you a competitive advantage in securing admission to your dream institutions."
-              },
-              {
-                title: "End-to-End Support for International Students",
-                desc: "From course selection to student visa guidance, MATSOLS provides complete support for international students. We assist with applications, documentation, pre-departure preparation, and ongoing advice to ensure your overseas study journey is stress-free and successful."
-              },
-              {
-                title: "Focused on Long-Term Academic and Career Success",
-                desc: "We don't just help you get admission - we focus on outcomes. By offering guidance on overseas study programs and career-focused education, MATSOLS ensures that your education becomes a foundation for global opportunities and professional growth."
-              },
-              {
-                title: "Integrity, Transparency, and Trust",
-                desc: "As a trusted education consultancy for international students, MATSOLS provides honest, transparent advice. Students always understand their options, costs, and timelines, allowing them to make informed decisions about studying abroad with confidence."
-              }
-            ].map((pillar, idx) => (
-              <div 
-                key={idx} 
-                className={`pillar-card anim-hidden ${idx < 3 ? 'anim-left' : 'anim-right'}`} 
-                style={{ transitionDelay: `${(idx % 3) * 0.15}s` }}
-              >
-                <h3>{pillar.title}</h3>
-                <p>{pillar.desc}</p>
+        <div className="why-matsols-bg-circle"></div>
+        <div className="why-matsols-container">
+          <div className="why-matsols-content">
+            {/* Left Column - Text Content */}
+            <div className="why-matsols-left anim-hidden anim-left">
+              <div className="why-matsols-header">
+                <h2 className="why-matsols-title">
+                  Why Choose <span className="text-gradient">MATSOLS?</span>
+                </h2>
+                <p className="why-matsols-subtitle">
+                  We don't just find you a university—we design a career pathway. The principles that drive our excellence and innovation ensure your success every step of the way.
+                </p>
+                <a href="#" className="btn btn-primary anim-hidden anim-up delay-300" style={{ marginTop: '30px', alignSelf: 'flex-start' }}>Start Your Journey</a>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="impact-header" style={{ marginTop: '80px', textAlign: "left" }}>
-            <h2 className="section-title">Our Global <span className="text-gradient">Impact in Numbers</span></h2>
-            <p className="section-subtitle" style={{ textAlign: "left", marginLeft: "0" }}>Quantifying our commitment to international student success worldwide.</p>
-          </div>
+            {/* Right Side - 3 Column Stair Layout */}
+            <div className="why-matsols-right">
+              <div className="why-matsols-stair-layout">
+                {/* Column 1 */}
+                <div ref={col1Ref} className="why-matsols-column why-matsols-column-1">
+                   {[
+                     {
+                       title: "Personalized Strategy",
+                       desc: "Tailored career roadmaps, not just university lists.",
+                       image: path1,
+                       cat: "STRATEGY"
+                     },
+                     {
+                       title: "Global Network",
+                       desc: "Direct partnerships with 70+ top-tier universities.",
+                       image: story1,
+                       cat: "NETWORK"
+                     }
+                   ].map((card, idx) => (
+                     <div key={`c1-${idx}`} className={`why-matsols-card anim-hidden anim-zoom delay-${idx * 200}`}>
+                       <div className="why-matsols-card-bg" style={{ backgroundImage: `url(${card.image})` }} />
+                       <div className="why-matsols-card-overlay" />
+                       <div className="why-matsols-card-content">
+                         <span className="why-matsols-card-category">{card.cat}</span>
+                         <h3 className="why-matsols-card-title">{card.title}</h3>
+                         <p className="why-matsols-card-description">{card.desc}</p>
+                       </div>
+                     </div>
+                   ))}
+                </div>
 
-          <div className="impact-deck">
-            {[
-              { 
-                num: '50,000+', 
-                title: 'Students Successfully Placed',
-                desc: 'Over 50,000 students worldwide have benefited from MATSOLS guidance, progressing through our pathways to top universities abroad and turning academic ambitions into real global opportunities.'
-              },
-              { 
-                num: '135+', 
-                title: 'Study Centres Across 40+ Countries',
-                desc: 'Our international network of over 135 study centres ensures international students have access to consistent, high-quality guidance and study abroad support wherever they are.'
-              },
-              { 
-                num: '120+', 
-                title: 'Nationalities Represented Annually',
-                desc: 'Students from over 120 countries join our programs each year, creating a diverse and inclusive global learning environment, supporting students from around the world in pursuing international education.'
-              },
-              { 
-                num: '89%', 
-                title: 'Achieve a 2:1 or Higher',
-                desc: 'An impressive 89% of our students achieve a 2:1 or higher at university, showing that our study abroad guidance translates into strong academic performance globally.'
-              },
-              { 
-                num: '70+', 
-                title: 'University Partners Worldwide',
-                desc: 'We collaborate with more than 70 trusted university partners, including 21 ranked in the QS World Top 200, giving international students access to globally recognized institutions.'
-              }
-            ].map((impact, idx) => (
-              <div key={idx} className={`impact-card anim-hidden anim-zoom delay-${(idx % 3) * 100}`}>
-                <div className="impact-num">{impact.num}</div>
-                <div className="impact-title">{impact.title}</div>
-                <p className="impact-desc">{impact.desc}</p>
+                {/* Column 2 */}
+                <div ref={col2Ref} className="why-matsols-column why-matsols-column-2">
+                   {[
+                     {
+                       title: "End-to-End Support",
+                       desc: "From application to accommodation, we handle it all.",
+                       image: heroBg,
+                       cat: "SUPPORT"
+                     },
+                     {
+                       title: "Scholarship Experts",
+                       desc: "Maximized financial aid through expert negotiation.",
+                       image: story3,
+                       cat: "FUNDING"
+                     }
+                   ].map((card, idx) => (
+                     <div key={`c2-${idx}`} className={`why-matsols-card anim-hidden anim-zoom delay-${(idx + 1) * 200}`}>
+                       <div className="why-matsols-card-bg" style={{ backgroundImage: `url(${card.image})` }} />
+                       <div className="why-matsols-card-overlay" />
+                       <div className="why-matsols-card-content">
+                         <span className="why-matsols-card-category">{card.cat}</span>
+                         <h3 className="why-matsols-card-title">{card.title}</h3>
+                         <p className="why-matsols-card-description">{card.desc}</p>
+                       </div>
+                     </div>
+                   ))}
+                </div>
+
+                {/* Column 3 */}
+                <div ref={col3Ref} className="why-matsols-column why-matsols-column-3">
+                   {[
+                     {
+                       title: "Visa Success",
+                       desc: "99% visa approval rate with our compliance team.",
+                       image: path3,
+                       cat: "LEGAL"
+                     },
+                     {
+                       title: "Local Presence",
+                       desc: "Offices in 5 countries for on-ground assistance.",
+                       image: supportBg,
+                       cat: "GLOBAL"
+                     }
+                   ].map((card, idx) => (
+                     <div key={`c3-${idx}`} className={`why-matsols-card anim-hidden anim-zoom delay-${(idx + 2) * 200}`}>
+                       <div className="why-matsols-card-bg" style={{ backgroundImage: `url(${card.image})` }} />
+                       <div className="why-matsols-card-overlay" />
+                       <div className="why-matsols-card-content">
+                         <span className="why-matsols-card-category">{card.cat}</span>
+                         <h3 className="why-matsols-card-title">{card.title}</h3>
+                         <p className="why-matsols-card-description">{card.desc}</p>
+                       </div>
+                     </div>
+                   ))}
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Impact Section - High Fidelity Schematic Restoration */}
+      <section className="section-impact-new" style={{ padding: '140px 0', background: '#f8fafc', position: 'relative', overflow: 'hidden' }}>
+        <div className="blueprint-bg-container">
+          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+            <defs>
+              <pattern id="impactGrid" width="80" height="80" patternUnits="userSpaceOnUse">
+                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(0, 64, 137, 0.08)" strokeWidth="0.5"/>
+              </pattern>
+              <linearGradient id="impactOrangeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.0" />
+              </linearGradient>
+            </defs>
+            <rect width="1400" height="1000" fill="url(#impactGrid)" />
+            
+            {/* Aggressive Schematic Detail Loops - Dense & Complex */}
+            <circle cx="700" cy="100" r="300" stroke="rgba(0, 64, 137, 0.1)" strokeWidth="1" fill="none" strokeDasharray="10 5" />
+            <circle cx="700" cy="100" r="280" stroke="rgba(255, 115, 36, 0.15)" strokeWidth="2" fill="none" opacity="0.6" />
+            <circle cx="700" cy="100" r="250" stroke="rgba(0, 64, 137, 0.08)" strokeWidth="0.5" fill="none" />
+            
+            {/* Complex Intersecting Curvature */}
+            <path d="M-100,500 C 200,300 1200,700 1500,400" stroke="rgba(0, 64, 137, 0.15)" strokeWidth="10" fill="none" opacity="0.2" />
+            <path d="M0,200 L1400,800" stroke="var(--primary-orange)" strokeWidth="2" opacity="0.2" strokeDasharray="5 15" />
+            
+            {/* Ruler & Measure Markings */}
+            {[...Array(12)].map((_, i) => (
+              <line key={`ruler-${i}`} x1={40} y1={100 + i * 80} x2={60} y2={100 + i * 80} stroke="rgba(0, 64, 137, 0.4)" strokeWidth="1" />
+            ))}
+            <text x="70" y="115" fontSize="12" fill="rgba(0, 64, 137, 0.3)" fontFamily="monospace">REF_MOD_01</text>
+            
+            {/* Technical Detail Elements */}
+            {[...Array(8)].map((_, i) => (
+              <rect key={`tech-node-${i}`} x={100 + i * 180} y={900} width="8" height="8" fill="var(--primary-orange)" opacity="0.3" transform={`rotate(${i * 45} ${104 + i * 180} 904)`} />
+            ))}
+            
+            {/* Diagonal Hatch Patterns */}
+            <path d="M1200,400 L1400,600 M1220,400 L1400,580 M1240,400 L1400,560" stroke="rgba(255, 115, 36, 0.1)" strokeWidth="0.5" />
+            <path d="M0,800 L200,1000 M0,820 L180,1000 M0,840 L160,1000" stroke="rgba(255, 115, 36, 0.1)" strokeWidth="0.5" />
+            
+            {/* Glow Focal Points */}
+            <circle cx="200" cy="800" r="180" fill="url(#impactOrangeGlow)" />
+          </svg>
+        </div>
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div className="impact-header-new anim-hidden anim-up" style={{ marginBottom: '60px', textAlign: "left" }}>
+            <h2 className="section-title" style={{ color: '#0f172a', fontSize: '3.5rem', fontFamily: '"Playfair Display", serif' }}>
+              Our Global <span className="text-gradient">Impact in Numbers</span>
+            </h2>
+            <p className="section-subtitle" style={{ textAlign: "left", marginLeft: "0", color: '#64748b', fontSize: '1.2rem', maxWidth: '600px' }}>
+              Quantifying our commitment to international student success worldwide.
+            </p>
+          </div>
+
+          <div className="impact-main-card anim-hidden anim-zoom" style={{ background: '#0f172a', padding: '80px', borderRadius: '60px', boxShadow: '0 40px 100px rgba(15, 23, 42, 0.2)' }}>
+            <div className="impact-grid-new" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '80px' }}>
+              <div className="impact-col-left" style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+                {[
+                  { 
+                    num: '50,000+', 
+                    title: 'Students Successfully Placed',
+                    desc: 'Over 50,000 students worldwide have benefited from MATSOLS guidance, progressing through our pathways to top universities abroad.'
+                  },
+                  { 
+                    num: '120+', 
+                    title: 'Nationalities Represented Annually',
+                    desc: 'Students from over 120 countries join our programs each year, creating a diverse global learning environment.'
+                  },
+                  { 
+                    num: '70+', 
+                    title: 'University Partners Worldwide',
+                    desc: 'We collaborate with more than 70 trusted university partners, including 21 in the QS World Top 200.'
+                  }
+                ].map((item, idx) => (
+                  <div key={idx} className={`impact-item-new anim-hidden anim-left delay-${idx * 200}`}>
+                    <div className="impact-num" style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--primary-orange)', marginBottom: '10px' }}>{item.num}</div>
+                    <div className="impact-title" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'white', marginBottom: '12px' }}>{item.title}</div>
+                    <p style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '1rem', margin: 0 }}>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="impact-col-right" style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+                {[
+                  { 
+                    num: '135+', 
+                    title: 'Study Centres Across 40+ Countries',
+                    desc: 'Our international network ensures students have access to consistent, high-quality guidance wherever they are.'
+                  },
+                  { 
+                    num: '89%', 
+                    title: 'Achieve a 2:1 or Higher',
+                    desc: 'An impressive 89% of our students achieve strong academic performance globally.'
+                  }
+                ].map((item, idx) => (
+                  <div key={idx} className={`impact-item-new anim-hidden anim-right delay-${(idx + 1) * 200}`}>
+                    <div className="impact-num" style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--primary-orange)', marginBottom: '10px' }}>{item.num}</div>
+                    <div className="impact-title" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'white', marginBottom: '12px' }}>{item.title}</div>
+                    <p style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '1rem', margin: 0 }}>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
 
       {/* Path Section */}
       <section className="section-path" ref={pathRef}>
