@@ -50,6 +50,7 @@ function App() {
   const partnersRef = useRef(null);
   const heroRef = useRef(null);
   const heroVideoRef = useRef(null);
+  const hasBeenAutoUnmuted = useRef(false);
 
   useEffect(() => {
     // Scroll listener for navbar
@@ -57,6 +58,20 @@ function App() {
       setScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
+
+    // CSS Animation Observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+        }
+      });
+    }, { 
+      threshold: 0.2,
+      rootMargin: "0px 0px -30% 0px" // Only trigger when element is 30% up the viewport (near center)
+    });
+
+    document.querySelectorAll('.anim-hidden').forEach((el) => observer.observe(el));
 
     // Lenis Smooth Scroll
     const lenis = new Lenis({
@@ -80,44 +95,7 @@ function App() {
 
     // GSAP Animations
     const ctx = gsap.context(() => {
-      // Bento Animation
-      // Bento Grid Entrance (Alternating Kinetic Scrub)
-      gsap.utils.toArray(".b-card").forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { y: i % 2 === 0 ? 50 : -50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-      });
-
-      // Bento Section Header (Enhanced Speed)
-      gsap.fromTo(
-        ".animate-bento-header",
-        { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
-        {
-          y: 0,
-          opacity: 1,
-          clipPath: "inset(0 0 0% 0)",
-          stagger: 0.08,
-          duration: 0.5,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: ".section-bento",
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-        },
-      );
+      // Bento Animation - REMOVED GSAP ENTRY for CSS
 
       // Abstract Background Parallax Scrub
       gsap.fromTo(
@@ -165,59 +143,7 @@ function App() {
         },
       );
 
-      // Destinations Header (Enhanced Speed)
-      gsap.fromTo(
-        ".section-dest h2",
-        { y: 30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
-        {
-          y: 0,
-          opacity: 1,
-          clipPath: "inset(0 0 0% 0)",
-          duration: 0.5,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: ".section-dest",
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        },
-      );
-      gsap.fromTo(
-        ".section-dest .section-subtitle",
-        { y: 15, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.4,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".section-dest",
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-        },
-      );
-
-      // Destination Cards (Instant Reveal)
-      gsap.utils.toArray(".dest-card").forEach((card, i) => {
-        // Row 1 (i < 2) from Left, Row 2 (i >= 2) from Right
-        const posX = i < 2 ? -60 : 60;
-        gsap.fromTo(
-          card,
-          { x: posX, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          },
-        );
-      });
+      // Destinations Header & Cards - REMOVED GSAP ENTRY for CSS
 
       // 3. Process Section - High-Fidelity Terminal Overhaul (Desktop Only)
       let mm = gsap.matchMedia();
@@ -514,12 +440,13 @@ function App() {
         once: true
       });
 
-      // Dedicated bridge for unmuting on first interaction
+      // Dedicated bridge for unmuting on first interaction (EXECUTES ONCE)
       ScrollTrigger.create({
         trigger: "body",
         start: "10px top",
         onEnter: () => {
-          if (isVideoMuted) {
+          if (isVideoMuted && !hasBeenAutoUnmuted.current) {
+            hasBeenAutoUnmuted.current = true;
             setIsVideoMuted(false);
             if (heroVideoRef.current) {
               heroVideoRef.current.muted = false;
@@ -1262,7 +1189,7 @@ function App() {
                 icon: "ri:medal-line"
               }
             ].map((offer, idx) => (
-              <div key={idx} className="offer-card">
+              <div key={idx} className="offer-card anim-hidden anim-pop" style={{ transitionDelay: `${idx * 0.15}s` }}>
                 <div className="offer-icon-tag">
                   <iconify-icon icon={offer.icon}></iconify-icon>
                 </div>
@@ -1278,20 +1205,49 @@ function App() {
       {/* Updates & Insights Section */}
       <section className="section-insights">
         <div className="insights-bg-abstract">
-          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-            {/* Aggressive Moving Shit - Cinematic Drift (Brand Colors Only) */}
-            <path d="M-200,600 Q 300,100 800,600 T 1600,200" className="bg-shape moving-shape" stroke="#004089" />
-            <path d="M-100,800 Q 500,1100 1000,700 T 1500,900" className="bg-shape moving-shape" stroke="#ff863c" />
-            <circle cx="1200" cy="800" r="300" className="bg-shape moving-shape" stroke="#004089" opacity="0.4" />
-            <circle cx="200" cy="200" r="250" className="bg-shape moving-shape" stroke="#ff863c" opacity="0.4" />
-            <path d="M-150,100 Q 600,-200 1100,300 T 1600,50" className="bg-shape moving-shape" stroke="#004089" opacity="0.2" /> 
-            <circle cx="800" cy="100" r="150" className="bg-shape moving-shape" stroke="#ff863c" opacity="0.2" />
+          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+            <defs>
+              <pattern id="denseGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--primary-orange)" strokeWidth="0.5" opacity="0.1"/>
+              </pattern>
+              <linearGradient id="deepBlueGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#004089" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#004089" stopOpacity="0.0" />
+              </linearGradient>
+              <linearGradient id="orangeSurge" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ff863c" stopOpacity="0.1" />
+                <stop offset="50%" stopColor="#ff863c" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#ff863c" stopOpacity="0.1" />
+              </linearGradient>
+            </defs>
+
+            {/* Layer 1: Skewed Cyber Grid */}
+            <rect width="1800" height="1400" fill="url(#denseGrid)" opacity="0.4" transform="rotate(-15 -200 -200)" />
+
+            {/* Layer 2: Massive Swish Curves (FAQ Density) */}
+            <path d="M-200,600 C 200,900 800,200 1600,700" fill="none" stroke="url(#orangeSurge)" strokeWidth="50" strokeLinecap="round" opacity="0.2" filter="blur(20px)" /> {/* Blur for depth, heavy stroke */}
+            <path d="M-100,300 Q 600,800 1300,100" fill="none" stroke="url(#orangeSurge)" strokeWidth="30" strokeLinecap="round" opacity="0.25" />
+            <path d="M0,900 Q 700,200 1500,800" fill="none" stroke="#004089" strokeWidth="20" strokeLinecap="round" opacity="0.2" />
+
+            {/* Layer 3: Tech Node Network (Floating Data) */}
+            {[...Array(15)].map((_, i) => (
+              <g key={`node-${i}`} opacity={Math.random() * 0.5 + 0.3}>
+                <circle cx={Math.random() * 1400} cy={Math.random() * 1000} r={Math.random() * 4 + 2} fill="#ff863c" />
+                <line 
+                  x1={Math.random() * 1400} y1={Math.random() * 1000} 
+                  x2={Math.random() * 1400} y2={Math.random() * 1000} 
+                  stroke="#004089" strokeWidth="1" opacity="0.2" 
+                />
+              </g>
+            ))}
+
+            {/* Layer 4: Focal Energy Points */}
+            <circle cx="1200" cy="800" r="300" fill="url(#deepBlueGlow)" />
+            <circle cx="200" cy="200" r="250" fill="url(#deepBlueGlow)" />
             
-            {/* Outlines for Kinetic Depth (Brand White/Orange) - Bottom & TOP Coverage */}
-            <path d="M-210,610 Q 290,110 790,610 T 1590,210" className="bg-shape-outline moving-outline" stroke="rgba(255, 134, 60, 0.3)" strokeDasharray="20 60" />
-            <circle cx="1210" cy="810" r="310" className="bg-shape-outline moving-outline" stroke="rgba(0, 64, 137, 0.3)" strokeDasharray="10 30" />
-            <path d="M-50,150 Q 400,400 900,100 T 1500,300" className="bg-shape-outline moving-outline" stroke="rgba(255, 134, 60, 0.2)" strokeDasharray="15 45" />
-            <circle cx="100" cy="150" r="180" className="bg-shape-outline moving-outline" stroke="rgba(0, 64, 137, 0.25)" strokeDasharray="5 20" />
+            {/* Layer 5: Data Stream Lines */}
+            <path d="M0,400 H1400" stroke="#ff863c" strokeWidth="1" strokeDasharray="10 30" opacity="0.4" />
+            <path d="M0,420 H1400" stroke="#004089" strokeWidth="1" strokeDasharray="5 15" opacity="0.4" />
           </svg>
         </div>
 
@@ -1386,7 +1342,11 @@ function App() {
                   icon: "ri:user-star-line"
                 }
               ].map((item, idx) => (
-                <div key={idx} className="insight-card animate-entry" style={{ transitionDelay: `${idx * 0.1}s` }}>
+                <div 
+                  key={idx} 
+                  className="insight-card anim-hidden anim-pop" 
+                  style={{ transitionDelay: `${idx * 0.1}s` }}
+                >
                   <span className={`insight-badge ${item.class}`}>{item.badge}</span>
                   <h3 className="insight-title">{item.title}</h3>
                   <p className="insight-desc">{item.desc}</p>
@@ -1402,9 +1362,66 @@ function App() {
           </div>
       </section>
 
-      <section className="section-why-choose">
-        <div className="container">
-          <div className="why-choose-header animate-matsols-header">
+      <section className="section-why-choose" style={{ position: 'relative', overflow: 'hidden', background: '#fff' }}>
+        {/* Background Layer - Z-Index 1 */}
+        <div className="why-choose-bg-abstract" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1, opacity: 1 }}>
+            <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+              <defs>
+                <pattern id="heavyGrid" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#004089" strokeWidth="2" opacity="0.08"/>
+                </pattern>
+                <pattern id="diagonalHatch" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                   <line x1="0" y1="0" x2="0" y2="20" stroke="#ff6600" strokeWidth="2" opacity="0.1" />
+                </pattern>
+              </defs>
+              
+              {/* 1. Base Grid (Dark Blue) */}
+              <rect width="1400" height="1000" fill="url(#heavyGrid)" />
+              
+              {/* 2. Structural Bars (Thick & Visible) */}
+              <rect x="50" y="50" width="1300" height="900" fill="none" stroke="#004089" strokeWidth="6" opacity="0.1" />
+              <line x1="700" y1="50" x2="700" y2="950" stroke="#004089" strokeWidth="4" opacity="0.1" />
+              
+              {/* 3. Orange Accent Zones */}
+              <rect x="100" y="100" width="300" height="200" fill="url(#diagonalHatch)" />
+              <rect x="1000" y="700" width="300" height="200" fill="url(#diagonalHatch)" />
+              
+              {/* 4. Circuit/Node Connectors (Solid) */}
+              <circle cx="700" cy="500" r="150" fill="none" stroke="#004089" strokeWidth="2" strokeDasharray="20 10" opacity="0.2" />
+              <circle cx="700" cy="500" r="140" fill="none" stroke="#ff6600" strokeWidth="4" opacity="0.1" />
+              
+              <line x1="50" y1="500" x2="1350" y2="500" stroke="#004089" strokeWidth="2" opacity="0.15" />
+              <line x1="700" y1="50" x2="700" y2="950" stroke="#004089" strokeWidth="2" opacity="0.15" />
+              
+              {/* 5. Hard Corners */}
+              <rect x="40" y="40" width="40" height="40" fill="#004089" opacity="0.2" />
+              <rect x="1320" y="40" width="40" height="40" fill="#004089" opacity="0.2" />
+              <rect x="40" y="920" width="40" height="40" fill="#004089" opacity="0.2" />
+              <rect x="1320" y="920" width="40" height="40" fill="#004089" opacity="0.2" />
+              <rect x="1320" y="920" width="40" height="40" fill="#004089" opacity="0.2" />
+
+              {/* World Map Abstract Texture */}
+              {[...Array(20)].map((_, i) => (
+                <circle 
+                  key={`dot-${i}`}
+                  cx={Math.random() * 1400} 
+                  cy={Math.random() * 1000} 
+                  r={Math.random() * 3 + 2} 
+                  fill="#004089" 
+                  opacity="0.1" 
+                />
+              ))}
+              
+              {/* Large Geometric Watermark */}
+              <circle cx="1200" cy="200" r="350" fill="url(#blueOracle)" opacity="0.4" />
+              <path d="M1200,200 L1200,800" stroke="#004089" strokeWidth="1" opacity="0.1" />
+              <path d="M900,200 L1500,200" stroke="#004089" strokeWidth="1" opacity="0.1" />
+            </svg>
+        </div>
+
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div className="why-choose-header anim-hidden anim-up">
             <h2 className="section-title">
               {"Why Choose ".split("").map((char, i) => (
                 <span key={`wc-${i}`} className="char" style={{ display: "inline-block", whiteSpace: "pre" }}>{char}</span>
@@ -1418,7 +1435,7 @@ function App() {
             <p className="section-subtitle">Empowering your academic aspirations with expert guidance and global reach.</p>
           </div>
 
-          <div className="pillars-grid">
+          <div className="pillars-grid" style={{ perspective: '1000px' }}>
             {[
               {
                 title: "Personalized Global Education Pathways",
@@ -1445,7 +1462,11 @@ function App() {
                 desc: "As a trusted education consultancy for international students, MATSOLS provides honest, transparent advice. Students always understand their options, costs, and timelines, allowing them to make informed decisions about studying abroad with confidence."
               }
             ].map((pillar, idx) => (
-              <div key={idx} className="pillar-card animate-matsols-card">
+              <div 
+                key={idx} 
+                className={`pillar-card anim-hidden ${idx < 3 ? 'anim-left' : 'anim-right'}`} 
+                style={{ transitionDelay: `${(idx % 3) * 0.15}s` }}
+              >
                 <h3>{pillar.title}</h3>
                 <p>{pillar.desc}</p>
               </div>
@@ -1485,7 +1506,7 @@ function App() {
                 desc: 'We collaborate with more than 70 trusted university partners, including 21 ranked in the QS World Top 200, giving international students access to globally recognized institutions.'
               }
             ].map((impact, idx) => (
-              <div key={idx} className="impact-card animate-matsols-card">
+              <div key={idx} className={`impact-card anim-hidden anim-zoom delay-${(idx % 3) * 100}`}>
                 <div className="impact-num">{impact.num}</div>
                 <div className="impact-title">{impact.title}</div>
                 <p className="impact-desc">{impact.desc}</p>
@@ -1733,7 +1754,7 @@ function App() {
 
         <div className="container">
           <div
-            className="bento-header"
+            className="bento-header anim-hidden anim-up"
             style={{
               textAlign: "center",
               maxWidth: "1000px",
@@ -1754,7 +1775,7 @@ function App() {
 
           <div className="bento-grid">
             {/* 1. Global Reach */}
-            <div className="b-card b-large">
+            <div className="b-card b-large anim-hidden anim-left">
               <div className="card-main-content">
                 <div className="card-top-row">
                   <h3 style={{ fontSize: "1.8rem" }}>Global Reach</h3>
@@ -1796,7 +1817,7 @@ function App() {
             </div>
 
             {/* 2. Success Rate (Circular) */}
-            <div className="b-card b-tall">
+            <div className="b-card b-tall anim-hidden anim-right">
               <div className="card-main-content">
                 <div className="card-top-row">
                   <h3 style={{ fontSize: "1.8rem" }}>Success Rate</h3>
@@ -1846,7 +1867,7 @@ function App() {
             </div>
 
             {/* 3. Confidential (Small) */}
-            <div className="b-card b-small">
+            <div className="b-card b-small anim-hidden anim-left">
               <div className="card-main-content">
                 <div className="card-top-row">
                   <h3 style={{ fontSize: "1.8rem" }}>Confidential</h3>
@@ -1885,7 +1906,7 @@ function App() {
             </div>
 
             {/* 4. Tailored Pathways (Wide) */}
-            <div className="b-card b-wide">
+            <div className="b-card b-wide anim-hidden anim-right">
               <div className="card-main-content">
                 <div className="card-top-row">
                   <h3 style={{ fontSize: "1.8rem" }}>Tailored Pathways</h3>
@@ -2021,7 +2042,7 @@ function App() {
             Discover your ideal study destination among the world's leading academic hubs.
           </p>
           <div className="cards-row">
-            <div className="dest-card">
+            <div className="dest-card anim-hidden anim-left">
               <img
                 alt="UK"
                 src="https://storage.googleapis.com/banani-generated-images/generated-images/ee17499d-cc53-46e4-90cf-1165877d8493.jpg"
@@ -2038,7 +2059,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="dest-card">
+            <div className="dest-card anim-hidden anim-left">
               <img
                 alt="USA"
                 src="https://storage.googleapis.com/banani-generated-images/generated-images/4f95ce3a-7fbe-4e49-9201-29c22d1d80df.jpg"
@@ -2055,7 +2076,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="dest-card">
+            <div className="dest-card anim-hidden anim-right">
               <img
                 alt="Canada"
                 src="https://storage.googleapis.com/banani-generated-images/generated-images/ee7c2dce-4c7f-4225-b955-abf95a74d492.jpg"
@@ -2072,7 +2093,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="dest-card">
+            <div className="dest-card anim-hidden anim-right">
               <img
                 alt="Australia"
                 src="https://storage.googleapis.com/banani-generated-images/generated-images/28fd5e03-2a59-4651-a36b-b0d2b542efec.jpg"
@@ -2366,8 +2387,44 @@ function App() {
       </section>
 
       {/* Process Sticky - Extreme Overhaul */}
-      <section className="section-process" ref={processRef}>
-        <div className="blueprint-grid"></div>
+      <section className="section-process" ref={processRef} style={{ position: 'relative' }}>
+        <div className="process-bg-abstract" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, 
+        /* Orange background override handled by CSS or container */ }}>
+            <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+              <defs>
+                <pattern id="engineerGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#004089" strokeWidth="0.5" opacity="0.15"/> {/* Dark Blue Stroke for Light BG */}
+                </pattern>
+                <linearGradient id="blueprintFade" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#004089" stopOpacity="0.1" />
+                  <stop offset="100%" stopColor="#004089" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+              
+              {/* Full Schematic Grid (Dark for Visibility) */}
+              <rect width="1400" height="1000" fill="url(#engineerGrid)" />
+              
+              {/* Contrast Frame - Dark Blue */}
+              <path d="M40,40 L150,40 M40,40 L40,150" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
+              <path d="M1360,40 L1250,40 M1360,40 L1360,150" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
+              <path d="M40,960 L150,960 M40,960 L40,850" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
+              <path d="M1360,960 L1250,960 M1360,960 L1360,850" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
+              
+              {/* Ruler Markings */}
+              {[...Array(20)].map((_, i) => (
+                <line key={`v-rule-${i}`} x1={40} y1={100 + i * 40} x2={55} y2={100 + i * 40} stroke="#004089" strokeWidth="1" opacity="0.6" />
+              ))}
+              
+              {/* Isometric / Radar Elements */}
+              <circle cx="700" cy="500" r="300" stroke="#004089" strokeWidth="1" fill="none" strokeDasharray="10 10" opacity="0.3" />
+              <circle cx="700" cy="500" r="450" stroke="#004089" strokeWidth="1" fill="url(#blueprintFade)" opacity="0.5" />
+              
+              {/* Isometric Cube Hint */}
+              <path d="M1100,500 L1200,440 L1300,500 L1200,560 Z" fill="none" stroke="#004089" strokeWidth="2" opacity="0.2" />
+              <path d="M1100,500 V620 L1200,680 V560" fill="none" stroke="#004089" strokeWidth="2" opacity="0.2" />
+              <path d="M1300,500 V620 L1200,680" fill="none" stroke="#004089" strokeWidth="2" opacity="0.2" />
+            </svg>
+        </div>
 
         <div className="process-layout">
           <div className="sticky-col">

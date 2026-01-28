@@ -3729,3 +3729,236 @@ img {
     font-size: 2.5rem;
   }
 }
+
+/* =========================================
+   HERO RESPONSIVENESS
+   ========================================= */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+    padding-top: 100px;
+  }
+
+  .hero-text h1 {
+    font-size: 3.5rem;
+    justify-content: center;
+  }
+  
+  .hero-title .line {
+    justify-content: center;
+  }
+
+  .hero-stats-cluster {
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+  }
+
+  .stat-badge {
+    padding: 12px 20px;
+    min-width: 200px;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust orbit for smaller circle */
+  .stat-1 { top: 0%; right: 10%; }
+  .stat-2 { top: 30%; right: -12%; }
+  .stat-3 { top: 65%; right: -12%; }
+  .stat-4 { top: 90%; right: 10%; }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  .hero-content {
+    display: flex; /* Switch to flex for easier stacking control */
+    flex-direction: column;
+    padding: 120px 24px 60px;
+    gap: 60px; /* Space between text and stats */
+  }
+
+  .hero-text {
+    max-width: 100%;
+  }
+
+  .hero-text h1 {
+    font-size: 2.8rem;
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    margin: 0 auto 30px;
+  }
+
+  .hero-btns {
+    width: 100%;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  /* RESET ORBITAL STATS TO VERTICAL STACK */
+  .hero-stats-cluster {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .stat-badge {
+    position: relative; /* XML-like reset */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    justify-content: flex-start;
+  }
+  
+  /* Reset GSAP triggers visually */
+  .stat-1, .stat-2, .stat-3, .stat-4 {
+    margin: 0;
+  }
+  /* 5. Mobile Center Alignment for All Cards */
+  .pillar-card,
+  .insight-card,
+  .offer-card,
+  .b-card,
+  .dest-card,
+  .section-title,
+  .section-subtitle,
+  .impact-header,
+  .offers-header,
+  .why-choose-header {
+    text-align: center !important;
+    align-items: center !important;
+  }
+  
+  .insight-footer {
+    justify-content: center !important;
+  }
+  
+  .offer-icon-tag, .insight-badge {
+    margin: 0 auto 15px auto !important;
+  }
+}
+
+/* Dramatic Client-Requested Animations */
+
+/* Initial State - Hidden */
+.anim-hidden {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* 1. Super Slide (Left) - 'Far the f*** off' */
+@keyframes superSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.anim-left.in-view {
+  animation: superSlideLeft 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 2. Super Slide (Right) */
+@keyframes superSlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(200px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.anim-right.in-view {
+  animation: superSlideRight 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 3. Elastic Zoom - 'In your face' */
+@keyframes elasticZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.anim-zoom.in-view {
+  animation: elasticZoom 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 4. Heavy Fade Up - Headings */
+@keyframes heavyFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-up.in-view {
+  animation: heavyFadeUp 1s ease-out forwards;
+}
+
+/* Delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+
+
+/* Super Pop Up - Vertical Bounce (No Rotation) */
+@keyframes superPopUp {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.anim-pop.in-view {
+  animation: superPopUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
