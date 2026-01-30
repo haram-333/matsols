@@ -18,8 +18,13 @@ import heroAvatar from "./assets/images/hero-avatar.webp";
 import story1 from "./assets/images/story-1.webp";
 import story3 from "./assets/images/story-3.webp";
 import supportBg from "./assets/images/support-bg.webp";
+import blueprintBg from "./assets/images/blueprint-bg.png";
 import titan1 from "./assets/images/path-1.webp"; 
 import titan2 from "./assets/images/path-2.webp";
+
+import ukDest from "./assets/destinations/uk.png";
+import istanbulDest from "./assets/destinations/istanbul.png";
+import maltaDest from "./assets/destinations/malta.png";
 
 import manchesterMet from "./assets/ubi-logos/1200px-Manchester_Metropolitan_University_logo.svg.png.webp";
 import cardiff from "./assets/ubi-logos/Cardiff-Uni.png.webp";
@@ -41,7 +46,7 @@ function App() {
   const [faqActive, setFaqActive] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [isVideoMuted, setIsVideoMuted] = useState(true); // MUST start muted for browser autoplay compliance
+  const [isVideoMuted, setIsVideoMuted] = useState(false); // ATTEMPTING UNMUTED BY DEFAULT PER USER REQUEST
   const [videoKey, setVideoKey] = useState(Date.now()); // Hard-reload key
   const bentoRef = useRef(null);
   const destRef = useRef(null);
@@ -93,12 +98,58 @@ function App() {
     });
     gsap.ticker.lagSmoothing(0);
 
-    // Hero Video Hard-Persistence Effect
-    if (heroVideoRef.current) {
-      heroVideoRef.current.volume = 0.3;
-      heroVideoRef.current.muted = isVideoMuted;
-      heroVideoRef.current.play().catch(e => console.log("Hero video auto-play blocked", e));
+    // Hero Video FORCE-AUTOMATION (Max-Aggressive)
+    const heroVid = heroVideoRef.current;
+    if (heroVid) {
+      heroVid.volume = 0.7;
+      heroVid.muted = false;
+      
+      const startVideo = async () => {
+        try {
+          await heroVid.play();
+          setIsVideoMuted(false);
+          console.log("Hero: Unmuted Autoplay Success");
+        } catch (err) {
+          console.log("Hero: Unmuted block, forced silent fallback", err);
+          heroVid.muted = true;
+          setIsVideoMuted(true);
+          heroVid.play();
+        }
+      };
+      
+      startVideo();
     }
+
+    // Persistant "Force-Unmute" Loop
+    // This keeps trying to unmute. The moment ANY user gesture occurs (even a scroll), 
+    // the browser permissions will shift and this will finally succeed.
+    const forceUnmuteInterval = setInterval(() => {
+      if (heroVideoRef.current && heroVideoRef.current.muted) {
+        heroVideoRef.current.muted = false;
+        heroVideoRef.current.play()
+          .then(() => {
+            setIsVideoMuted(false);
+            console.log("Hero: Automatically Force-Unmuted after gesture context shift");
+            clearInterval(forceUnmuteInterval);
+          })
+          .catch(() => {
+            heroVideoRef.current.muted = true;
+          });
+      }
+    }, 100);
+
+    // Global Interaction Bridge (Even more listeners)
+    const quickUnmute = () => {
+      if (heroVideoRef.current && heroVideoRef.current.muted) {
+        heroVideoRef.current.muted = false;
+        setIsVideoMuted(false);
+        heroVideoRef.current.play();
+      }
+      clearInterval(forceUnmuteInterval);
+    };
+
+    const interactiveEvents = ["click", "touchstart", "mousedown", "keydown", "scroll"];
+    interactiveEvents.forEach(evt => window.addEventListener(evt, quickUnmute, { once: true }));
 
     // GSAP Animations
     const ctx = gsap.context(() => {
@@ -462,20 +513,12 @@ function App() {
         once: true
       });
 
-      // Dedicated bridge for unmuting on first interaction (EXECUTES ONCE)
+      // Hero Scroll Animation Trigger - REMOVED GENERIC UNMUTING BRIDGE IN FAVOUR OF AGGRESSIVE LISTENERS
       ScrollTrigger.create({
-        trigger: "body",
-        start: "10px top",
-        onEnter: () => {
-          if (isVideoMuted && !hasBeenAutoUnmuted.current) {
-            hasBeenAutoUnmuted.current = true;
-            setIsVideoMuted(false);
-            if (heroVideoRef.current) {
-              heroVideoRef.current.muted = false;
-              heroVideoRef.current.play().catch(e => console.log("Autoplay bridge blocked:", e));
-            }
-          }
-        }
+        trigger: ".hero",
+        start: "top 20%",
+        onEnter: () => heroAnimTl.play(),
+        once: true
       });
 
       // AI Matchmaking Animation (Instant Reveal)
@@ -834,6 +877,8 @@ function App() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      interactiveEvents.forEach(evt => window.removeEventListener(evt, quickUnmute));
+      clearInterval(forceUnmuteInterval);
       ctx.revert();
       lenis.destroy();
     };
@@ -845,80 +890,94 @@ function App() {
       <nav
         className={`navbar ${scrolled ? "scrolled" : ""} ${isMenuOpen ? "menu-open" : ""}`}
       >
-        <div className="nav-logo">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 2L2 7L12 12L22 7L12 2Z"
-              fill="var(--primary-orange)"
-            ></path>
-            <path
-              d="M2 17L12 22L22 17"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-            <path
-              d="M2 12L12 17L22 12"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-          </svg>
-          MATSOLS
-        </div>
-        <div className="nav-menu">
-          <a href="#" className="nav-link">
-            Home
-          </a>
-          <a href="#" className="nav-link">
-            About Us
-          </a>
-          <a href="#" className="nav-link nav-dropdown">
-            What we Offer
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </a>
-          <a href="#" className="nav-link">
-            Universities
-          </a>
-          <a href="#" className="nav-link">
-            Resources
-          </a>
-          <a href="#" className="nav-link">
-            Contact
-          </a>
-        </div>
+        <div className="nav-container">
+          <div className="nav-main">
+            <div className="nav-logo">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2L2 7L12 12L22 7L12 2Z"
+                  fill="var(--primary-orange)"
+                ></path>
+                <path
+                  d="M2 17L12 22L22 17"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+                <path
+                  d="M2 12L12 17L22 12"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+              </svg>
+              MATSOLS
+            </div>
+            <div className="nav-menu">
+              <a href="#" className="nav-link">
+                Home
+              </a>
+              <a href="#" className="nav-link">
+                About Us
+              </a>
+              <a href="#" className="nav-link nav-dropdown">
+                What we Offer
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </a>
+              <a href="#" className="nav-link">
+                Universities
+              </a>
+              <a href="#" className="nav-link">
+                Resources
+              </a>
+              <a href="#" className="nav-link">
+                Contact
+              </a>
+            </div>
 
-        <div className="nav-actions">
-          <a href="#" className="btn btn-primary nav-cta">
-            Free Consultation
-          </a>
-          <button
-            className="hamburger"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-            <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-            <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-          </button>
+            <div className="nav-actions">
+              <a href="#" className="btn btn-primary nav-cta">
+                Free Consultation
+              </a>
+              <button
+                className="hamburger"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+              </button>
+            </div>
+          </div>
+
+          <div className="nav-secondary">
+            <a href="#" className="student-type-link">
+              UK AND EU STUDENTS
+            </a>
+            <div className="nav-secondary-divider"></div>
+            <a href="#" className="student-type-link">
+              INTERNATIONAL STUDENTS
+            </a>
+          </div>
         </div>
 
         {/* Mobile Menu Overlay */}
@@ -984,7 +1043,6 @@ function App() {
           className="hero-video-bg"
           src={heroVideo}
           autoPlay
-          muted
           loop
           playsInline
         ></video>
@@ -2137,12 +2195,12 @@ function App() {
             <div className="dest-card anim-hidden anim-left">
               <img
                 alt="UK"
-                src="https://storage.googleapis.com/banani-generated-images/generated-images/ee17499d-cc53-46e4-90cf-1165877d8493.jpg"
+                src={ukDest}
               />
               <div className="dest-info">
                 <h3>United Kingdom</h3>
                 <div className="dest-details">
-                  <p>Home to Oxford, Cambridge, and LSE.</p>
+                  <p>Home to world-leading universities like Oxford, Cambridge, and Imperial College London.</p>
                   <span
                     style={{ color: "var(--primary-orange)", fontWeight: 600 }}
                   >
@@ -2151,53 +2209,36 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="dest-card anim-hidden anim-left">
+            <div className="dest-card anim-hidden anim-up">
               <img
-                alt="USA"
-                src="https://storage.googleapis.com/banani-generated-images/generated-images/4f95ce3a-7fbe-4e49-9201-29c22d1d80df.jpg"
+                alt="Istanbul"
+                src={istanbulDest}
               />
               <div className="dest-info">
-                <h3>USA</h3>
+                <h3>Istanbul, Turkey</h3>
                 <div className="dest-details">
-                  <p>Ivy League and top research institutions.</p>
+                  <p>A vibrant bridge between East and West, offering rich cultural heritage and modern academic excellence.</p>
                   <span
                     style={{ color: "var(--primary-orange)", fontWeight: 600 }}
                   >
-                    Explore USA →
+                    Explore Istanbul →
                   </span>
                 </div>
               </div>
             </div>
             <div className="dest-card anim-hidden anim-right">
               <img
-                alt="Canada"
-                src="https://storage.googleapis.com/banani-generated-images/generated-images/ee7c2dce-4c7f-4225-b955-abf95a74d492.jpg"
+                alt="Malta"
+                src={maltaDest}
               />
               <div className="dest-info">
-                <h3>Canada</h3>
+                <h3>Malta</h3>
                 <div className="dest-details">
-                  <p>World-class education with PGWP options.</p>
+                  <p>Study in a Mediterranean paradise with high-quality English-taught programs and a booming career landscape.</p>
                   <span
                     style={{ color: "var(--primary-orange)", fontWeight: 600 }}
                   >
-                    Explore Canada →
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="dest-card anim-hidden anim-right">
-              <img
-                alt="Australia"
-                src="https://storage.googleapis.com/banani-generated-images/generated-images/28fd5e03-2a59-4651-a36b-b0d2b542efec.jpg"
-              />
-              <div className="dest-info">
-                <h3>Australia</h3>
-                <div className="dest-details">
-                  <p>Innovative research and vibrant lifestyle.</p>
-                  <span
-                    style={{ color: "var(--primary-orange)", fontWeight: 600 }}
-                  >
-                    Explore Australia →
+                    Explore Malta →
                   </span>
                 </div>
               </div>
@@ -2206,7 +2247,6 @@ function App() {
         </div>
       </section>
 
-      {/* Success Stories Section */}
       <section className="section-stories">
         <div className="container">
           <div className="stories-header animate-entry">
@@ -2231,21 +2271,21 @@ function App() {
             >
               {[
                 {
-                  quote: "Honestly, I was stressed out about applying to universities abroad. I wasn't sure which country or course was right for me, and the whole paperwork thing was overwhelming. Then I reached out to MATSOLS. They walked me through everything-step by step-and helped me figure out a path that made sense for me. Now I'm at SBM Malta studying Business, and it's been amazing. The campus is vibrant, I've met people from over 30 countries, and I feel confident about my career plans. What I loved the most was how personal their support was-they really cared about my goals, not just getting me admitted.",
+                  quote: "Stressed by paperwork and choices, I turned to MATSOLS. They simplified everything, guiding me to SBM Malta for Business. I’m now thriving in a global environment with a clear career path ahead.",
                   name: "Emma L.",
                   uni: "SBM Malta",
                   course: "Business Administration",
                   img: story1,
                 },
                 {
-                  quote: "Applying to universities abroad was confusing at first. I didn't know which courses matched my skills or how to handle all the documents and deadlines. MATSOLS helped me map out my path, guided me through my application, and even gave me interview tips. Now I'm at a UK university studying IT, already doing projects that could help me land my first career job. I feel like I have a plan, a direction, and a support system all at once. MATSOLS wasn't just about admissions-they helped me take the first steps toward my career.",
+                  quote: "MATSOLS turned application chaos into a clear strategy. From interview prep to enrollment, they handled it all. I’m now studying IT in the UK, already building projects for my future career.",
                   name: "James K.",
                   uni: "UK University",
                   course: "Information Technology",
                   img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80",
                 },
                 {
-                  quote: "I always wanted to study finance abroad, but honestly, I was worried about the cost. Between tuition, living expenses, and travel, it felt impossible on my family's budget. I wasn't sure how I'd make it work. Then I reached out to MATSOLS. They didn't just help me with my university applications-they helped me figure out scholarships, budget-friendly options, and ways to manage living costs abroad. They even helped me plan a realistic financial roadmap for my studies. Fast forward a few months, and I'm now studying Finance in Malta at SBM, surrounded by students from all over the world. I feel confident about my education and my finances, and I know I wouldn't have made it here without MATSOLS. They turned what felt impossible into a real opportunity.",
+                  quote: "The cost of studying abroad felt impossible until MATSOLS found my scholarships. They built a financial roadmap that worked. Today, I’m studying Finance in Malta, debt-managed and future-ready.",
                   name: "Sofia R.",
                   uni: "SBM Malta",
                   course: "Finance & Accounting",
@@ -2276,6 +2316,66 @@ function App() {
               ))}
             </Swiper>
           </div>
+        </div>
+      </section>
+
+      {/* AI Admissions Consultant Section - Academic Overhaul */}
+      <section className="section-ai-consultant anim-hidden anim-up">
+        <div className="world-map-bg-overlay"></div>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="simple-ai-wrapper">
+              <div className="simple-ai-main">
+                <div className="simple-ai-header">
+                  <h2 className="simple-title">Your AI Admission Office</h2>
+                  <p className="simple-hero-text">We've built a smart assistant that handles the complicated parts of studying abroad. It's designed to give you direct answers about universities, visas, and costs without making you wait for an email or a phone call.</p>
+                </div>
+                
+                <div className="simple-ai-content-grid">
+                  <div className="simple-text-side">
+                    <div className="info-group">
+                      <h3>Instant University Matching</h3>
+                      <p>Finding the right school is the hardest part. Our AI looks at your current grades, what you want to study, and your budget. In seconds, it gives you a list of universities in the UK, USA, or Europe where you have the best chance of getting an offer. It's accurate, fast, and uses real admission data.</p>
+                    </div>
+                    
+                    <div className="info-group">
+                      <h3>Clear Visa & Document Help</h3>
+                      <p>Visa rules change all the time. Our AI stays updated with the latest laws so you don't have to. Ask it which documents you need for a UK Student Visa or how much money you need to show in your bank account. It gives you a simple checklist so you don't miss anything important.</p>
+                    </div>
+
+                    <div className="info-group">
+                      <h3>Real-Time Cost Estimates</h3>
+                      <p>Planning your budget is essential. You can ask our assistant about tuition fees for specific courses or the average cost of rent in cities like London or Manchester. It helps you understand the total cost of your education before you even apply.</p>
+                    </div>
+
+                    <div className="simple-bottom-benefits">
+                      <div className="benefit">
+                        <span className="check">✓</span> 24/7 Support
+                      </div>
+                      <div className="benefit">
+                        <span className="check">✓</span> Plain English Answers
+                      </div>
+                      <div className="benefit">
+                        <span className="check">✓</span> No hidden costs
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="simple-chat-side">
+                    <div className="simple-chat-box">
+                      <div className="chat-header">
+                        <span className="dot"></span> Online Assistant
+                      </div>
+                      <div className="chat-messages">
+                        <div className="msg bot">Hello! I'm here to help you. What are you looking to study?</div>
+                        <div className="msg user">I want to study Business in London next year.</div>
+                        <div className="msg bot">Great! London has excellent schools for Business. Do you know your current GPA or test scores so I can suggest the best matches?</div>
+                      </div>
+                    </div>
+                    <p className="chat-disclaimer">Our AI is here to guide you, but you can always talk to a human advisor for final verification.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </section>
 
@@ -2480,41 +2580,61 @@ function App() {
 
       {/* Process Sticky - Extreme Overhaul */}
       <section className="section-process" ref={processRef} style={{ position: 'relative' }}>
-        <div className="process-bg-abstract" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, 
-        /* Orange background override handled by CSS or container */ }}>
-            <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+        <div className="process-bg-abstract" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
+            {/* Cinematic Asset BG */}
+            <img 
+              src={blueprintBg} 
+              alt="" 
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.15, filter: 'grayscale(100%) brightness(0.5)' }} 
+            />
+            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 70% 50%, rgba(4, 16, 33, 0) 0%, rgba(4, 16, 33, 0.9) 100%)' }}></div>
+            
+            <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1 }}>
               <defs>
-                <pattern id="engineerGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#004089" strokeWidth="0.5" opacity="0.15"/> {/* Dark Blue Stroke for Light BG */}
+                <pattern id="engineerGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+                  <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#06b6d4" strokeWidth="0.5" opacity="0.1"/>
                 </pattern>
-                <linearGradient id="blueprintFade" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#004089" stopOpacity="0.1" />
-                  <stop offset="100%" stopColor="#004089" stopOpacity="0.0" />
+                <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.1" />
+                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
               
-              {/* Full Schematic Grid (Dark for Visibility) */}
               <rect width="1400" height="1000" fill="url(#engineerGrid)" />
-              
-              {/* Contrast Frame - Dark Blue */}
-              <path d="M40,40 L150,40 M40,40 L40,150" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
-              <path d="M1360,40 L1250,40 M1360,40 L1360,150" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
-              <path d="M40,960 L150,960 M40,960 L40,850" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
-              <path d="M1360,960 L1250,960 M1360,960 L1360,850" stroke="#004089" strokeWidth="3" opacity="0.8" fill="none" />
-              
-              {/* Ruler Markings */}
-              {[...Array(20)].map((_, i) => (
-                <line key={`v-rule-${i}`} x1={40} y1={100 + i * 40} x2={55} y2={100 + i * 40} stroke="#004089" strokeWidth="1" opacity="0.6" />
+
+              {/* Center Concentric Hub */}
+              <circle cx="700" cy="500" r="480" stroke="#06b6d4" strokeWidth="1" fill="none" opacity="0.05" />
+              <circle cx="700" cy="500" r="400" stroke="#06b6d4" strokeWidth="0.5" fill="none" opacity="0.1" strokeDasharray="5,5" />
+              <circle cx="700" cy="500" r="320" stroke="#06b6d4" strokeWidth="2" fill="none" opacity="0.15" />
+              <circle cx="700" cy="500" r="150" stroke="#06b6d4" strokeWidth="1" fill="none" opacity="0.2" />
+
+              {/* Radial Technical Markers */}
+              {[...Array(24)].map((_, i) => (
+                <line 
+                  key={`radial-${i}`}
+                  x1="700" y1="500"
+                  x2={700 + Math.cos(i * 15 * Math.PI / 180) * 1000}
+                  y2={500 + Math.sin(i * 15 * Math.PI / 180) * 1000}
+                  stroke="#06b6d4" strokeWidth="0.5" opacity="0.05"
+                />
               ))}
+
+              {/* Corner Accents */}
+              <path d="M40,40 L180,40 M40,40 L40,180" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
+              <path d="M1360,40 L1220,40 M1360,40 L1360,180" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
+              <path d="M40,960 L180,960 M40,960 L40,820" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
+              <path d="M1360,960 L1220,960 M1360,960 L1360,820" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
               
-              {/* Isometric / Radar Elements */}
-              <circle cx="700" cy="500" r="300" stroke="#004089" strokeWidth="1" fill="none" strokeDasharray="10 10" opacity="0.3" />
-              <circle cx="700" cy="500" r="450" stroke="#004089" strokeWidth="1" fill="url(#blueprintFade)" opacity="0.5" />
-              
-              {/* Isometric Cube Hint */}
-              <path d="M1100,500 L1200,440 L1300,500 L1200,560 Z" fill="none" stroke="#004089" strokeWidth="2" opacity="0.2" />
-              <path d="M1100,500 V620 L1200,680 V560" fill="none" stroke="#004089" strokeWidth="2" opacity="0.2" />
-              <path d="M1300,500 V620 L1200,680" fill="none" stroke="#004089" strokeWidth="2" opacity="0.2" />
+              {/* Data Points */}
+              <circle cx="200" cy="200" r="3" fill="#06b6d4" opacity="0.6" />
+              <text x="210" y="205" fill="#06b6d4" fontSize="10" fontFamily="monospace" opacity="0.4">NODE_ALPHA_01</text>
+              <circle cx="1200" cy="800" r="3" fill="#06b6d4" opacity="0.6" />
+              <text x="1210" y="805" fill="#06b6d4" fontSize="10" fontFamily="monospace" opacity="0.4">SYNC_COMPLETE</text>
+
+              {/* Ruler Markings */}
+              {[...Array(30)].map((_, i) => (
+                <line key={`v-rule-${i}`} x1={40} y1={50 + i * 30} x2={55} y2={50 + i * 30} stroke="#06b6d4" strokeWidth="1" opacity="0.3" />
+              ))}
             </svg>
         </div>
 
