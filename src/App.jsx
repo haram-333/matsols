@@ -13,7 +13,7 @@ import path1 from "./assets/images/path-1.webp";
 import path2 from "./assets/images/path-2.webp";
 import path3 from "./assets/images/path-3.webp";
 import heroBg from "./assets/images/hero-bg.webp";
-import heroVideo from "./assets/videos/bg-video.mp4";
+import heroVideo from "./assets/videos/bg-video-compressed.mp4";
 import heroAvatar from "./assets/images/hero-avatar.webp";
 import story1 from "./assets/images/story-1.webp";
 import story3 from "./assets/images/story-3.webp";
