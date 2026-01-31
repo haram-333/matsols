@@ -399,6 +399,91 @@ img {
   background: #000;
 }
 
+/* Relocated Student Types Section */
+.section-student-types {
+  padding: 40px 0;
+  background: white;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.student-types-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.student-type-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 40px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  letter-spacing: 1.5px;
+  z-index: 2;
+}
+
+.student-type-btn iconify-icon {
+  font-size: 1.5rem;
+  color: var(--primary-orange);
+  z-index: 2;
+  transition: transform 0.4s ease;
+}
+
+.btn-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 134, 60, 0.1) 0%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.student-type-btn:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-orange);
+  background: white;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.student-type-btn:hover .btn-glow {
+  opacity: 1;
+}
+
+.student-type-btn:hover iconify-icon {
+  transform: translate(5px, -5px);
+}
+
+@media (max-width: 768px) {
+  .student-types-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Secondary Navbar Removal Support */
+.nav-secondary {
+  display: none !important;
+}
+
 .hero-video-bg {
   position: absolute;
   inset: 0;
@@ -1572,6 +1657,43 @@ img {
   background: white;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   border-color: var(--primary-orange);
+}
+
+/* Lead Magnet Grid Fix */
+.magnet-form-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 60px;
+  background: white;
+  border-radius: 40px;
+  align-content: center;
+}
+
+.magnet-form-title {
+  grid-column: span 2;
+  font-size: 1.7rem;
+  margin-bottom: 30px;
+}
+
+.magnet-form-wrap .input-group {
+  margin-bottom: 0;
+}
+
+.magnet-btn {
+  grid-column: span 2;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .magnet-form-wrap {
+    grid-template-columns: 1fr;
+    padding: 30px;
+  }
+  .magnet-form-title,
+  .magnet-btn {
+    grid-column: span 1;
+  }
 }
 
 .ai-card-icon {
@@ -4508,7 +4630,7 @@ img {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 64, 137, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 64, 137, 0.05) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -4544,8 +4666,12 @@ img {
 }
 
 @keyframes rotateAcademic {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .orbit-academic text {
@@ -4555,8 +4681,12 @@ img {
 }
 
 @keyframes counterRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
 }
 
 /* Simple AI Assistant Overhaul */
@@ -4744,5 +4874,7 @@ img {
     height: 320px;
     margin: 0 auto;
   }
-  .chat-message { max-width: 100%; }
+  .chat-message {
+    max-width: 100%;
+  }
 }

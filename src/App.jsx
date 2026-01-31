@@ -992,15 +992,7 @@ function App() {
             </div>
           </div>
 
-          <div className="nav-secondary">
-            <a href="#" className="student-type-link">
-              UK AND EU STUDENTS
-            </a>
-            <div className="nav-secondary-divider"></div>
-            <a href="#" className="student-type-link">
-              INTERNATIONAL STUDENTS
-            </a>
-          </div>
+
         </div>
 
         {/* Mobile Menu Overlay */}
@@ -1189,6 +1181,24 @@ function App() {
         </div>
       </header>
 
+      {/* NEW: Student Category Section (Relocated from Hero) */}
+      <section className="section-student-types">
+        <div className="container">
+          <div className="student-types-grid">
+            <a href="#" className="student-type-btn uk-eu">
+              <div className="btn-glow"></div>
+              <span className="btn-text">UK AND EU STUDENTS</span>
+              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon>
+            </a>
+            <a href="#" className="student-type-btn international">
+              <div className="btn-glow"></div>
+              <span className="btn-text">INTERNATIONAL STUDENTS</span>
+              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Partners Section (Replaced Marquee) */}
       <section className="section-partners" ref={partnersRef}>
         <div className="container">
@@ -1277,7 +1287,66 @@ function App() {
         </div>
       </section>
 
-      {/* Updates & Insights Section */}
+      {/* AI Admissions Consultant Section - Academic Overhaul */}
+      <section className="section-ai-consultant anim-hidden anim-up">
+        <div className="world-map-bg-overlay"></div>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="simple-ai-wrapper">
+              <div className="simple-ai-main">
+                <div className="simple-ai-header">
+                  <h2 className="simple-title">Your AI Admission Office</h2>
+                  <p className="simple-hero-text">We've built a smart assistant that handles the complicated parts of studying abroad. It's designed to give you direct answers about universities, visas, and costs without making you wait for an email or a phone call.</p>
+                </div>
+                
+                <div className="simple-ai-content-grid">
+                  <div className="simple-text-side">
+                    <div className="info-group">
+                      <h3>Instant University Matching</h3>
+                      <p>Finding the right school is the hardest part. Our AI looks at your current grades, what you want to study, and your budget. In seconds, it gives you a list of universities in the UK, USA, or Europe where you have the best chance of getting an offer. It's accurate, fast, and uses real admission data.</p>
+                    </div>
+                    
+                    <div className="info-group">
+                      <h3>Clear Visa & Document Help</h3>
+                      <p>Visa rules change all the time. Our AI stays updated with the latest laws so you don't have to. Ask it which documents you need for a UK Student Visa or how much money you need to show in your bank account. It gives you a simple checklist so you don't miss anything important.</p>
+                    </div>
+
+                    <div className="info-group">
+                      <h3>Real-Time Cost Estimates</h3>
+                      <p>Planning your budget is essential. You can ask our assistant about tuition fees for specific courses or the average cost of rent in cities like London or Manchester. It helps you understand the total cost of your education before you even apply.</p>
+                    </div>
+
+                    <div className="simple-bottom-benefits">
+                      <div className="benefit">
+                        <span className="check">✓</span> 24/7 Support
+                      </div>
+                      <div className="benefit">
+                        <span className="check">✓</span> Plain English Answers
+                      </div>
+                      <div className="benefit">
+                        <span className="check">✓</span> No hidden costs
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="simple-chat-side">
+                    <div className="simple-chat-box">
+                      <div className="chat-header">
+                        <span className="dot"></span> Online Assistant
+                      </div>
+                      <div className="chat-messages">
+                        <div className="msg bot">Hello! I'm here to help you. What are you looking to study?</div>
+                        <div className="msg user">I want to study Business in London next year.</div>
+                        <div className="msg bot">Great! London has excellent schools for Business. Do you know your current GPA or test scores so I can suggest the best matches?</div>
+                      </div>
+                    </div>
+                    <p className="chat-disclaimer">Our AI is here to guide you, but you can always talk to a human advisor for final verification.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+
       <section className="section-insights">
         <div className="insights-bg-abstract">
           <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
@@ -2343,65 +2412,7 @@ function App() {
         </div>
       </section>
 
-      {/* AI Admissions Consultant Section - Academic Overhaul */}
-      <section className="section-ai-consultant anim-hidden anim-up">
-        <div className="world-map-bg-overlay"></div>
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-            <div className="simple-ai-wrapper">
-              <div className="simple-ai-main">
-                <div className="simple-ai-header">
-                  <h2 className="simple-title">Your AI Admission Office</h2>
-                  <p className="simple-hero-text">We've built a smart assistant that handles the complicated parts of studying abroad. It's designed to give you direct answers about universities, visas, and costs without making you wait for an email or a phone call.</p>
-                </div>
-                
-                <div className="simple-ai-content-grid">
-                  <div className="simple-text-side">
-                    <div className="info-group">
-                      <h3>Instant University Matching</h3>
-                      <p>Finding the right school is the hardest part. Our AI looks at your current grades, what you want to study, and your budget. In seconds, it gives you a list of universities in the UK, USA, or Europe where you have the best chance of getting an offer. It's accurate, fast, and uses real admission data.</p>
-                    </div>
-                    
-                    <div className="info-group">
-                      <h3>Clear Visa & Document Help</h3>
-                      <p>Visa rules change all the time. Our AI stays updated with the latest laws so you don't have to. Ask it which documents you need for a UK Student Visa or how much money you need to show in your bank account. It gives you a simple checklist so you don't miss anything important.</p>
-                    </div>
 
-                    <div className="info-group">
-                      <h3>Real-Time Cost Estimates</h3>
-                      <p>Planning your budget is essential. You can ask our assistant about tuition fees for specific courses or the average cost of rent in cities like London or Manchester. It helps you understand the total cost of your education before you even apply.</p>
-                    </div>
-
-                    <div className="simple-bottom-benefits">
-                      <div className="benefit">
-                        <span className="check">✓</span> 24/7 Support
-                      </div>
-                      <div className="benefit">
-                        <span className="check">✓</span> Plain English Answers
-                      </div>
-                      <div className="benefit">
-                        <span className="check">✓</span> No hidden costs
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="simple-chat-side">
-                    <div className="simple-chat-box">
-                      <div className="chat-header">
-                        <span className="dot"></span> Online Assistant
-                      </div>
-                      <div className="chat-messages">
-                        <div className="msg bot">Hello! I'm here to help you. What are you looking to study?</div>
-                        <div className="msg user">I want to study Business in London next year.</div>
-                        <div className="msg bot">Great! London has excellent schools for Business. Do you know your current GPA or test scores so I can suggest the best matches?</div>
-                      </div>
-                    </div>
-                    <p className="chat-disclaimer">Our AI is here to guide you, but you can always talk to a human advisor for final verification.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-      </section>
 
       {/* FAQ Section */}
       <section className="section-faq">
@@ -2807,6 +2818,20 @@ function App() {
                 <input
                   type="email"
                   placeholder="Email Address"
+                  className="input-field"
+                />
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="Country of Residence"
+                  className="input-field"
+                />
+              </div>
+              <div className="input-group">
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
                   className="input-field"
                 />
               </div>
