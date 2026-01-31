@@ -140,10 +140,10 @@ function App() {
 
     // Global Interaction Bridge (Even more listeners)
     const quickUnmute = () => {
-      if (heroVideoRef.current && heroVideoRef.current.muted) {
+      if (heroVideoRef.current) {
         heroVideoRef.current.muted = false;
         setIsVideoMuted(false);
-        heroVideoRef.current.play();
+        heroVideoRef.current.play().catch(e => console.log("Bridge play block:", e));
       }
       clearInterval(forceUnmuteInterval);
     };
@@ -1044,6 +1044,7 @@ function App() {
           src={heroVideo}
           autoPlay
           loop
+          muted
           playsInline
         ></video>
         <div className="hero-overlay"></div>
