@@ -98,55 +98,81 @@ function App() {
     });
     gsap.ticker.lagSmoothing(0);
 
-    // Hero Video FORCE-AUTHENTIC (Visual Priority)
+    // Interaction-Based Hero Audio Unmuting (Browser-Tailored)
     const heroVid = heroVideoRef.current;
     if (heroVid) {
       heroVid.volume = 0.7;
-      heroVid.muted = true; // Hard-force muted base state
-      
-      const startVideo = async () => {
-        try {
-          await heroVid.play();
-          setIsVideoMuted(true);
-          console.log("Hero: Muted Autoplay Success (Visuals Active)");
-        } catch (err) {
-          console.log("Hero: Autoplay block", err);
-        }
-      };
-      
-      startVideo();
     }
 
-    // Persistant "Force-Unmute" Loop
-    // This keeps trying to unmute. The moment ANY user gesture occurs (even a scroll), 
-    // the browser permissions will shift and this will finally succeed.
-    const forceUnmuteInterval = setInterval(() => {
-      if (heroVideoRef.current && heroVideoRef.current.muted) {
-        heroVideoRef.current.muted = false;
-        heroVideoRef.current.play()
-          .then(() => {
-            setIsVideoMuted(false);
-            console.log("Hero: Automatically Force-Unmuted after gesture context shift");
-            clearInterval(forceUnmuteInterval);
-          })
-          .catch(() => {
-            heroVideoRef.current.muted = true;
-          });
-      }
-    }, 100);
+    // Robust Brave Detection
+    const isBrave = !!(navigator.brave && typeof navigator.brave.isBrave === 'function');
+    const isChrome = /Chrome/.test(navigator.userAgent) && 
+                     /Google Inc/.test(navigator.vendor) && 
+                     !isBrave;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    // Global Interaction Bridge (Even more listeners)
-    const quickUnmute = () => {
+    const handleInteraction = (e) => {
       if (heroVideoRef.current) {
+        // If already unmuted, cleanup
+        if (!heroVideoRef.current.muted) {
+          interactiveEvents.forEach(evt => window.removeEventListener(evt, handleInteraction));
+          return;
+        }
+
+        // Programmatic unmute attempt
         heroVideoRef.current.muted = false;
         setIsVideoMuted(false);
-        heroVideoRef.current.play().catch(e => console.log("Bridge play block:", e));
+        
+        heroVideoRef.current.play()
+          .then(() => {
+            console.log("Hero: Unmuted success via " + (e ? e.type : "manual interaction"));
+            interactiveEvents.forEach(evt => window.removeEventListener(evt, handleInteraction));
+          })
+          .catch((err) => {
+            console.log("Hero: Unmuted block on interaction", err);
+            if (heroVideoRef.current) {
+              heroVideoRef.current.muted = true;
+              setIsVideoMuted(true);
+            }
+          });
       }
-      clearInterval(forceUnmuteInterval);
     };
 
-    const interactiveEvents = ["click", "touchstart", "mousedown", "keydown", "scroll"];
-    interactiveEvents.forEach(evt => window.addEventListener(evt, quickUnmute, { once: true }));
+    // Strategy Execution
+    if (heroVid) {
+      if (!isChrome && !isMobile) {
+        // BRAVE/SAFARI/OTHERS: "WARM START" HACK (Muted Load -> 100ms Delay -> Unmute)
+        heroVid.muted = true;
+        setIsVideoMuted(true);
+        heroVid.play()
+          .then(() => {
+            // Wait 100ms for browser to "accept" the media session, then unmute
+            setTimeout(() => {
+              if (heroVideoRef.current && heroVideoRef.current.muted) {
+                heroVideoRef.current.muted = false;
+                setIsVideoMuted(false);
+                heroVideoRef.current.play().catch(() => {
+                  console.log("Hero: Warm-start unmute blocked, reverting to gesture bridge");
+                  heroVideoRef.current.muted = true;
+                  setIsVideoMuted(true);
+                });
+              }
+            }, 100);
+          })
+          .catch(() => {
+            console.log("Hero: Initial play blocked even while muted");
+          });
+      } else {
+        // Google Chrome (Standard) & Mobile: Visuals-First (Muted)
+        heroVid.muted = true;
+        setIsVideoMuted(true);
+        heroVid.play().catch(() => {});
+      }
+    }
+
+    // Interaction Bridge (No scroll, only physical gestures)
+    const interactiveEvents = ["click", "touchstart"];
+    interactiveEvents.forEach(evt => window.addEventListener(evt, handleInteraction));
 
     // GSAP Animations
     const ctx = gsap.context(() => {
@@ -235,7 +261,7 @@ function App() {
             },
           });
 
-          // Technical Parallax Grid
+          /* // Technical Parallax Grid (Commented out - target not found)
           mainTl.to(
             ".blueprint-grid",
             {
@@ -244,7 +270,7 @@ function App() {
               ease: "none",
             },
             0,
-          );
+          ); */
         }
       });
 
@@ -267,7 +293,7 @@ function App() {
       );
 
 
-      // MATSOLS Pillar Section Header (Enhanced Speed)
+      /* // MATSOLS Pillar Section Header (Commented out - target not found)
       gsap.fromTo(
         ".animate-matsols-header",
         { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
@@ -283,7 +309,7 @@ function App() {
             toggleActions: "play none none none",
           }
         }
-      );
+      ); */
 
       // MATSOLS Pillar Section (Instant Reveal)
       gsap.utils.toArray(".animate-matsols-card").forEach((card, i) => {
@@ -341,7 +367,7 @@ function App() {
 
       // MATSOLS Offers Section (Removed GSAP to favour CSS)
 
-      // Global Impact Section Header (Enhanced Speed)
+      /* // Global Impact Section Header (Commented out - target not found)
       gsap.fromTo(
         ".impact-header .section-title",
         { y: -30, opacity: 0, clipPath: "inset(0 0 100% 0)" },
@@ -372,7 +398,7 @@ function App() {
             toggleActions: "play none none none",
           },
         }
-      );
+      ); */
 
       // Impact Deck Section (Instant Reveal)
       gsap.utils.toArray(".impact-card").forEach((card, i) => {
@@ -395,7 +421,7 @@ function App() {
         );
       });
 
-      // MATSOLS Title Drawing Animation
+      /* // MATSOLS Title Drawing Animation (Commented out - target not found)
       const matsolsTl = gsap.timeline({
         scrollTrigger: {
           trigger: ".section-why-choose",
@@ -418,7 +444,7 @@ function App() {
           stagger: 0.02,
           ease: "power4.out",
         }
-      );
+      ); */
 
       // --- NEW WHY CHOOSE PARALLAX (Stair Layout) ---
       // Column 1 - moves up detailed
@@ -518,7 +544,7 @@ function App() {
         once: true
       });
 
-      // AI Matchmaking Animation (Instant Reveal)
+      /* // AI Matchmaking Animation (Commented out - target not found)
       gsap.fromTo(
         ".ai-content-side",
         { x: -80, opacity: 0, clipPath: "inset(0 0 100% 0)" },
@@ -559,7 +585,7 @@ function App() {
         duration: 0.4,
         stagger: 0.01,
         ease: "power2.out",
-      });
+      }); */
 
       // Success Stories Animation (Instant Reveal)
       gsap.fromTo(
@@ -624,7 +650,7 @@ function App() {
         },
       );
 
-      // Updates & Insights Card Blast (Removed GSAP to favour CSS)
+      /* // Updates & Insights Extra Graphics (Commented out - target not found)
       gsap.to(".moving-shape", {
         x: "random(-150, 150)",
         y: "random(-150, 150)",
@@ -660,7 +686,7 @@ function App() {
           each: 0.5,
           from: "random"
         }
-      });
+      }); */
 
       // FAQ Header Reveal (Instant Reveal & Visibility Hardening)
       gsap.fromTo(
@@ -733,6 +759,7 @@ function App() {
           }
         }
       );
+      /* // Path Header Subtitle (Commented out - target not found)
       gsap.fromTo(
         ".path-header .section-subtitle",
         { y: 15, opacity: 0 },
@@ -747,7 +774,7 @@ function App() {
             toggleActions: "play none none none",
           }
         }
-      );
+      ); */
 
       // 2. Path Zigzag Animation (Dynamic Length)
       const zigzagPath = document.querySelector(".zigzag-path");
@@ -821,7 +848,7 @@ function App() {
         });
       });
 
-      // Lead Magnet Directional Reveals (Instant Reveal)
+      /* // Lead Magnet (Commented out - target not found)
       gsap.fromTo(
         ".magnet-left",
         { x: -60, opacity: 0, clipPath: "inset(0 0 100% 0)" },
@@ -849,7 +876,7 @@ function App() {
         opacity: 0,
         duration: 0.6,
         ease: "power2.out",
-      });
+      }); */
 
       // Partners Section Reveal (Top-Masked Drop)
       gsap.fromTo(
@@ -874,8 +901,7 @@ function App() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      interactiveEvents.forEach(evt => window.removeEventListener(evt, quickUnmute));
-      clearInterval(forceUnmuteInterval);
+      interactiveEvents.forEach(evt => window.removeEventListener(evt, handleInteraction));
       ctx.revert();
       lenis.destroy();
     };
@@ -1041,7 +1067,7 @@ function App() {
           src={heroVideo}
           autoPlay
           loop
-          muted
+          muted={isVideoMuted}
           playsInline
         ></video>
         <div className="hero-overlay"></div>
