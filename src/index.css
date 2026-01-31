@@ -476,6 +476,15 @@ img {
 @media (max-width: 768px) {
   .student-types-grid {
     grid-template-columns: 1fr;
+    padding: 0 20px;
+  }
+
+  .btn-text {
+    font-size: 0.85rem;
+  }
+
+  .student-type-btn {
+    padding: 20px 25px;
   }
 }
 
