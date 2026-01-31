@@ -46,7 +46,7 @@ function App() {
   const [faqActive, setFaqActive] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [isVideoMuted, setIsVideoMuted] = useState(false); // ATTEMPTING UNMUTED BY DEFAULT PER USER REQUEST
+  const [isVideoMuted, setIsVideoMuted] = useState(true); // DEFAULT TO MUTED FOR CHROME AUTOPLAY GUARANTEE
   const [videoKey, setVideoKey] = useState(Date.now()); // Hard-reload key
   const bentoRef = useRef(null);
   const destRef = useRef(null);
@@ -98,22 +98,19 @@ function App() {
     });
     gsap.ticker.lagSmoothing(0);
 
-    // Hero Video FORCE-AUTOMATION (Max-Aggressive)
+    // Hero Video FORCE-AUTHENTIC (Visual Priority)
     const heroVid = heroVideoRef.current;
     if (heroVid) {
       heroVid.volume = 0.7;
-      heroVid.muted = false;
+      heroVid.muted = true; // Hard-force muted base state
       
       const startVideo = async () => {
         try {
           await heroVid.play();
-          setIsVideoMuted(false);
-          console.log("Hero: Unmuted Autoplay Success");
-        } catch (err) {
-          console.log("Hero: Unmuted block, forced silent fallback", err);
-          heroVid.muted = true;
           setIsVideoMuted(true);
-          heroVid.play();
+          console.log("Hero: Muted Autoplay Success (Visuals Active)");
+        } catch (err) {
+          console.log("Hero: Autoplay block", err);
         }
       };
       
