@@ -1,1 +1,5 @@
-PS C:\Users\Haram\Desktop\Student Immigration & Study Abroad Platform Developmen> & ".\node_modules\.bin\vite"
+.\node_modules\.bin\vite
+
+i told you to use the same navbar from the homepage but you created your own bullshit
+the hero section height should be 100 vh and should also have a bg image(use the ones from this project)
+also the svgs bg are not complex and dense and not in most of the sections and in about page there is not a single svgs background
