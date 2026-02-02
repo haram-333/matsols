@@ -7,19 +7,14 @@ import "lenis/dist/lenis.css";
 import "../index.css";
 import "./CourseMatching.css";
 
-// Images (Unsplash placeholders to match the aesthetic)
-const heroBg = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1920&q=80";
-const approach1 = "https://images.unsplash.com/photo-1521791136064-7986c2923216?auto=format&fit=crop&w=800&q=80";
-const approach2 = "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80";
-const approach3 = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80";
-const approach4 = "https://images.unsplash.com/photo-1454165833267-0351833e72c5?auto=format&fit=crop&w=800&q=80";
-const examineImg = "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80";
-const ctaBg = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80";
-
-// Testimonial Avatars
-const avatar1 = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80";
-const avatar2 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80";
-const avatar3 = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80";
+// Local Project Assets
+import path1 from "../assets/images/smiling-students-standing-with-notepad.jpg.jpeg";
+import path2 from "../assets/images/diverse_students_library_1770056302151.png";
+import path3 from "../assets/images/university_consulting_session_1770056274181.png";
+import heroBg from "../assets/images/glamorous-female-student-red-jacket-sitting-yard-front-college-with-computer.jpg.jpeg";
+import story1 from "../assets/images/story-1.webp";
+import story3 from "../assets/images/story-3.webp";
+import supportBg from "../assets/images/support-bg.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -122,12 +117,12 @@ function CourseMatching() {
                 <div className="nav-dropdown-menu">
                   <Link to="/what-we-offer/university-admissions" className="dropdown-link">University Admissions</Link>
                   <Link to="/what-we-offer/course-matching" className="dropdown-link active">Course Matching</Link>
-                  <Link to="/what-we-offer#visa-support" className="dropdown-link">Visa Support</Link>
-                  <Link to="/what-we-offer#institutional-representation" className="dropdown-link">Institutional Representation</Link>
+                  <Link to="/what-we-offer/visa-support" className="dropdown-link">Visa Support</Link>
+                  <Link to="/what-we-offer/institutional-representation" className="dropdown-link">Institutional Representation</Link>
                 </div>
               </div>
               <a href="#" className="nav-link">Universities</a>
-              <a href="#" className="nav-link">Resources</a>
+              <Link to="/faqs" className="nav-link">FAQs</Link>
               <a href="#" className="nav-link">Contact</a>
             </div>
 
@@ -157,7 +152,7 @@ function CourseMatching() {
                     </div>
                   </div>
                   <a href="#" className="mobile-link">Universities</a>
-                  <a href="#" className="mobile-link">Resources</a>
+                  <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
                   <a href="#" className="mobile-link">Contact</a>
                   <a href="#" className="btn btn-primary">Free Consultation</a>
                 </div>
@@ -170,8 +165,8 @@ function CourseMatching() {
                 <div className="mobile-menu-links">
                   <Link to="/what-we-offer/university-admissions" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
                   <Link to="/what-we-offer/course-matching" className="mobile-sublink active" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                  <Link to="/what-we-offer#visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                  <Link to="/what-we-offer#institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
+                  <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
+                  <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
                 </div>
               </div>
             </div>
@@ -181,7 +176,7 @@ function CourseMatching() {
 
       {/* HERO SECTION */}
       <section className="cm-hero">
-        <div className="cm-hero__bg"></div>
+        <div className="cm-hero__bg" style={{backgroundImage: `url(${heroBg})`}}></div>
         <div className="cm-hero__overlay"></div>
         <div className="cm-hero__content">
           <h1 className="cm-hero__title anim-hidden anim-up">
@@ -204,7 +199,7 @@ function CourseMatching() {
         
         <div className="cm-approach__row anim-hidden anim-left">
           <div className="cm-approach__image-wrap">
-            <img src={approach1} alt="Counseling" />
+            <img src={path1} alt="Counseling" />
           </div>
           <div className="cm-approach__text">
             <h3>One-to-One Counseling</h3>
@@ -214,7 +209,7 @@ function CourseMatching() {
 
         <div className="cm-approach__row reverse anim-hidden anim-right">
           <div className="cm-approach__image-wrap">
-            <img src={approach2} alt="Recommendations" />
+            <img src={path2} alt="Recommendations" />
           </div>
           <div className="cm-approach__text">
             <h3>Career-Aligned Recommendations</h3>
@@ -224,7 +219,7 @@ function CourseMatching() {
 
         <div className="cm-approach__row anim-hidden anim-left">
           <div className="cm-approach__image-wrap">
-            <img src={approach3} alt="International" />
+            <img src={path3} alt="International" />
           </div>
           <div className="cm-approach__text">
             <h3>International Destinations</h3>
@@ -234,7 +229,7 @@ function CourseMatching() {
 
         <div className="cm-approach__row reverse anim-hidden anim-right">
           <div className="cm-approach__image-wrap">
-            <img src={approach4} alt="Trend Analysis" />
+            <img src={supportBg} alt="Trend Analysis" />
           </div>
           <div className="cm-approach__text">
             <h3>Market Trend Analysis</h3>
@@ -265,7 +260,7 @@ function CourseMatching() {
       <section className="cm-examine">
         <div className="cm-container cm-examine__grid">
           <div className="cm-examine__image anim-hidden anim-left">
-            <img src={examineImg} alt="Team" />
+            <img src={supportBg} alt="Team" />
           </div>
           <div className="cm-examine__content anim-hidden anim-right">
             <h2>What We Examine</h2>
@@ -323,7 +318,7 @@ function CourseMatching() {
         <h2 className="cm-stories__title anim-hidden anim-up">Career Success Stories</h2>
         <div className="cm-stories__grid">
           <div className="cm-story-card anim-hidden anim-up delay-100">
-            <img src={avatar1} alt="Sarah" className="cm-story-avatar" />
+            <img src={story1} alt="Sarah" className="cm-story-avatar" />
             <p>"The course matching process was simple and efficient. I found exactly what I needed."</p>
             <div className="cm-story-info">
               <h4>Sarah J.</h4>
@@ -331,7 +326,7 @@ function CourseMatching() {
             </div>
           </div>
           <div className="cm-story-card anim-hidden anim-up delay-200">
-            <img src={avatar2} alt="Michael" className="cm-story-avatar" />
+            <img src={story1} alt="Michael" className="cm-story-avatar" />
             <p>"Found a course that aligned perfectly with my career goals. Highly recommended!"</p>
             <div className="cm-story-info">
               <h4>Michael T.</h4>
@@ -339,7 +334,7 @@ function CourseMatching() {
             </div>
           </div>
           <div className="cm-story-card anim-hidden anim-up delay-300">
-            <img src={avatar3} alt="Elena" className="cm-story-avatar" />
+            <img src={story3} alt="Elena" className="cm-story-avatar" />
             <p>"Their insights into the international job market were a game-changer for me."</p>
             <div className="cm-story-info">
               <h4>Elena R.</h4>
@@ -392,7 +387,7 @@ function CourseMatching() {
 
       {/* FINAL CTA */}
       <section className="cm-cta">
-        <div className="cm-cta__bg"></div>
+        <div className="cm-cta__bg" style={{backgroundImage: `url(${heroBg})`}}></div>
         <div className="cm-cta__overlay"></div>
         <div className="cm-container cm-cta__content">
           <h2 className="anim-hidden anim-up">Ready to Find Your Perfect Course?</h2>
@@ -413,9 +408,9 @@ function CourseMatching() {
               <div className="footer-logo">MATSOLS</div>
               <p>Building bridges to global education since 2005. We are the architects of your international career.</p>
               <div className="footer-social">
-                <a href="#" className="social-icon"><iconify-icon icon="line-md:linkedin"></iconify-icon></a>
-                <a href="#" className="social-icon"><iconify-icon icon="line-md:twitter-x"></iconify-icon></a>
-                <a href="#" className="social-icon"><iconify-icon icon="line-md:instagram"></iconify-icon></a>
+                <a href="#" className="social-icon"><iconify-icon icon="line-md:linkedin" width="22" height="22"></iconify-icon></a>
+                <a href="#" className="social-icon"><iconify-icon icon="line-md:twitter-x" width="22" height="22"></iconify-icon></a>
+                <a href="#" className="social-icon"><iconify-icon icon="line-md:instagram" width="22" height="22"></iconify-icon></a>
               </div>
             </div>
             <div className="footer-col">
@@ -434,6 +429,11 @@ function CourseMatching() {
                 <a href="#">Visa Support</a>
                 <a href="#">Scholarships</a>
               </nav>
+            </div>
+            <div className="footer-col">
+              <h4>Newsletter</h4>
+              <p className="footer-newsletter-text">Weekly insights on visa regulations.</p>
+              <input type="email" className="newsletter-input" placeholder="Email address" />
             </div>
           </div>
           <div className="footer-bottom">Copyright © 2026 MATSOLS. Built for Excellence.</div>

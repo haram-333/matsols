@@ -8,18 +8,19 @@ import "../index.css";
 import "./UniversityAdmissions.css";
 
 // Placeholder images - replace with actual assets
-const heroImg = "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80";
-const cardImg1 = "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80";
-const cardImg2 = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80";
-const cardImg3 = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80";
-const cardImg4 = "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80";
-const uniImg1 = "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=800&q=80";
-const uniImg2 = "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&w=800&q=80";
-const uniImg3 = "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=800&q=80";
-const uniImg4 = "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=800&q=80";
-const avatar1 = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80";
-const avatar2 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80";
-const avatar3 = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80";
+// Local Assets
+import heroBg from "../assets/images/graduation-cap-with-globe-digital-art-style-education-day.jpg.jpeg";
+import cardImg1 from "../assets/images/girl-checks-her-tablet-standing-street.jpg.jpeg";
+import cardImg2 from "../assets/images/dreamy-teen-girl-with-textbook.jpg.jpeg";
+import cardImg3 from "../assets/images/low-angle-cheerful-team-students-passed-test-by-preparing-all-together.jpg.jpeg";
+import cardImg4 from "../assets/images/digital_admissions_portal_1770056288503.png";
+import uniImg1 from "../assets/images/path-1.webp";
+import uniImg2 from "../assets/images/path-2.webp";
+import uniImg3 from "../assets/images/path-3.webp";
+import uniImg4 from "../assets/images/support-bg.webp";
+import avatar1 from "../assets/images/story-1.webp";
+import avatar2 from "../assets/images/story-3.webp";
+import avatar3 from "../assets/images/hero-avatar.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -152,10 +153,10 @@ function UniversityAdmissions() {
                     <Link to="/what-we-offer/course-matching" className="dropdown-link">
                         Course Matching
                     </Link>
-                    <Link to="/what-we-offer#visa-support" className="dropdown-link">
-                        Visa Support
-                    </Link>
-                    <Link to="/what-we-offer#institutional-representation" className="dropdown-link">
+                     <Link to="/what-we-offer/visa-support" className="dropdown-link">
+                         Visa Support
+                     </Link>
+                    <Link to="/what-we-offer/institutional-representation" className="dropdown-link">
                         Institutional Representation
                     </Link>
                 </div>
@@ -163,9 +164,9 @@ function UniversityAdmissions() {
               <a href="#" className="nav-link">
                 Universities
               </a>
-              <a href="#" className="nav-link">
-                Resources
-              </a>
+              <Link to="/faqs" className="nav-link">
+                FAQs
+              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
@@ -238,13 +239,13 @@ function UniversityAdmissions() {
                             >
                                 Universities
                             </a>
-                            <a
-                                href="#"
+                            <Link
+                                to="/faqs"
                                 className="mobile-link"
                                 onClick={() => setIsMenuOpen(false)}
                             >
-                                Resources
-                            </a>
+                                FAQs
+                            </Link>
                             <a
                                 href="#"
                                 className="mobile-link"
@@ -285,8 +286,8 @@ function UniversityAdmissions() {
                         <div className="mobile-menu-links" style={{marginTop:'10px'}}>
                             <Link to="/what-we-offer/university-admissions" className="mobile-sublink active" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
                             <Link to="/what-we-offer/course-matching" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                            <Link to="/what-we-offer#visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                            <Link to="/what-we-offer#institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
+                             <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
+                            <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
                         </div>
                     </div>
                 </div>
@@ -296,7 +297,7 @@ function UniversityAdmissions() {
 
       {/* ========== HERO SECTION ========== */}
       <section className="ua-hero">
-        <img src={heroImg} className="ua-hero__bg" alt="University Campus" />
+        <div className="ua-hero__bg" style={{backgroundImage: `url(${heroBg})`}}></div>
         <div className="ua-hero__overlay"></div>
         <div className="ua-hero__inner">
           <h1 className="ua-hero__title anim-hidden anim-up">

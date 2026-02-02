@@ -4,17 +4,25 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import UniversityAdmissions from "./pages/UniversityAdmissions";
 import CourseMatching from "./pages/CourseMatching";
+import VisaSupport from "./pages/VisaSupport";
+import InstitutionalRepresentation from "./pages/InstitutionalRepresentation";
+import FAQ from "./pages/FAQ";
+import ScrollToTop from "./components/ScrollToTop";
 import "./index.css";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/what-we-offer" element={<Services />} />
         <Route path="/what-we-offer/university-admissions" element={<UniversityAdmissions />} />
         <Route path="/what-we-offer/course-matching" element={<CourseMatching />} />
+        <Route path="/what-we-offer/visa-support" element={<VisaSupport />} />
+        <Route path="/what-we-offer/institutional-representation" element={<InstitutionalRepresentation />} />
+        <Route path="/faqs" element={<FAQ />} />
       </Routes>
     </Router>
   );

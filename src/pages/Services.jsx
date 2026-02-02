@@ -11,14 +11,14 @@ import "swiper/css/pagination";
 import "./Services.css"; // The CSS file we just created
 import "../index.css"; // Global styles
 
-// Image Imports (Reusing existing assets as requested)
-import heroBg from "../assets/images/hero-bg.webp";
+import supportBg from "../assets/images/support-bg.webp"; 
 import story1 from "../assets/images/story-1.webp";
-import story3 from "../assets/images/story-3.webp";
-import path1 from "../assets/images/path-1.webp";
-import path2 from "../assets/images/path-2.webp";
-import path3 from "../assets/images/path-3.webp";
-import supportBg from "../assets/images/support-bg.webp"; // For trust/magnet sections
+import consultingImg from "../assets/images/university_consulting_session_1770056274181.png";
+import passportImg from "../assets/images/medium-shot-smiley-woman-with-passport.jpg.jpeg";
+import libraryImg from "../assets/images/diverse_students_library_1770056302151.png";
+import travelImg from "../assets/images/people-traveling-without-covid-worries.jpg.jpeg";
+import digitalPortal from "../assets/images/digital_admissions_portal_1770056288503.png";
+import scholarStory from "../assets/images/path-3.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -212,10 +212,10 @@ function Services() {
                     <Link to="/what-we-offer/course-matching" className="dropdown-link">
                         Course Matching
                     </Link>
-                    <Link to="/what-we-offer#visa-support" className="dropdown-link">
-                        Visa Support
-                    </Link>
-                    <Link to="/what-we-offer#institutional-representation" className="dropdown-link">
+                     <Link to="/what-we-offer/visa-support" className="dropdown-link">
+                         Visa Support
+                     </Link>
+                    <Link to="/what-we-offer/institutional-representation" className="dropdown-link">
                         Institutional Representation
                     </Link>
                 </div>
@@ -223,9 +223,9 @@ function Services() {
               <a href="#" className="nav-link">
                 Universities
               </a>
-              <a href="#" className="nav-link">
-                Resources
-              </a>
+              <Link to="/faqs" className="nav-link">
+                FAQs
+              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
@@ -300,13 +300,13 @@ function Services() {
                             >
                                 Universities
                             </a>
-                            <a
-                                href="#"
+                            <Link
+                                to="/faqs"
                                 className="mobile-link"
                                 onClick={() => setIsMenuOpen(false)}
                             >
-                                Resources
-                            </a>
+                                FAQs
+                            </Link>
                             <a
                                 href="#"
                                 className="mobile-link"
@@ -352,8 +352,8 @@ function Services() {
                         <div className="mobile-menu-links" style={{marginTop:'10px'}}>
                             <Link to="/what-we-offer/university-admissions" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
                             <Link to="/what-we-offer/course-matching" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                            <Link to="/what-we-offer#visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                            <Link to="/what-we-offer#institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
+                             <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
+                            <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
                         </div>
                     </div>
                 </div>
@@ -400,7 +400,7 @@ function Services() {
             <div className="offerings-grid">
                 {/* Card 1: University Application */}
                 <div className="offering-card anim-hidden anim-left">
-                    <img src={path1} alt="University Application" className="offering-img" />
+                    <img src={consultingImg} alt="University Application" className="offering-img" />
                     <div className="offering-content">
                         <div className="offering-icon">
                             <iconify-icon icon="ri:school-line"></iconify-icon>
@@ -420,7 +420,7 @@ function Services() {
 
                 {/* Card 2: Visa Support */}
                 <div className="offering-card anim-hidden anim-right">
-                    <img src={path2} alt="Visa Support" className="offering-img" />
+                    <img src={passportImg} alt="Visa Support" className="offering-img" />
                     <div className="offering-content">
                         <div className="offering-icon">
                             <iconify-icon icon="ri:passport-line"></iconify-icon>
@@ -440,7 +440,7 @@ function Services() {
 
                 {/* Card 3: Scholarships */}
                 <div className="offering-card anim-hidden anim-left">
-                    <img src={story3} alt="Scholarships" className="offering-img" />
+                    <img src={libraryImg} alt="Scholarships" className="offering-img" />
                     <div className="offering-content">
                         <div className="offering-icon">
                             <iconify-icon icon="ri:money-dollar-circle-line"></iconify-icon>
@@ -460,7 +460,7 @@ function Services() {
 
                  {/* Card 4: Accommodation */}
                  <div className="offering-card anim-hidden anim-right">
-                    <img src={supportBg} alt="Accommodation" className="offering-img" />
+                    <img src={travelImg} alt="Accommodation" className="offering-img" />
                     <div className="offering-content">
                         <div className="offering-icon">
                             <iconify-icon icon="ri:home-smile-line"></iconify-icon>
@@ -589,7 +589,7 @@ function Services() {
               {/* Row 1 */}
               <div className="delivery-row anim-hidden anim-up">
                   <div className="delivery-img-wrapper">
-                      <img src={path3} alt="Meeting" className="delivery-img" />
+                      <img src={consultingImg} alt="Meeting" className="delivery-img" />
                   </div>
                   <div className="delivery-content">
                       <h3 className="offering-title">Step 1: Understanding Needs</h3>
@@ -603,7 +603,7 @@ function Services() {
                {/* Row 2 Reverse */}
                <div className="delivery-row reverse anim-hidden anim-up">
                   <div className="delivery-img-wrapper">
-                      <img src={path2} alt="Counseling" className="delivery-img" />
+                      <img src={libraryImg} alt="Counseling" className="delivery-img" />
                   </div>
                   <div className="delivery-content">
                       <h3 className="offering-title">Step 2: Counseling & Shortlisting</h3>
@@ -617,7 +617,7 @@ function Services() {
                {/* Row 3 */}
                <div className="delivery-row anim-hidden anim-up">
                   <div className="delivery-img-wrapper">
-                      <img src={heroBg} alt="Application" className="delivery-img" />
+                      <img src={digitalPortal} alt="Application" className="delivery-img" />
                   </div>
                   <div className="delivery-content">
                       <h3 className="offering-title">Step 3: Application & Lodgment</h3>

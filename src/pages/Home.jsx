@@ -986,10 +986,10 @@ function Home() {
                     <Link to="/what-we-offer/course-matching" className="dropdown-link">
                         Course Matching
                     </Link>
-                    <Link to="/what-we-offer#visa-support" className="dropdown-link">
+                    <Link to="/what-we-offer/visa-support" className="dropdown-link">
                         Visa Support
                     </Link>
-                    <Link to="/what-we-offer#institutional-representation" className="dropdown-link">
+                    <Link to="/what-we-offer/institutional-representation" className="dropdown-link">
                         Institutional Representation
                     </Link>
                 </div>
@@ -998,9 +998,9 @@ function Home() {
               <a href="#" className="nav-link">
                 Universities
               </a>
-              <a href="#" className="nav-link">
-                Resources
-              </a>
+              <Link to="/faqs" className="nav-link">
+                FAQs
+              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
@@ -1075,13 +1075,13 @@ function Home() {
                             >
                                 Universities
                             </a>
-                            <a
-                                href="#"
+                            <Link
+                                to="/faqs"
                                 className="mobile-link"
                                 onClick={() => setIsMenuOpen(false)}
                             >
-                                Resources
-                            </a>
+                                FAQs
+                            </Link>
                             <a
                                 href="#"
                                 className="mobile-link"
@@ -1127,8 +1127,8 @@ function Home() {
                         <div className="mobile-menu-links" style={{marginTop:'10px'}}>
                             <Link to="/what-we-offer/university-admissions" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
                             <Link to="/what-we-offer/course-matching" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                            <Link to="/what-we-offer#visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                            <Link to="/what-we-offer#institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
+                            <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
+                            <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
                         </div>
                     </div>
                 </div>
@@ -1484,9 +1484,9 @@ function Home() {
 
         <div className="insights-content">
           <div className="container">
-            <div className="insights-header" style={{ marginBottom: '60px' }}>
+            <div className="insights-header" style={{ marginBottom: '60px', textAlign: 'center' }}>
               <h2 className="section-title">Updates & <span className="text-gradient">Insights.</span></h2>
-              <p className="section-subtitle">Real-time opportunities, essential notices, and global academic news.</p>
+              <p className="section-subtitle" style={{ margin: '0 auto' }}>Real-time opportunities, essential notices, and global academic news.</p>
             </div>
           </div>
         </div>
@@ -2638,7 +2638,7 @@ function Home() {
 
         <div className="container">
           <div className="faq-layout">
-            <div className="faq-info animate-entry">
+            <div className="faq-info">
               <div className="section-badge">SUPPORT</div>
               <h2 className="section-title">
                 Common <span className="text-gradient">Questions.</span>
@@ -2677,7 +2677,7 @@ function Home() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className={`faq-item ${faqActive === idx ? "active" : ""} animate-entry`}
+                  className={`faq-item ${faqActive === idx ? "active" : ""}`}
                   style={{ animationDelay: `${idx * 0.1}s` }}
                   onClick={() => setFaqActive(faqActive === idx ? null : idx)}
                 >
@@ -2918,8 +2918,8 @@ function Home() {
                 </div>
               </div>
               <div className="input-group">
-                <select className="input-field select-field">
-                  <option value="" disabled selected>Country of Residence</option>
+                <select className="input-field select-field" defaultValue="">
+                  <option value="" disabled>Country of Residence</option>
                   <option value="UK">United Kingdom</option>
                   <option value="US">United States</option>
                   <option value="CA">Canada</option>

@@ -129,10 +129,10 @@ function About() {
                     <Link to="/what-we-offer/course-matching" className="dropdown-link">
                         Course Matching
                     </Link>
-                    <Link to="/what-we-offer#visa-support" className="dropdown-link">
-                        Visa Support
-                    </Link>
-                    <Link to="/what-we-offer#institutional-representation" className="dropdown-link">
+                     <Link to="/what-we-offer/visa-support" className="dropdown-link">
+                         Visa Support
+                     </Link>
+                    <Link to="/what-we-offer/institutional-representation" className="dropdown-link">
                         Institutional Representation
                     </Link>
                 </div>
@@ -140,9 +140,9 @@ function About() {
               <a href="#" className="nav-link">
                 Universities
               </a>
-              <a href="#" className="nav-link">
-                Resources
-              </a>
+              <Link to="/faqs" className="nav-link">
+                FAQs
+              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
@@ -215,13 +215,13 @@ function About() {
                             >
                                 Universities
                             </a>
-                            <a
-                                href="#"
+                            <Link
+                                to="/faqs"
                                 className="mobile-link"
                                 onClick={() => setIsMenuOpen(false)}
                             >
-                                Resources
-                            </a>
+                                FAQs
+                            </Link>
                             <a
                                 href="#"
                                 className="mobile-link"
@@ -267,8 +267,8 @@ function About() {
                         <div className="mobile-menu-links" style={{marginTop:'10px'}}>
                             <Link to="/what-we-offer/university-admissions" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
                             <Link to="/what-we-offer/course-matching" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                            <Link to="/what-we-offer#visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                            <Link to="/what-we-offer#institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
+                             <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
+                            <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
                         </div>
                     </div>
                 </div>
