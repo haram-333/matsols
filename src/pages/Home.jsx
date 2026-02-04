@@ -6,9 +6,9 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/navigation";
+import AIAdvisor from "../components/AIAdvisor";
+import "../components/AIAdvisor.css";
 import "../index.css";
 import path1 from "../assets/images/path-1.webp";
 import path2 from "../assets/images/path-2.webp";
@@ -1001,6 +1001,9 @@ function Home() {
               <Link to="/faqs" className="nav-link">
                 FAQs
               </Link>
+              <Link to="/login" className="nav-link portal-link">
+                Portal
+              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
@@ -1081,6 +1084,13 @@ function Home() {
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 FAQs
+                            </Link>
+                            <Link
+                                to="/login"
+                                className="mobile-link"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Portal
                             </Link>
                             <a
                                 href="#"
@@ -1413,18 +1423,8 @@ function Home() {
                       </div>
                     </div>
                   </div>
-  
                   <div className="simple-chat-side">
-                    <div className="simple-chat-box">
-                      <div className="chat-header">
-                        <span className="dot"></span> Online Assistant
-                      </div>
-                      <div className="chat-messages">
-                        <div className="msg bot">Hello! I'm here to help you. What are you looking to study?</div>
-                        <div className="msg user">I want to study Business in London next year.</div>
-                        <div className="msg bot">Great! London has excellent schools for Business. Do you know your current GPA or test scores so I can suggest the best matches?</div>
-                      </div>
-                    </div>
+                    <AIAdvisor />
                     <p className="chat-disclaimer">Our AI is here to guide you, but you can always talk to a human advisor for final verification.</p>
                   </div>
                 </div>

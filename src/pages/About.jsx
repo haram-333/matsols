@@ -143,6 +143,9 @@ function About() {
               <Link to="/faqs" className="nav-link">
                 FAQs
               </Link>
+              <Link to="/login" className="nav-link portal-link">
+                Portal
+              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
@@ -221,6 +224,13 @@ function About() {
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 FAQs
+                            </Link>
+                            <Link
+                                to="/login"
+                                className="mobile-link"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Portal
                             </Link>
                             <a
                                 href="#"

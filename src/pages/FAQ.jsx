@@ -132,7 +132,8 @@ function FAQ() {
                 </div>
               </div>
               <a href="#" className="nav-link">Universities</a>
-              <Link to="/faqs" className="nav-link active">FAQs</Link>
+              <Link to="/faqs" className="nav-link">FAQs</Link>
+              <Link to="/login" className="nav-link portal-link">Portal</Link>
               <a href="#" className="nav-link">Contact</a>
             </div>
 
@@ -162,7 +163,8 @@ function FAQ() {
                     </div>
                   </div>
                   <a href="#" className="mobile-link">Universities</a>
-                  <Link to="/faqs" className="mobile-link active" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
+                  <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
+                  <Link to="/login" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Portal</Link>
                   <a href="#" className="mobile-link">Contact</a>
                   <a href="#" className="btn btn-primary">Free Consultation</a>
                 </div>
