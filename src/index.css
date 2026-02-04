@@ -5146,15 +5146,34 @@ img {
    HERO BUTTONS MOBILE OPTIMIZATION
    ========================================= */
 @media (max-width: 768px) {
+    .hero-content {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+        text-align: center;
+    }
+
+    .hero-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-text h1, .hero-text p {
+        text-align: center !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .hero-btns {
         flex-direction: column !important;
         gap: 12px !important;
-        width: 100%;
-        max-width: 400px;
+        width: 100% !important;
+        max-width: none !important; /* Remove the 400px limit */
     }
 
     .hero-btns .btn {
         width: 100% !important;
+        max-width: 400px; /* Limit the button width instead of the container, and center it */
         justify-content: center;
         padding: 14px 24px !important;
     }
