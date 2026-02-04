@@ -143,18 +143,16 @@ function About() {
               <Link to="/faqs" className="nav-link">
                 FAQs
               </Link>
-              <Link to="/login" className="nav-link portal-link">
-                Portal
-              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
             </div>
 
             <div className="nav-actions">
-              <a href="#" className="btn btn-primary nav-cta">
-                Free Consultation
-              </a>
+                <Link to="/login" className="nav-link" style={{marginRight: '20px'}}>Sign In</Link>
+                <Link to="/free-consultation" className="btn btn-primary nav-cta">
+                  Free Consultation
+                </Link>
               <button
                 className="hamburger"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -225,13 +223,6 @@ function About() {
                             >
                                 FAQs
                             </Link>
-                            <Link
-                                to="/login"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Portal
-                            </Link>
                             <a
                                 href="#"
                                 className="mobile-link"
@@ -239,13 +230,20 @@ function About() {
                             >
                                 Contact
                             </a>
-                            <a
-                                href="#"
+                            <Link
+                                to="/login"
+                                className="mobile-link"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Sign In
+                            </Link>
+                            <Link
+                                to="/free-consultation"
                                 className="btn btn-primary"
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Free Consultation
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

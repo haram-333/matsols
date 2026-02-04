@@ -7,11 +7,11 @@ import CourseMatching from "./pages/CourseMatching";
 import VisaSupport from "./pages/VisaSupport";
 import InstitutionalRepresentation from "./pages/InstitutionalRepresentation";
 import FAQ from "./pages/FAQ";
-import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
-import StudentDashboard from "./pages/Dashboard/StudentDashboard";
-import AdminPanel from "./pages/Dashboard/AdminPanel";
-import StaffPortal from "./pages/Dashboard/StaffPortal";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import DashboardLayout from "./layouts/DashboardLayout";
+import DashboardHome from "./pages/dashboard/DashboardHome";
+import FreeConsultation from "./pages/FreeConsultation";
 import ScrollToTop from "./components/ScrollToTop";
 import "./index.css";
 
@@ -30,9 +30,14 @@ function App() {
         <Route path="/faqs" element={<FAQ />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<StudentDashboard />} />
-        <Route path="/admin" element={<AdminPanel />} />
-        <Route path="/staff" element={<StaffPortal />} />
+        
+        {/* Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+          {/* Add more nested dashboard routes here later */}
+        </Route>
+        
+        <Route path="/free-consultation" element={<FreeConsultation />} />
       </Routes>
     </Router>
   );

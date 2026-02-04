@@ -6,9 +6,9 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 import "swiper/css/navigation";
-import AIAdvisor from "../components/AIAdvisor";
-import "../components/AIAdvisor.css";
 import "../index.css";
 import path1 from "../assets/images/path-1.webp";
 import path2 from "../assets/images/path-2.webp";
@@ -1001,21 +1001,52 @@ function Home() {
               <Link to="/faqs" className="nav-link">
                 FAQs
               </Link>
-              <Link to="/login" className="nav-link portal-link">
-                Portal
-              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
             </div>
 
             <div className="nav-actions">
-              <a href="#" className="btn btn-primary nav-cta">
+              <Link to="/login" aria-label="Sign In" style={{
+                  marginRight: '12px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  width: '44px', 
+                  height: '44px', 
+                  borderRadius: '50%', 
+                  border: '1px solid rgba(255, 255, 255, 0.3)', 
+                  background: 'rgba(255, 255, 255, 0.05)', 
+                  color: 'white',
+                  transition: 'all 0.3s ease'
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Link>
+              <Link to="/free-consultation" className="btn btn-primary nav-cta">
                 Free Consultation
-              </a>
+              </Link>
+              <div className="mobile-nav-controls" style={{display: 'none'}}> {/* CSS will handle display */}
+                 <Link to="/login" className="mobile-user-icon" style={{color: 'white', marginRight: '16px', display: 'flex'}}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                 </Link>
+                 <button
+                    className="hamburger"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                 >
+                    <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                    <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                    <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                 </button>
+              </div>
               <button
-                className="hamburger"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                 className="hamburger desktop-hide"
+                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
@@ -1023,8 +1054,6 @@ function Home() {
               </button>
             </div>
           </div>
-
-
         </div>
 
         {/* Mobile Menu Overlay - SLIDE-OVER IMPLEMENTATION */}
@@ -1085,13 +1114,6 @@ function Home() {
                             >
                                 FAQs
                             </Link>
-                            <Link
-                                to="/login"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Portal
-                            </Link>
                             <a
                                 href="#"
                                 className="mobile-link"
@@ -1099,13 +1121,17 @@ function Home() {
                             >
                                 Contact
                             </a>
-                            <a
-                                href="#"
-                                className="btn btn-primary"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Free Consultation
-                            </a>
+                            <div className="mobile-actions" style={{display:'flex', flexDirection:'column', gap:'12px', width:'100%', marginTop:'20px'}}>
+                                <Link
+                                    to="/free-consultation"
+                                    className="btn btn-primary"
+                                    style={{width:'100%', justifyContent:'center'}}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Free Consultation
+                                </Link>
+                                {/* Sign In removed from here - moved to top navbar icon */}
+                            </div>
                         </div>
                     </div>
 
@@ -1423,8 +1449,18 @@ function Home() {
                       </div>
                     </div>
                   </div>
+  
                   <div className="simple-chat-side">
-                    <AIAdvisor />
+                    <div className="simple-chat-box">
+                      <div className="chat-header">
+                        <span className="dot"></span> Online Assistant
+                      </div>
+                      <div className="chat-messages">
+                        <div className="msg bot">Hello! I'm here to help you. What are you looking to study?</div>
+                        <div className="msg user">I want to study Business in London next year.</div>
+                        <div className="msg bot">Great! London has excellent schools for Business. Do you know your current GPA or test scores so I can suggest the best matches?</div>
+                      </div>
+                    </div>
                     <p className="chat-disclaimer">Our AI is here to guide you, but you can always talk to a human advisor for final verification.</p>
                   </div>
                 </div>

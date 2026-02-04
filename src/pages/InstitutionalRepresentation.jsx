@@ -144,7 +144,8 @@ function InstitutionalRepresentation() {
             </div>
 
             <div className="nav-actions">
-              <a href="#" className="btn btn-primary nav-cta">Free Consultation</a>
+              <Link to="/login" className="nav-link" style={{marginRight: '20px'}}>Sign In</Link>
+              <Link to="/free-consultation" className="btn btn-primary nav-cta">Free Consultation</Link>
               <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
@@ -171,7 +172,8 @@ function InstitutionalRepresentation() {
                   <a href="#" className="mobile-link">Universities</a>
                   <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
                   <a href="#" className="mobile-link">Contact</a>
-                  <a href="#" className="btn btn-primary">Free Consultation</a>
+                  <Link to="/login" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
+                  <Link to="/free-consultation" className="btn btn-primary">Free Consultation</Link>
                 </div>
               </div>
               <div className="mobile-menu-view">

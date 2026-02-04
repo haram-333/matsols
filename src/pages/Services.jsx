@@ -226,18 +226,16 @@ function Services() {
               <Link to="/faqs" className="nav-link">
                 FAQs
               </Link>
-              <Link to="/login" className="nav-link portal-link">
-                Portal
-              </Link>
               <a href="#" className="nav-link">
                 Contact
               </a>
             </div>
 
             <div className="nav-actions">
-              <a href="#" className="btn btn-primary nav-cta">
+              <Link to="/login" className="nav-link" style={{marginRight: '20px'}}>Sign In</Link>
+              <Link to="/free-consultation" className="btn btn-primary nav-cta">
                 Free Consultation
-              </a>
+              </Link>
               <button
                 className="hamburger"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -309,13 +307,6 @@ function Services() {
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 FAQs
-                            </Link>
-                            <Link
-                                to="/login"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Portal
                             </Link>
                             <a
                                 href="#"

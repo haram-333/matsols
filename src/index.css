@@ -130,6 +130,21 @@ img {
   border-color: white;
 }
 
+.btn-ghost {
+  background: transparent;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 500;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary-orange);
+}
+
 /* Animations */
 @keyframes fadeInUp {
   from {
@@ -5063,4 +5078,66 @@ img {
     grid-template-columns: 1fr;
     gap: 0;
   }
+}
+
+/* =========================================
+   NAVBAR USER ICON & RESPONSIVE CONTROLS
+   ========================================= */
+
+/* Default: Desktop View */
+.btn-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-nav-controls {
+    display: none !important;
+}
+
+/* Mobile View Overrides */
+@media (max-width: 1024px) {
+    /* Hide Desktop Elements */
+    .nav-actions .btn-icon {
+        display: none !important;
+    }
+    
+    .nav-actions .hamburger.desktop-hide {
+        display: none !important;
+    }
+
+    /* Show Mobile Elements */
+    .mobile-nav-controls {
+        display: flex !important;
+        align-items: center;
+    }
+
+    .mobile-user-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: 0.3s;
+    }
+
+    .mobile-user-icon:active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.95);
+    }
 }

@@ -173,9 +173,10 @@ function UniversityAdmissions() {
             </div>
 
             <div className="nav-actions">
-              <a href="#" className="btn btn-primary nav-cta">
+              <Link to="/login" className="nav-link" style={{marginRight: '20px'}}>Sign In</Link>
+              <Link to="/free-consultation" className="btn btn-primary nav-cta">
                 Free Consultation
-              </a>
+              </Link>
               <button
                 className="hamburger"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -255,11 +256,25 @@ function UniversityAdmissions() {
                             </a>
                             <a
                                 href="#"
+                                className="mobile-link"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Contact
+                            </a>
+                            <Link
+                                to="/login"
+                                className="mobile-link"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Sign In
+                            </Link>
+                            <Link
+                                to="/free-consultation"
                                 className="btn btn-primary"
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Free Consultation
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

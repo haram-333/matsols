@@ -1,0 +1,361 @@
+/* Dashboard Home */
+.dash-welcome {
+  margin-bottom: 30px;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.welcome-subtitle {
+  color: #64748b;
+  font-size: 16px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e0e3ea;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.stat-info .label {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.stat-info .value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.stat-icon.blue { background: rgba(4, 16, 33, 0.05); color: #041021; }
+.stat-icon.orange { background: rgba(255, 134, 60, 0.1); color: #ff863c; }
+.stat-icon.green { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
+.stat-icon.purple { background: rgba(147, 51, 234, 0.1); color: #9333ea; }
+
+/* Application Tracker */
+.tracker-section {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e0e3ea;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  text-align: left; /* Ensure left alignment */
+  flex: 1; /* Allow text to take space */
+  margin-right: 16px; /* Space between text and button */
+}
+
+.btn-sm {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-orange);
+  text-decoration: none;
+  flex-shrink: 0; /* Prevent button from squeezing */
+  white-space: nowrap; /* Keep text on one line */
+}
+
+.app-tracker {
+  position: relative;
+  padding: 20px 40px; /* Add horizontal padding to accommodate width calculation */
+}
+
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  /* Ensure circles sit on top of the line */
+}
+
+.progress-bar {
+  position: absolute;
+  top: 20px; /* Aligns with center of 40px circle (circle height/2) */
+  left: 60px; /* Center of first item (120px/2) */
+  right: 60px; /* Center of last item */
+  width: auto;
+  height: 3px;
+  background: #f1f5f9;
+  z-index: -1; /* Behind circles */
+  transform: translateY(-50%);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary-orange);
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  width: 120px;
+  position: relative;
+  z-index: 2;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 2px solid #e0e3ea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.step-item.completed .step-circle {
+  background: var(--primary-orange);
+  border-color: var(--primary-orange);
+  color: white;
+}
+
+.step-item.current .step-circle {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  box-shadow: 0 0 0 4px rgba(255, 134, 60, 0.15);
+}
+
+.step-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.step-item.current .step-label {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e0e3ea;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h4 {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+.todo-list {
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item:hover {
+  background: #fcfcfd;
+}
+
+.todo-check {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.todo-check.checked {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: white;
+}
+
+.todo-content {
+  flex: 1;
+}
+
+.todo-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.todo-desc {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.todo-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-orange);
+  cursor: pointer;
+}
+
+.doc-list {
+  padding: 16px;
+}
+
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8f9fc;
+  margin-bottom: 12px;
+}
+
+.doc-icon {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #041021;
+}
+
+.doc-info {
+  flex: 1;
+}
+
+.doc-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.doc-status {
+  font-size: 11px;
+  color: #16a34a;
+}
+
+.doc-status.pending {
+  color: #f59e0b;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .steps-container {
+    overflow-x: auto;
+    padding-bottom: 20px;
+    justify-content: flex-start;
+    gap: 40px; /* Increased gap for better mobile spacing */
+    padding-left: 20px;
+    padding-right: 20px;
+    min-width: 100%; /* Ensure it takes width */
+  }
+  
+  .app-tracker {
+    padding: 20px 0;
+    overflow-x: hidden; /* Let container handle scroll */
+  }
+
+  .progress-bar {
+    top: 20px;
+    left: 60px; 
+    right: auto; /* Unset right for fixed width in scroll */
+    width: calc(100% - 120px); /* Width based on scroll content width, roughly */
+    /* Since steps-container scrolls, width:auto might be tricky if flex container doesn't have explicit width. 
+       Better to let it be constrained by left/right in the scroll context OR give fixed width matching content.
+       With 5 items * 120px + 4 * 40px gap = 600 + 160 = 760px content approx with gaps.
+       Let's stick to left/right and see if it stretches with flex container content.
+       Actually, steps-container width stretches to fit content in overflow:auto. 
+       So left:60px right:60px should work relative to that full width. 
+    */
+    min-width: 640px; /* Exact distance: 4 gaps * 40 + 4 items * 120 = 160+480=640. No, wait. 
+                         Center to center: 
+                         Item width 120. Center at 60.
+                         Items at 0, 160, 320, 480, 640 (starts).
+                         Last item start 640. Center 700.
+                         First item center 60.
+                         Difference 700 - 60 = 640px.
+                         So width must be exactly 640px. */
+    width: 640px;
+  }
+}

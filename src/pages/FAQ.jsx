@@ -132,13 +132,13 @@ function FAQ() {
                 </div>
               </div>
               <a href="#" className="nav-link">Universities</a>
-              <Link to="/faqs" className="nav-link">FAQs</Link>
-              <Link to="/login" className="nav-link portal-link">Portal</Link>
+              <Link to="/faqs" className="nav-link active">FAQs</Link>
               <a href="#" className="nav-link">Contact</a>
             </div>
 
             <div className="nav-actions">
-              <a href="#" className="btn btn-primary nav-cta">Free Consultation</a>
+              <Link to="/login" className="nav-link" style={{marginRight: '20px'}}>Sign In</Link>
+              <Link to="/free-consultation" className="btn btn-primary nav-cta">Free Consultation</Link>
               <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
@@ -163,10 +163,10 @@ function FAQ() {
                     </div>
                   </div>
                   <a href="#" className="mobile-link">Universities</a>
-                  <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
-                  <Link to="/login" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Portal</Link>
+                  <Link to="/faqs" className="mobile-link active" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
                   <a href="#" className="mobile-link">Contact</a>
-                  <a href="#" className="btn btn-primary">Free Consultation</a>
+                  <Link to="/login" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
+                  <Link to="/free-consultation" className="btn btn-primary">Free Consultation</Link>
                 </div>
               </div>
               <div className="mobile-menu-view">
