@@ -10,7 +10,7 @@ import FAQ from "./pages/FAQ";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardLayout from "./layouts/DashboardLayout";
-import DashboardHome from "./pages/dashboard/DashboardHome";
+import DashboardHome from "./pages/Dashboard/DashboardHome";
 import FreeConsultation from "./pages/FreeConsultation";
 import ScrollToTop from "./components/ScrollToTop";
 import "./index.css";
