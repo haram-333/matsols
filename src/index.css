@@ -5141,3 +5141,35 @@ img {
         transform: scale(0.95);
     }
 }
+
+/* =========================================
+   HERO BUTTONS MOBILE OPTIMIZATION
+   ========================================= */
+@media (max-width: 768px) {
+    .hero-btns {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .hero-btns .btn {
+        width: 100% !important;
+        justify-content: center;
+        padding: 14px 24px !important;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(2.5rem, 8vw, 3.5rem) !important;
+    }
+}
+
+/* Fix mobile nav controls density */
+@media (max-width: 480px) {
+    .mobile-nav-controls {
+        gap: 8px;
+    }
+    .mobile-user-icon {
+        margin-right: 8px !important;
+    }
+}

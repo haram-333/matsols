@@ -1007,7 +1007,7 @@ function Home() {
             </div>
 
             <div className="nav-actions">
-              <Link to="/login" aria-label="Sign In" style={{
+              <Link to="/login" className="btn-icon" aria-label="Sign In" style={{
                   marginRight: '12px', 
                   display: 'flex', 
                   alignItems: 'center', 
