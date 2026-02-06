@@ -13,6 +13,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import DashboardHome from "./pages/Dashboard/DashboardHome";
 import FreeConsultation from "./pages/FreeConsultation";
 import ScrollToTop from "./components/ScrollToTop";
+import AIChat from "./components/AIChat";
 import "./index.css";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         
         <Route path="/free-consultation" element={<FreeConsultation />} />
       </Routes>
+      <AIChat />
     </Router>
   );
 }
