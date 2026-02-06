@@ -2974,7 +2974,8 @@ img {
   transition: all 0.3s ease;
   overflow: hidden;
   width: 100%;
-  opacity: 1 !important;
+  display: flex;
+  flex-direction: column;
 }
 
 .faq-item:hover {
@@ -2988,7 +2989,7 @@ img {
 }
 
 .faq-question {
-  padding: 12px 20px;
+  padding: 20px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2996,6 +2997,7 @@ img {
   color: white;
   font-size: 1.1rem;
   text-align: left;
+  user-select: none;
 }
 
 .faq-item.active .faq-question {
@@ -3003,23 +3005,28 @@ img {
 }
 
 .faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.4s var(--ease-out);
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease, padding 0.4s ease, opacity 0.4s ease;
   padding: 0 24px;
   opacity: 0;
 }
 
 .faq-item.active .faq-answer {
-  max-height: 500px;
-  padding-bottom: 16px;
+  grid-template-rows: 1fr;
+  padding-bottom: 24px;
   opacity: 1;
 }
 
+.faq-answer-content {
+  overflow: hidden;
+}
+
 .faq-answer p {
-  color: #64748b;
-  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
   font-size: 1rem;
+  margin: 0;
 }
 
 /* Redesigned Luxury Testimonials */
@@ -3242,23 +3249,23 @@ img {
 .steps-nav {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 24px;
 }
 
 .step-item {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 3px;
   color: rgba(255, 255, 255, 0.3);
   transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
   cursor: pointer;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: 12px;
-  white-space: nowrap;
-  padding: 4px 0;
+  gap: 20px !important;
+  white-space: nowrap !important;
+  width: fit-content;
 }
 
 .step-item.active {

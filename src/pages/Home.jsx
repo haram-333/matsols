@@ -20,7 +20,7 @@ import story1 from "../assets/images/story-1.webp";
 import story3 from "../assets/images/story-3.webp";
 import supportBg from "../assets/images/support-bg.webp";
 import blueprintBg from "../assets/images/blueprint-bg.png";
-import titan1 from "../assets/images/path-1.webp"; 
+import titan1 from "../assets/images/path-1.webp";
 import titan2 from "../assets/images/path-2.webp";
 
 import ukDest from "../assets/destinations/uk.png";
@@ -66,7 +66,7 @@ function Home() {
       setIsMobileSubmenuOpen(false);
     }
   }, [isMenuOpen]);
-  
+
   // Why Choose Redesign Refs
   const whyChooseRef = useRef(null);
   const col1Ref = useRef(null);
@@ -81,18 +81,23 @@ function Home() {
     window.addEventListener("scroll", handleScroll);
 
     // CSS Animation Observer
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-        }
-      });
-    }, { 
-      threshold: 0.2,
-      rootMargin: "0px 0px 0px 0px" // Trigger immediately when element enters viewport
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "0px 0px 0px 0px", // Trigger immediately when element enters viewport
+      },
+    );
 
-    document.querySelectorAll('.anim-hidden').forEach((el) => observer.observe(el));
+    document
+      .querySelectorAll(".anim-hidden")
+      .forEach((el) => observer.observe(el));
 
     // Lenis Smooth Scroll
     const lenis = new Lenis({
@@ -114,28 +119,39 @@ function Home() {
     }
 
     // Robust Brave Detection
-    const isBrave = !!(navigator.brave && typeof navigator.brave.isBrave === 'function');
-    const isChrome = /Chrome/.test(navigator.userAgent) && 
-                     /Google Inc/.test(navigator.vendor) && 
-                     !isBrave;
+    const isBrave = !!(
+      navigator.brave && typeof navigator.brave.isBrave === "function"
+    );
+    const isChrome =
+      /Chrome/.test(navigator.userAgent) &&
+      /Google Inc/.test(navigator.vendor) &&
+      !isBrave;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     const handleInteraction = (e) => {
       if (heroVideoRef.current) {
         // If already unmuted, cleanup
         if (!heroVideoRef.current.muted) {
-          interactiveEvents.forEach(evt => window.removeEventListener(evt, handleInteraction));
+          interactiveEvents.forEach((evt) =>
+            window.removeEventListener(evt, handleInteraction),
+          );
           return;
         }
 
         // Programmatic unmute attempt
         heroVideoRef.current.muted = false;
         setIsVideoMuted(false);
-        
-        heroVideoRef.current.play()
+
+        heroVideoRef.current
+          .play()
           .then(() => {
-            console.log("Hero: Unmuted success via " + (e ? e.type : "manual interaction"));
-            interactiveEvents.forEach(evt => window.removeEventListener(evt, handleInteraction));
+            console.log(
+              "Hero: Unmuted success via " +
+                (e ? e.type : "manual interaction"),
+            );
+            interactiveEvents.forEach((evt) =>
+              window.removeEventListener(evt, handleInteraction),
+            );
           })
           .catch((err) => {
             console.log("Hero: Unmuted block on interaction", err);
@@ -153,7 +169,8 @@ function Home() {
         // BRAVE/SAFARI/OTHERS: "WARM START" HACK (Muted Load -> 100ms Delay -> Unmute)
         heroVid.muted = true;
         setIsVideoMuted(true);
-        heroVid.play()
+        heroVid
+          .play()
           .then(() => {
             // Wait 100ms for browser to "accept" the media session, then unmute
             setTimeout(() => {
@@ -161,7 +178,9 @@ function Home() {
                 heroVideoRef.current.muted = false;
                 setIsVideoMuted(false);
                 heroVideoRef.current.play().catch(() => {
-                  console.log("Hero: Warm-start unmute blocked, reverting to gesture bridge");
+                  console.log(
+                    "Hero: Warm-start unmute blocked, reverting to gesture bridge",
+                  );
                   heroVideoRef.current.muted = true;
                   setIsVideoMuted(true);
                 });
@@ -181,7 +200,9 @@ function Home() {
 
     // Interaction Bridge (No scroll, only physical gestures)
     const interactiveEvents = ["click", "touchstart"];
-    interactiveEvents.forEach(evt => window.addEventListener(evt, handleInteraction));
+    interactiveEvents.forEach((evt) =>
+      window.addEventListener(evt, handleInteraction),
+    );
 
     // GSAP Animations
     const ctx = gsap.context(() => {
@@ -292,15 +313,14 @@ function Home() {
           opacity: 1,
           clipPath: "inset(0 0 0% 0)",
           ease: "power4.out",
-          scrollTrigger: { 
-            trigger: processRef.current, 
+          scrollTrigger: {
+            trigger: processRef.current,
             start: "top 60%",
             end: "top 40%",
             scrub: 0.8,
           },
         },
       );
-
 
       /* // MATSOLS Pillar Section Header (Commented out - target not found)
       gsap.fromTo(
@@ -426,7 +446,7 @@ function Home() {
               start: "top 85%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       });
 
@@ -459,17 +479,17 @@ function Home() {
       // Column 1 - moves up detailed
       if (col1Ref.current && whyChooseRef.current) {
         gsap.to(col1Ref.current, {
-           y: -150,
+          y: -150,
           ease: "none",
           scrollTrigger: {
             trigger: whyChooseRef.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1
-          }
+            scrub: 1,
+          },
         });
       }
-      
+
       // Column 2 - moves up slower
       if (col2Ref.current && whyChooseRef.current) {
         gsap.to(col2Ref.current, {
@@ -479,13 +499,15 @@ function Home() {
             trigger: whyChooseRef.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1
-          }
+            scrub: 1,
+          },
         });
       }
 
       // Floating Abstract Elements
-      const bgCircle = whyChooseRef.current?.querySelector('.why-matsols-bg-circle');
+      const bgCircle = whyChooseRef.current?.querySelector(
+        ".why-matsols-bg-circle",
+      );
       if (bgCircle) {
         gsap.to(bgCircle, {
           y: -100,
@@ -494,8 +516,8 @@ function Home() {
             trigger: whyChooseRef.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 1
-          }
+            scrub: 1,
+          },
         });
       }
 
@@ -505,14 +527,14 @@ function Home() {
 
       // === HERO SCROLL-TRIGGERED FORWARD-ONLY SCRUB ===
       // Animation progress follows scroll but NEVER reverses
-      
+
       const heroAnimTl = gsap.timeline({ paused: true });
-      
+
       // 1. Title reveal (Forward Only)
       heroAnimTl.fromTo(
         ".hero-parallax-content",
         { opacity: 0, y: 100 },
-        { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
       );
 
       // 2. Main Heading reveal
@@ -520,7 +542,7 @@ function Home() {
         ".hero-title .char",
         { opacity: 0, y: 40 },
         { opacity: 1, y: 0, duration: 0.8, stagger: 0.02, ease: "power4.out" },
-        "-=0.7"
+        "-=0.7",
       );
 
       // 3. Description & Buttons reveal (Compressed overlaps)
@@ -528,21 +550,41 @@ function Home() {
         [".hero-desc", ".hero-btns"],
         { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power3.out" },
-        "-=0.6"
+        "-=0.6",
       );
 
       // 4. Stats cluster: Orbital reveal (One-Shot, back ease)
-      heroAnimTl.fromTo(".stat-1", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.5");
-      heroAnimTl.fromTo(".stat-2", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.55");
-      heroAnimTl.fromTo(".stat-3", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.55");
-      heroAnimTl.fromTo(".stat-4", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, "-=0.55");
+      heroAnimTl.fromTo(
+        ".stat-1",
+        { y: 60, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
+        "-=0.5",
+      );
+      heroAnimTl.fromTo(
+        ".stat-2",
+        { y: 60, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
+        "-=0.55",
+      );
+      heroAnimTl.fromTo(
+        ".stat-3",
+        { y: 60, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
+        "-=0.55",
+      );
+      heroAnimTl.fromTo(
+        ".stat-4",
+        { y: 60, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" },
+        "-=0.55",
+      );
 
       // Removed pinning logic to fix section overlap
       ScrollTrigger.create({
         trigger: ".hero",
         start: "top 20%",
         onEnter: () => heroAnimTl.play(),
-        once: true
+        once: true,
       });
 
       // Hero Scroll Animation Trigger - REMOVED GENERIC UNMUTING BRIDGE IN FAVOUR OF AGGRESSIVE LISTENERS
@@ -550,7 +592,7 @@ function Home() {
         trigger: ".hero",
         start: "top 20%",
         onEnter: () => heroAnimTl.play(),
-        once: true
+        once: true,
       });
 
       /* // AI Matchmaking Animation (Commented out - target not found)
@@ -765,8 +807,8 @@ function Home() {
             trigger: ".path-header",
             start: "top 80%",
             toggleActions: "play none none none",
-          }
-        }
+          },
+        },
       );
       /* // Path Header Subtitle (Commented out - target not found)
       gsap.fromTo(
@@ -853,7 +895,7 @@ function Home() {
             start: "top 75%",
             toggleActions: "play none none none",
           },
-          ease: "back.out(2)"
+          ease: "back.out(2)",
         });
       });
 
@@ -902,7 +944,7 @@ function Home() {
             end: "top 50%",
             scrub: 0.8,
           },
-        }
+        },
       );
 
       // [REVERTED] Partners Stagger Animation removed as per user request for static/instant marquee feel.
@@ -910,7 +952,9 @@ function Home() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      interactiveEvents.forEach(evt => window.removeEventListener(evt, handleInteraction));
+      interactiveEvents.forEach((evt) =>
+        window.removeEventListener(evt, handleInteraction),
+      );
       ctx.revert();
       lenis.destroy();
     };
@@ -960,12 +1004,12 @@ function Home() {
               <Link to="/about" className="nav-link">
                 About Us
               </Link>
-              
+
               {/* DROPDOWN MENU */}
               <div className="nav-item-dropdown">
                 <Link to="/what-we-offer" className="nav-link">
-                    What we Offer
-                    <svg
+                  What we Offer
+                  <svg
                     width="12"
                     height="12"
                     viewBox="0 0 24 24"
@@ -974,24 +1018,36 @@ function Home() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    >
+                  >
                     <path d="M6 9l6 6 6-6" />
-                    </svg>
+                  </svg>
                 </Link>
                 {/* Desktop Dropdown Content */}
                 <div className="nav-dropdown-menu">
-                    <Link to="/what-we-offer/university-admissions" className="dropdown-link">
-                        University Admissions
-                    </Link>
-                    <Link to="/what-we-offer/course-matching" className="dropdown-link">
-                        Course Matching
-                    </Link>
-                    <Link to="/what-we-offer/visa-support" className="dropdown-link">
-                        Visa Support
-                    </Link>
-                    <Link to="/what-we-offer/institutional-representation" className="dropdown-link">
-                        Institutional Representation
-                    </Link>
+                  <Link
+                    to="/what-we-offer/university-admissions"
+                    className="dropdown-link"
+                  >
+                    University Admissions
+                  </Link>
+                  <Link
+                    to="/what-we-offer/course-matching"
+                    className="dropdown-link"
+                  >
+                    Course Matching
+                  </Link>
+                  <Link
+                    to="/what-we-offer/visa-support"
+                    className="dropdown-link"
+                  >
+                    Visa Support
+                  </Link>
+                  <Link
+                    to="/what-we-offer/institutional-representation"
+                    className="dropdown-link"
+                  >
+                    Institutional Representation
+                  </Link>
                 </div>
               </div>
 
@@ -1007,46 +1063,100 @@ function Home() {
             </div>
 
             <div className="nav-actions">
-              <Link to="/login" className="btn-icon" aria-label="Sign In" style={{
-                  marginRight: '12px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  width: '44px', 
-                  height: '44px', 
-                  borderRadius: '50%', 
-                  border: '1px solid rgba(255, 255, 255, 0.3)', 
-                  background: 'rgba(255, 255, 255, 0.05)', 
-                  color: 'white',
-                  transition: 'all 0.3s ease'
-              }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
-                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <Link
+                to="/login"
+                className="btn-icon"
+                aria-label="Sign In"
+                style={{
+                  marginRight: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  color: "white",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ display: "block" }}
+                >
+                  <path
+                    d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </Link>
               <Link to="/free-consultation" className="btn btn-primary nav-cta">
                 Free Consultation
               </Link>
-              <div className="mobile-nav-controls" style={{display: 'none'}}> {/* CSS will handle display */}
-                 <Link to="/login" className="mobile-user-icon" style={{color: 'white', marginRight: '16px', display: 'flex'}}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                 </Link>
-                 <button
-                    className="hamburger"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                 >
-                    <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                    <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                    <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                 </button>
+              <div className="mobile-nav-controls" style={{ display: "none" }}>
+                {" "}
+                {/* CSS will handle display */}
+                <Link
+                  to="/login"
+                  className="mobile-user-icon"
+                  style={{
+                    color: "white",
+                    marginRight: "16px",
+                    display: "flex",
+                  }}
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="7"
+                      r="4"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+                <button
+                  className="hamburger"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                  <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                  <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+                </button>
               </div>
               <button
-                 className="hamburger desktop-hide"
-                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="hamburger desktop-hide"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
                 <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
@@ -1058,117 +1168,196 @@ function Home() {
 
         {/* Mobile Menu Overlay - SLIDE-OVER IMPLEMENTATION */}
         <div className={`mobile-menu ${isMenuOpen ? "active" : ""}`}>
-            <div className="mobile-menu-viewport">
-                <div 
-                    className="mobile-menu-slider" 
-                    style={{transform: isMobileSubmenuOpen ? 'translateX(-50%)' : 'translateX(0)'}}
-                >
-                    {/* VIEW 1: MAIN MENU */}
-                    <div className="mobile-menu-view">
-                        <div className="mobile-menu-links">
-                            <Link
-                                to="/"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Home
-                            </Link>
-                            <Link
-                                to="/about"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                About Us
-                            </Link>
-                            
-                            {/* FORWARD LINK TO SUBMENU - Split Interaction */ }
-                            <div className="mobile-link mobile-forward-link" style={{cursor:'default'}}>
-                                <Link 
-                                    to="/what-we-offer" 
-                                    onClick={() => setIsMenuOpen(false)}
-                                    style={{ color: 'inherit', textDecoration: 'none' }}
-                                >
-                                    What we Offer
-                                </Link>
-                                <div 
-                                    onClick={(e) => { e.stopPropagation(); setIsMobileSubmenuOpen(true); }}
-                                    style={{ cursor: 'pointer', paddingLeft: '20px', display: 'flex', alignItems: 'center', height: '100%' }}
-                                >
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                </div>
-                            </div>
+          <div className="mobile-menu-viewport">
+            <div
+              className="mobile-menu-slider"
+              style={{
+                transform: isMobileSubmenuOpen
+                  ? "translateX(-50%)"
+                  : "translateX(0)",
+              }}
+            >
+              {/* VIEW 1: MAIN MENU */}
+              <div className="mobile-menu-view">
+                <div className="mobile-menu-links">
+                  <Link
+                    to="/"
+                    className="mobile-link"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/about"
+                    className="mobile-link"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    About Us
+                  </Link>
 
-                            <a
-                                href="#"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Universities
-                            </a>
-                            <Link
-                                to="/faqs"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                FAQs
-                            </Link>
-                            <a
-                                href="#"
-                                className="mobile-link"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Contact
-                            </a>
-                            <div className="mobile-actions" style={{display:'flex', flexDirection:'column', gap:'12px', width:'100%', marginTop:'20px'}}>
-                                <Link
-                                    to="/free-consultation"
-                                    className="btn btn-primary"
-                                    style={{width:'100%', justifyContent:'center'}}
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    Free Consultation
-                                </Link>
-                                {/* Sign In removed from here - moved to top navbar icon */}
-                            </div>
-                        </div>
+                  {/* FORWARD LINK TO SUBMENU - Split Interaction */}
+                  <div
+                    className="mobile-link mobile-forward-link"
+                    style={{ cursor: "default" }}
+                  >
+                    <Link
+                      to="/what-we-offer"
+                      onClick={() => setIsMenuOpen(false)}
+                      style={{ color: "inherit", textDecoration: "none" }}
+                    >
+                      What we Offer
+                    </Link>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMobileSubmenuOpen(true);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        paddingLeft: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                        height: "100%",
+                      }}
+                    >
+                      <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9 18l6-6-6-6"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
                     </div>
+                  </div>
 
-                    {/* VIEW 2: SUBMENU */}
-                    <div className="mobile-menu-view" style={{position:'relative'}}>
-                        {/* ABSOLUTE POSITIONED BACK BUTTON (Top Left) */}
-                        <button 
-                            className="mobile-back-btn" 
-                            onClick={() => setIsMobileSubmenuOpen(false)} 
-                            style={{
-                                position: 'absolute',
-                                top: '0', 
-                                left: '0',
-                                padding: '10px',
-                                zIndex: 10
-                            }}
-                        >
-                            {/* Modern Back Arrow */}
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                        
-                        {/* Spacer for content */}
-                        <div style={{height: '60px'}}></div>
-                        
-                        {/* Header Removed as per user request to start links immediately */}
-
-                        <div className="mobile-menu-links" style={{marginTop:'10px'}}>
-                            <Link to="/what-we-offer/university-admissions" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
-                            <Link to="/what-we-offer/course-matching" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                            <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                            <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
-                        </div>
-                    </div>
+                  <a
+                    href="#"
+                    className="mobile-link"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Universities
+                  </a>
+                  <Link
+                    to="/faqs"
+                    className="mobile-link"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    FAQs
+                  </Link>
+                  <a
+                    href="#"
+                    className="mobile-link"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Contact
+                  </a>
+                  <div
+                    className="mobile-actions"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                      width: "100%",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Link
+                      to="/free-consultation"
+                      className="btn btn-primary"
+                      style={{ width: "100%", justifyContent: "center" }}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Free Consultation
+                    </Link>
+                    {/* Sign In removed from here - moved to top navbar icon */}
+                  </div>
                 </div>
+              </div>
+
+              {/* VIEW 2: SUBMENU */}
+              <div
+                className="mobile-menu-view"
+                style={{ position: "relative" }}
+              >
+                {/* ABSOLUTE POSITIONED BACK BUTTON (Top Left) */}
+                <button
+                  className="mobile-back-btn"
+                  onClick={() => setIsMobileSubmenuOpen(false)}
+                  style={{
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    padding: "10px",
+                    zIndex: 10,
+                  }}
+                >
+                  {/* Modern Back Arrow */}
+                  <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 18L9 12L15 6"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                {/* Spacer for content */}
+                <div style={{ height: "60px" }}></div>
+
+                {/* Header Removed as per user request to start links immediately */}
+
+                <div
+                  className="mobile-menu-links"
+                  style={{ marginTop: "10px" }}
+                >
+                  <Link
+                    to="/what-we-offer/university-admissions"
+                    className="mobile-sublink"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    University Admissions
+                  </Link>
+                  <Link
+                    to="/what-we-offer/course-matching"
+                    className="mobile-sublink"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Course Matching
+                  </Link>
+                  <Link
+                    to="/what-we-offer/visa-support"
+                    className="mobile-sublink"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Visa Support
+                  </Link>
+                  <Link
+                    to="/what-we-offer/institutional-representation"
+                    className="mobile-sublink"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Institutional Representation
+                  </Link>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
       </nav>
 
@@ -1285,7 +1474,9 @@ function Home() {
             }}
             aria-label={isVideoPlaying ? "Pause video" : "Play video"}
           >
-            <iconify-icon icon={isVideoPlaying ? "ri:pause-fill" : "ri:play-fill"}></iconify-icon>
+            <iconify-icon
+              icon={isVideoPlaying ? "ri:pause-fill" : "ri:play-fill"}
+            ></iconify-icon>
           </button>
           <button
             className="video-control-btn"
@@ -1297,7 +1488,9 @@ function Home() {
             }}
             aria-label={isVideoMuted ? "Unmute video" : "Mute video"}
           >
-            <iconify-icon icon={isVideoMuted ? "ri:volume-mute-fill" : "ri:volume-up-fill"}></iconify-icon>
+            <iconify-icon
+              icon={isVideoMuted ? "ri:volume-mute-fill" : "ri:volume-up-fill"}
+            ></iconify-icon>
           </button>
         </div>
       </header>
@@ -1309,13 +1502,19 @@ function Home() {
             <a href="#" className="student-type-btn">
               <span className="btn-label">UK AND EU</span>
               <span className="btn-type">STUDENTS</span>
-              <iconify-icon icon="ri:arrow-right-up-line" className="btn-arrow"></iconify-icon>
+              <iconify-icon
+                icon="ri:arrow-right-up-line"
+                className="btn-arrow"
+              ></iconify-icon>
             </a>
             <div className="selector-divider"></div>
             <a href="#" className="student-type-btn">
               <span className="btn-label">INTERNATIONAL</span>
               <span className="btn-type">STUDENTS</span>
-              <iconify-icon icon="ri:arrow-right-up-line" className="btn-arrow"></iconify-icon>
+              <iconify-icon
+                icon="ri:arrow-right-up-line"
+                className="btn-arrow"
+              ></iconify-icon>
             </a>
           </div>
         </div>
@@ -1372,8 +1571,15 @@ function Home() {
       <section className="section-offers">
         <div className="container">
           <div className="offers-header" style={{ textAlign: "left" }}>
-            <h2 className="section-title">What We <span className="text-gradient">Offer.</span></h2>
-            <p className="section-subtitle" style={{ textAlign: "left", marginLeft: "0" }}>Comprehensive guidance tailored to your academic and career goals.</p>
+            <h2 className="section-title">
+              What We <span className="text-gradient">Offer.</span>
+            </h2>
+            <p
+              className="section-subtitle"
+              style={{ textAlign: "left", marginLeft: "0" }}
+            >
+              Comprehensive guidance tailored to your academic and career goals.
+            </p>
           </div>
           <div className="offers-grid">
             {[
@@ -1381,28 +1587,38 @@ function Home() {
                 title: "Events",
                 desc: "Stay ahead with MATSOLS' global education events, webinars, and workshops for international students looking to study abroad. Gain insights on university applications, visa guidance, and career pathways, and connect directly with top universities and admissions experts.",
                 cta: "Join Event",
-                icon: "ri:calendar-event-line"
+                icon: "ri:calendar-event-line",
               },
               {
                 title: "Admissions",
                 desc: "Get expert support with international university admissions and study abroad applications. MATSOLS' experienced consultants guide you through course selection, documentation, SOPs, and visa processes, helping you secure a place at your ideal university abroad.",
                 cta: "Book Consultation",
-                icon: "ri:user-star-line"
+                icon: "ri:user-star-line",
               },
               {
                 title: "Scholarships",
                 desc: "Access exclusive scholarship opportunities for international students and make your overseas education affordable. MATSOLS helps you identify the right scholarships, prepare applications, and maximize your chances of funding your studies at top global universities.",
                 cta: "Find Scholarship",
-                icon: "ri:medal-line"
-              }
+                icon: "ri:medal-line",
+              },
             ].map((offer, idx) => (
-              <div key={idx} className="offer-card anim-hidden anim-pop" style={{ transitionDelay: `${idx * 0.15}s` }}>
+              <div
+                key={idx}
+                className="offer-card anim-hidden anim-pop"
+                style={{ transitionDelay: `${idx * 0.15}s` }}
+              >
                 <div className="offer-icon-tag">
                   <iconify-icon icon={offer.icon}></iconify-icon>
                 </div>
                 <h3>{offer.title}</h3>
                 <p>{offer.desc}</p>
-                <a href="#" className="btn btn-primary" style={{ marginTop: 'auto' }}>{offer.cta}</a>
+                <a
+                  href="#"
+                  className="btn btn-primary"
+                  style={{ marginTop: "auto" }}
+                >
+                  {offer.cta}
+                </a>
               </div>
             ))}
           </div>
@@ -1412,117 +1628,236 @@ function Home() {
       {/* AI Admissions Consultant Section - Academic Overhaul */}
       <section className="section-ai-consultant anim-hidden anim-up">
         <div className="world-map-bg-overlay"></div>
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-            <div className="simple-ai-wrapper">
-              <div className="simple-ai-main">
-                <div className="simple-ai-header">
-                  <h2 className="simple-title">Your AI Admission Office</h2>
-                  <p className="simple-hero-text">We've built a smart assistant that handles the complicated parts of studying abroad. It's designed to give you direct answers about universities, visas, and costs without making you wait for an email or a phone call.</p>
+        <div className="container" style={{ position: "relative", zIndex: 2 }}>
+          <div className="simple-ai-wrapper">
+            <div className="simple-ai-main">
+              <div className="simple-ai-header">
+                <h2 className="simple-title">Your AI Admission Office</h2>
+                <p className="simple-hero-text">
+                  We've built a smart assistant that handles the complicated
+                  parts of studying abroad. It's designed to give you direct
+                  answers about universities, visas, and costs without making
+                  you wait for an email or a phone call.
+                </p>
+              </div>
+
+              <div className="simple-ai-content-grid">
+                <div className="simple-text-side">
+                  <div className="info-group">
+                    <h3>Instant University Matching</h3>
+                    <p>
+                      Finding the right school is the hardest part. Our AI looks
+                      at your current grades, what you want to study, and your
+                      budget. In seconds, it gives you a list of universities in
+                      the UK, USA, or Europe where you have the best chance of
+                      getting an offer. It's accurate, fast, and uses real
+                      admission data.
+                    </p>
+                  </div>
+
+                  <div className="info-group">
+                    <h3>Clear Visa & Document Help</h3>
+                    <p>
+                      Visa rules change all the time. Our AI stays updated with
+                      the latest laws so you don't have to. Ask it which
+                      documents you need for a UK Student Visa or how much money
+                      you need to show in your bank account. It gives you a
+                      simple checklist so you don't miss anything important.
+                    </p>
+                  </div>
+
+                  <div className="info-group">
+                    <h3>Real-Time Cost Estimates</h3>
+                    <p>
+                      Planning your budget is essential. You can ask our
+                      assistant about tuition fees for specific courses or the
+                      average cost of rent in cities like London or Manchester.
+                      It helps you understand the total cost of your education
+                      before you even apply.
+                    </p>
+                  </div>
+
+                  <div className="simple-bottom-benefits">
+                    <div className="benefit">
+                      <span className="check">✓</span> 24/7 Support
+                    </div>
+                    <div className="benefit">
+                      <span className="check">✓</span> Plain English Answers
+                    </div>
+                    <div className="benefit">
+                      <span className="check">✓</span> No hidden costs
+                    </div>
+                  </div>
                 </div>
-                
-                <div className="simple-ai-content-grid">
-                  <div className="simple-text-side">
-                    <div className="info-group">
-                      <h3>Instant University Matching</h3>
-                      <p>Finding the right school is the hardest part. Our AI looks at your current grades, what you want to study, and your budget. In seconds, it gives you a list of universities in the UK, USA, or Europe where you have the best chance of getting an offer. It's accurate, fast, and uses real admission data.</p>
+
+                <div className="simple-chat-side">
+                  <div className="simple-chat-box">
+                    <div className="chat-header">
+                      <span className="dot"></span> Online Assistant
                     </div>
-                    
-                    <div className="info-group">
-                      <h3>Clear Visa & Document Help</h3>
-                      <p>Visa rules change all the time. Our AI stays updated with the latest laws so you don't have to. Ask it which documents you need for a UK Student Visa or how much money you need to show in your bank account. It gives you a simple checklist so you don't miss anything important.</p>
-                    </div>
-  
-                    <div className="info-group">
-                      <h3>Real-Time Cost Estimates</h3>
-                      <p>Planning your budget is essential. You can ask our assistant about tuition fees for specific courses or the average cost of rent in cities like London or Manchester. It helps you understand the total cost of your education before you even apply.</p>
-                    </div>
-  
-                    <div className="simple-bottom-benefits">
-                      <div className="benefit">
-                        <span className="check">✓</span> 24/7 Support
+                    <div className="chat-messages">
+                      <div className="msg bot">
+                        Hello! I'm here to help you. What are you looking to
+                        study?
                       </div>
-                      <div className="benefit">
-                        <span className="check">✓</span> Plain English Answers
+                      <div className="msg user">
+                        I want to study Business in London next year.
                       </div>
-                      <div className="benefit">
-                        <span className="check">✓</span> No hidden costs
+                      <div className="msg bot">
+                        Great! London has excellent schools for Business. Do you
+                        know your current GPA or test scores so I can suggest
+                        the best matches?
                       </div>
                     </div>
                   </div>
-  
-                  <div className="simple-chat-side">
-                    <div className="simple-chat-box">
-                      <div className="chat-header">
-                        <span className="dot"></span> Online Assistant
-                      </div>
-                      <div className="chat-messages">
-                        <div className="msg bot">Hello! I'm here to help you. What are you looking to study?</div>
-                        <div className="msg user">I want to study Business in London next year.</div>
-                        <div className="msg bot">Great! London has excellent schools for Business. Do you know your current GPA or test scores so I can suggest the best matches?</div>
-                      </div>
-                    </div>
-                    <p className="chat-disclaimer">Our AI is here to guide you, but you can always talk to a human advisor for final verification.</p>
-                  </div>
+                  <p className="chat-disclaimer">
+                    Our AI is here to guide you, but you can always talk to a
+                    human advisor for final verification.
+                  </p>
                 </div>
               </div>
             </div>
+          </div>
         </div>
       </section>
 
       {/* Updates & Insights Section */}
       <section className="section-insights">
         <div className="insights-bg-abstract">
-          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+          <svg
+            viewBox="0 0 1400 1000"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ width: "100%", height: "100%" }}
+          >
             <defs>
-              <pattern id="denseGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--primary-orange)" strokeWidth="0.5" opacity="0.1"/>
+              <pattern
+                id="denseGrid"
+                x="0"
+                y="0"
+                width="40"
+                height="40"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke="var(--primary-orange)"
+                  strokeWidth="0.5"
+                  opacity="0.1"
+                />
               </pattern>
-              <linearGradient id="deepBlueGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient
+                id="deepBlueGlow"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor="#004089" stopOpacity="0.3" />
                 <stop offset="100%" stopColor="#004089" stopOpacity="0.0" />
               </linearGradient>
-              <linearGradient id="orangeSurge" x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient
+                id="orangeSurge"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
                 <stop offset="0%" stopColor="#ff863c" stopOpacity="0.1" />
                 <stop offset="50%" stopColor="#ff863c" stopOpacity="0.4" />
                 <stop offset="100%" stopColor="#ff863c" stopOpacity="0.1" />
               </linearGradient>
             </defs>
-
             {/* Layer 1: Skewed Cyber Grid */}
-            <rect width="1800" height="1400" fill="url(#denseGrid)" opacity="0.4" transform="rotate(-15 -200 -200)" />
-
+            <rect
+              width="1800"
+              height="1400"
+              fill="url(#denseGrid)"
+              opacity="0.4"
+              transform="rotate(-15 -200 -200)"
+            />
             {/* Layer 2: Massive Swish Curves (FAQ Density) */}
-            <path d="M-200,600 C 200,900 800,200 1600,700" fill="none" stroke="url(#orangeSurge)" strokeWidth="50" strokeLinecap="round" opacity="0.2" filter="blur(20px)" /> {/* Blur for depth, heavy stroke */}
-            <path d="M-100,300 Q 600,800 1300,100" fill="none" stroke="url(#orangeSurge)" strokeWidth="30" strokeLinecap="round" opacity="0.25" />
-            <path d="M0,900 Q 700,200 1500,800" fill="none" stroke="#004089" strokeWidth="20" strokeLinecap="round" opacity="0.2" />
-
+            <path
+              d="M-200,600 C 200,900 800,200 1600,700"
+              fill="none"
+              stroke="url(#orangeSurge)"
+              strokeWidth="50"
+              strokeLinecap="round"
+              opacity="0.2"
+              filter="blur(20px)"
+            />{" "}
+            {/* Blur for depth, heavy stroke */}
+            <path
+              d="M-100,300 Q 600,800 1300,100"
+              fill="none"
+              stroke="url(#orangeSurge)"
+              strokeWidth="30"
+              strokeLinecap="round"
+              opacity="0.25"
+            />
+            <path
+              d="M0,900 Q 700,200 1500,800"
+              fill="none"
+              stroke="#004089"
+              strokeWidth="20"
+              strokeLinecap="round"
+              opacity="0.2"
+            />
             {/* Layer 3: Tech Node Network (Floating Data) */}
             {[...Array(15)].map((_, i) => (
               <g key={`node-${i}`} opacity={Math.random() * 0.5 + 0.3}>
-                <circle cx={Math.random() * 1400} cy={Math.random() * 1000} r={Math.random() * 4 + 2} fill="#ff863c" />
-                <line 
-                  x1={Math.random() * 1400} y1={Math.random() * 1000} 
-                  x2={Math.random() * 1400} y2={Math.random() * 1000} 
-                  stroke="#004089" strokeWidth="1" opacity="0.2" 
+                <circle
+                  cx={Math.random() * 1400}
+                  cy={Math.random() * 1000}
+                  r={Math.random() * 4 + 2}
+                  fill="#ff863c"
+                />
+                <line
+                  x1={Math.random() * 1400}
+                  y1={Math.random() * 1000}
+                  x2={Math.random() * 1400}
+                  y2={Math.random() * 1000}
+                  stroke="#004089"
+                  strokeWidth="1"
+                  opacity="0.2"
                 />
               </g>
             ))}
-
             {/* Layer 4: Focal Energy Points */}
             <circle cx="1200" cy="800" r="300" fill="url(#deepBlueGlow)" />
             <circle cx="200" cy="200" r="250" fill="url(#deepBlueGlow)" />
-            
             {/* Layer 5: Data Stream Lines */}
-            <path d="M0,400 H1400" stroke="#ff863c" strokeWidth="1" strokeDasharray="10 30" opacity="0.4" />
-            <path d="M0,420 H1400" stroke="#004089" strokeWidth="1" strokeDasharray="5 15" opacity="0.4" />
+            <path
+              d="M0,400 H1400"
+              stroke="#ff863c"
+              strokeWidth="1"
+              strokeDasharray="10 30"
+              opacity="0.4"
+            />
+            <path
+              d="M0,420 H1400"
+              stroke="#004089"
+              strokeWidth="1"
+              strokeDasharray="5 15"
+              opacity="0.4"
+            />
           </svg>
         </div>
 
         <div className="insights-content">
           <div className="container">
-            <div className="insights-header" style={{ marginBottom: '60px', textAlign: 'center' }}>
-              <h2 className="section-title">Updates & <span className="text-gradient">Insights.</span></h2>
-              <p className="section-subtitle" style={{ margin: '0 auto' }}>Real-time opportunities, essential notices, and global academic news.</p>
+            <div
+              className="insights-header"
+              style={{ marginBottom: "60px", textAlign: "center" }}
+            >
+              <h2 className="section-title">
+                Updates & <span className="text-gradient">Insights.</span>
+              </h2>
+              <p className="section-subtitle" style={{ margin: "0 auto" }}>
+                Real-time opportunities, essential notices, and global academic
+                news.
+              </p>
             </div>
           </div>
         </div>
@@ -1530,11 +1865,15 @@ function Home() {
         <div className="pinned-full-width">
           <Swiper
             modules={[Pagination, Autoplay]}
-            pagination={{ 
+            pagination={{
               clickable: true,
               renderBullet: function (index, className) {
-                return '<span class="' + className + ' custom-pagination-bullet"></span>';
-              }
+                return (
+                  '<span class="' +
+                  className +
+                  ' custom-pagination-bullet"></span>'
+                );
+              },
             }}
             autoplay={{ delay: 6000, disableOnInteraction: false }}
             slidesPerView={1}
@@ -1548,7 +1887,7 @@ function Home() {
                 subtitle: "Applications Open Now",
                 desc: "Priority admissions for UK & Malta are live. Secure your scholarship eligibility before the Q3 deadline.",
                 cta: "Begin Assessment",
-                image: titan1
+                image: titan1,
               },
               {
                 badge: "Important",
@@ -1556,8 +1895,8 @@ function Home() {
                 subtitle: "100% Tuition Coverage",
                 desc: "Finalize your research portfolio by Feb 15th to satisfy the new STEM requirements for top-tier funding.",
                 cta: "Apply for Grant",
-                image: titan2
-              }
+                image: titan2,
+              },
             ].map((hero, i) => (
               <SwiperSlide key={i}>
                 <div className="cinematic-strip">
@@ -1565,14 +1904,15 @@ function Home() {
                     <img src={hero.image} alt="Hero Background" />
                     <div className="cinematic-overlay"></div>
                   </div>
-                  
+
                   <div className="cinematic-content">
                     <span className="hero-badge-pill">{hero.badge}</span>
                     <h1 className="hero-title-large">{hero.title}</h1>
                     <h2 className="hero-subtitle">{hero.subtitle}</h2>
                     <p className="hero-desc">{hero.desc}</p>
                     <a href="#" className="hero-cta-btn">
-                      {hero.cta} <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
+                      {hero.cta}{" "}
+                      <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
                     </a>
                   </div>
                 </div>
@@ -1583,86 +1923,178 @@ function Home() {
 
         <div className="container">
           <div className="insights-grid">
-              {[
-                {
-                  badge: "Scholarship",
-                  class: "badge-scholarship",
-                  title: "Global Excellence Grant",
-                  desc: "New $10,000 grants available for high-achieving STEM students applying to top-tier UK research institutions.",
-                  date: "Ends Mar 15",
-                  icon: "ri:medal-line"
-                },
-                {
-                  badge: "Event",
-                  class: "badge-event",
-                  title: "Virtual Admissions Fair",
-                  desc: "Connect directly with 20+ university representatives from Australia and Canada in our exclusive live webinar series.",
-                  date: "Jan 30, 2026",
-                  icon: "ri:calendar-event-line"
-                },
-                {
-                  badge: "Admission",
-                  class: "badge-admission",
-                  title: "Malta Study Pathway",
-                  desc: "Explore accelerated Business and IT programs with integrated internship placements in Malta's growing tech hub.",
-                  date: "Q2 Intake",
-                  icon: "ri:user-star-line"
-                }
-              ].map((item, idx) => (
-                <div 
-                  key={idx} 
-                  className="insight-card anim-hidden anim-pop" 
-                  style={{ transitionDelay: `${idx * 0.1}s` }}
-                >
-                  <span className={`insight-badge ${item.class}`}>{item.badge}</span>
-                  <h3 className="insight-title">{item.title}</h3>
-                  <p className="insight-desc">{item.desc}</p>
-                  <div className="insight-footer">
-                    <span style={{ fontSize: '12px', opacity: 0.6, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <iconify-icon icon="ri:time-line"></iconify-icon> {item.date}
-                    </span>
-                    <a href="#" className="btn-insight">Details <iconify-icon icon="ri:arrow-right-line"></iconify-icon></a>
-                  </div>
+            {[
+              {
+                badge: "Scholarship",
+                class: "badge-scholarship",
+                title: "Global Excellence Grant",
+                desc: "New $10,000 grants available for high-achieving STEM students applying to top-tier UK research institutions.",
+                date: "Ends Mar 15",
+                icon: "ri:medal-line",
+              },
+              {
+                badge: "Event",
+                class: "badge-event",
+                title: "Virtual Admissions Fair",
+                desc: "Connect directly with 20+ university representatives from Australia and Canada in our exclusive live webinar series.",
+                date: "Jan 30, 2026",
+                icon: "ri:calendar-event-line",
+              },
+              {
+                badge: "Admission",
+                class: "badge-admission",
+                title: "Malta Study Pathway",
+                desc: "Explore accelerated Business and IT programs with integrated internship placements in Malta's growing tech hub.",
+                date: "Q2 Intake",
+                icon: "ri:user-star-line",
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="insight-card anim-hidden anim-pop"
+                style={{ transitionDelay: `${idx * 0.1}s` }}
+              >
+                <span className={`insight-badge ${item.class}`}>
+                  {item.badge}
+                </span>
+                <h3 className="insight-title">{item.title}</h3>
+                <p className="insight-desc">{item.desc}</p>
+                <div className="insight-footer">
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      opacity: 0.6,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <iconify-icon icon="ri:time-line"></iconify-icon>{" "}
+                    {item.date}
+                  </span>
+                  <a href="#" className="btn-insight">
+                    Details{" "}
+                    <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
+                  </a>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
       </section>
 
       {/* NEW: Why Choose / Analysis Section (Stair Layout) */}
       {/* Why Choose MATSOLS Section (Redesigned Stair Layout) */}
       <section className="why-matsols-section" ref={whyChooseRef}>
         <div className="blueprint-bg-container">
-          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+          <svg
+            viewBox="0 0 1400 1000"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ width: "100%", height: "100%" }}
+          >
             <defs>
-              <pattern id="whyMatsolsGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="0.5"/>
+              <pattern
+                id="whyMatsolsGrid"
+                width="60"
+                height="60"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 60 0 L 0 0 0 60"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.05)"
+                  strokeWidth="0.5"
+                />
               </pattern>
-              <linearGradient id="whyMatsolsOrangeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.0" />
+              <linearGradient
+                id="whyMatsolsOrangeGlow"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="var(--primary-orange)"
+                  stopOpacity="0.4"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--primary-orange)"
+                  stopOpacity="0.0"
+                />
               </linearGradient>
             </defs>
             <rect width="1400" height="1000" fill="url(#whyMatsolsGrid)" />
-            
+
             {/* Aggressive Organic Background Elements */}
-            <path d="M1200,100 Q1400,300 1100,500 T900,900" fill="none" stroke="var(--primary-orange)" strokeWidth="40" strokeLinecap="round" opacity="0.15" />
-            <path d="M-100,200 Q300,400 100,700 T500,1000" fill="none" stroke="var(--primary-orange)" strokeWidth="30" strokeLinecap="round" opacity="0.1" />
-            
+            <path
+              d="M1200,100 Q1400,300 1100,500 T900,900"
+              fill="none"
+              stroke="var(--primary-orange)"
+              strokeWidth="40"
+              strokeLinecap="round"
+              opacity="0.15"
+            />
+            <path
+              d="M-100,200 Q300,400 100,700 T500,1000"
+              fill="none"
+              stroke="var(--primary-orange)"
+              strokeWidth="30"
+              strokeLinecap="round"
+              opacity="0.1"
+            />
+
             {/* Complex Intersecting Schematic Lines */}
-            <path d="M0,400 L1400,600" stroke="var(--primary-orange)" strokeWidth="8" opacity="0.2" strokeDasharray="20 40" />
-            <path d="M-100,600 C 400,400 600,800 1500,500" stroke="var(--primary-orange)" strokeWidth="15" fill="none" opacity="0.15" />
-            
+            <path
+              d="M0,400 L1400,600"
+              stroke="var(--primary-orange)"
+              strokeWidth="8"
+              opacity="0.2"
+              strokeDasharray="20 40"
+            />
+            <path
+              d="M-100,600 C 400,400 600,800 1500,500"
+              stroke="var(--primary-orange)"
+              strokeWidth="15"
+              fill="none"
+              opacity="0.15"
+            />
+
             {/* Technical Detail Nodes */}
             {[...Array(5)].map((_, i) => (
-              <circle key={`node-${i}`} cx={300 + i * 250} cy={200 + (i % 2) * 600} r="4" fill="var(--primary-orange)" opacity="0.4" />
+              <circle
+                key={`node-${i}`}
+                cx={300 + i * 250}
+                cy={200 + (i % 2) * 600}
+                r="4"
+                fill="var(--primary-orange)"
+                opacity="0.4"
+              />
             ))}
-            
+
             {/* Floating Technical Nodes */}
-            <rect x="1100" y="700" width="160" height="160" rx="30" stroke="var(--primary-orange)" strokeWidth="4" fill="none" opacity="0.1" transform="rotate(15 1180 780)" />
-            
+            <rect
+              x="1100"
+              y="700"
+              width="160"
+              height="160"
+              rx="30"
+              stroke="var(--primary-orange)"
+              strokeWidth="4"
+              fill="none"
+              opacity="0.1"
+              transform="rotate(15 1180 780)"
+            />
+
             {/* Focal Glow */}
-            <circle cx="1250" cy="200" r="220" fill="url(#whyMatsolsOrangeGlow)" />
+            <circle
+              cx="1250"
+              cy="200"
+              r="220"
+              fill="url(#whyMatsolsOrangeGlow)"
+            />
           </svg>
         </div>
         <div className="why-matsols-bg-circle"></div>
@@ -1675,9 +2107,17 @@ function Home() {
                   Why Choose <span className="text-gradient">MATSOLS?</span>
                 </h2>
                 <p className="why-matsols-subtitle">
-                  We don't just find you a university—we design a career pathway. The principles that drive our excellence and innovation ensure your success every step of the way.
+                  We don't just find you a university—we design a career
+                  pathway. The principles that drive our excellence and
+                  innovation ensure your success every step of the way.
                 </p>
-                <a href="#" className="btn btn-primary anim-hidden anim-up delay-300" style={{ marginTop: '30px', alignSelf: 'flex-start' }}>Start Your Journey</a>
+                <a
+                  href="#"
+                  className="btn btn-primary anim-hidden anim-up delay-300"
+                  style={{ marginTop: "30px", alignSelf: "flex-start" }}
+                >
+                  Start Your Journey
+                </a>
               </div>
             </div>
 
@@ -1685,87 +2125,126 @@ function Home() {
             <div className="why-matsols-right">
               <div className="why-matsols-stair-layout">
                 {/* Column 1 */}
-                <div ref={col1Ref} className="why-matsols-column why-matsols-column-1">
-                   {[
-                     {
-                       title: "Personalized Strategy",
-                       desc: "Tailored career roadmaps, not just university lists.",
-                       image: path1,
-                       cat: "STRATEGY"
-                     },
-                     {
-                       title: "Global Network",
-                       desc: "Direct partnerships with 70+ top-tier universities.",
-                       image: story1,
-                       cat: "NETWORK"
-                     }
-                   ].map((card, idx) => (
-                     <div key={`c1-${idx}`} className={`why-matsols-card anim-hidden anim-zoom delay-${idx * 200}`}>
-                       <div className="why-matsols-card-bg" style={{ backgroundImage: `url(${card.image})` }} />
-                       <div className="why-matsols-card-overlay" />
-                       <div className="why-matsols-card-content">
-                         <span className="why-matsols-card-category">{card.cat}</span>
-                         <h3 className="why-matsols-card-title">{card.title}</h3>
-                         <p className="why-matsols-card-description">{card.desc}</p>
-                       </div>
-                     </div>
-                   ))}
+                <div
+                  ref={col1Ref}
+                  className="why-matsols-column why-matsols-column-1"
+                >
+                  {[
+                    {
+                      title: "Personalized Strategy",
+                      desc: "Tailored career roadmaps, not just university lists.",
+                      image: path1,
+                      cat: "STRATEGY",
+                    },
+                    {
+                      title: "Global Network",
+                      desc: "Direct partnerships with 70+ top-tier universities.",
+                      image: story1,
+                      cat: "NETWORK",
+                    },
+                  ].map((card, idx) => (
+                    <div
+                      key={`c1-${idx}`}
+                      className={`why-matsols-card anim-hidden anim-zoom delay-${idx * 200}`}
+                    >
+                      <div
+                        className="why-matsols-card-bg"
+                        style={{ backgroundImage: `url(${card.image})` }}
+                      />
+                      <div className="why-matsols-card-overlay" />
+                      <div className="why-matsols-card-content">
+                        <span className="why-matsols-card-category">
+                          {card.cat}
+                        </span>
+                        <h3 className="why-matsols-card-title">{card.title}</h3>
+                        <p className="why-matsols-card-description">
+                          {card.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Column 2 */}
-                <div ref={col2Ref} className="why-matsols-column why-matsols-column-2">
-                   {[
-                     {
-                       title: "End-to-End Support",
-                       desc: "From application to accommodation, we handle it all.",
-                       image: heroBg,
-                       cat: "SUPPORT"
-                     },
-                     {
-                       title: "Scholarship Experts",
-                       desc: "Maximized financial aid through expert negotiation.",
-                       image: story3,
-                       cat: "FUNDING"
-                     }
-                   ].map((card, idx) => (
-                     <div key={`c2-${idx}`} className={`why-matsols-card anim-hidden anim-zoom delay-${(idx + 1) * 200}`}>
-                       <div className="why-matsols-card-bg" style={{ backgroundImage: `url(${card.image})` }} />
-                       <div className="why-matsols-card-overlay" />
-                       <div className="why-matsols-card-content">
-                         <span className="why-matsols-card-category">{card.cat}</span>
-                         <h3 className="why-matsols-card-title">{card.title}</h3>
-                         <p className="why-matsols-card-description">{card.desc}</p>
-                       </div>
-                     </div>
-                   ))}
+                <div
+                  ref={col2Ref}
+                  className="why-matsols-column why-matsols-column-2"
+                >
+                  {[
+                    {
+                      title: "End-to-End Support",
+                      desc: "From application to accommodation, we handle it all.",
+                      image: heroBg,
+                      cat: "SUPPORT",
+                    },
+                    {
+                      title: "Scholarship Experts",
+                      desc: "Maximized financial aid through expert negotiation.",
+                      image: story3,
+                      cat: "FUNDING",
+                    },
+                  ].map((card, idx) => (
+                    <div
+                      key={`c2-${idx}`}
+                      className={`why-matsols-card anim-hidden anim-zoom delay-${(idx + 1) * 200}`}
+                    >
+                      <div
+                        className="why-matsols-card-bg"
+                        style={{ backgroundImage: `url(${card.image})` }}
+                      />
+                      <div className="why-matsols-card-overlay" />
+                      <div className="why-matsols-card-content">
+                        <span className="why-matsols-card-category">
+                          {card.cat}
+                        </span>
+                        <h3 className="why-matsols-card-title">{card.title}</h3>
+                        <p className="why-matsols-card-description">
+                          {card.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Column 3 */}
-                <div ref={col3Ref} className="why-matsols-column why-matsols-column-3">
-                   {[
-                     {
-                       title: "Visa Success",
-                       desc: "99% visa approval rate with our compliance team.",
-                       image: path3,
-                       cat: "LEGAL"
-                     },
-                     {
-                       title: "Local Presence",
-                       desc: "Offices in 5 countries for on-ground assistance.",
-                       image: supportBg,
-                       cat: "GLOBAL"
-                     }
-                   ].map((card, idx) => (
-                     <div key={`c3-${idx}`} className={`why-matsols-card anim-hidden anim-zoom delay-${(idx + 2) * 200}`}>
-                       <div className="why-matsols-card-bg" style={{ backgroundImage: `url(${card.image})` }} />
-                       <div className="why-matsols-card-overlay" />
-                       <div className="why-matsols-card-content">
-                         <span className="why-matsols-card-category">{card.cat}</span>
-                         <h3 className="why-matsols-card-title">{card.title}</h3>
-                         <p className="why-matsols-card-description">{card.desc}</p>
-                       </div>
-                     </div>
-                   ))}
+                <div
+                  ref={col3Ref}
+                  className="why-matsols-column why-matsols-column-3"
+                >
+                  {[
+                    {
+                      title: "Visa Success",
+                      desc: "99% visa approval rate with our compliance team.",
+                      image: path3,
+                      cat: "LEGAL",
+                    },
+                    {
+                      title: "Local Presence",
+                      desc: "Offices in 5 countries for on-ground assistance.",
+                      image: supportBg,
+                      cat: "GLOBAL",
+                    },
+                  ].map((card, idx) => (
+                    <div
+                      key={`c3-${idx}`}
+                      className={`why-matsols-card anim-hidden anim-zoom delay-${(idx + 2) * 200}`}
+                    >
+                      <div
+                        className="why-matsols-card-bg"
+                        style={{ backgroundImage: `url(${card.image})` }}
+                      />
+                      <div className="why-matsols-card-overlay" />
+                      <div className="why-matsols-card-content">
+                        <span className="why-matsols-card-category">
+                          {card.cat}
+                        </span>
+                        <h3 className="why-matsols-card-title">{card.title}</h3>
+                        <p className="why-matsols-card-description">
+                          {card.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1776,101 +2255,312 @@ function Home() {
       {/* Impact Section - High Fidelity Schematic Restoration */}
       <section className="section-impact-new">
         <div className="blueprint-bg-container">
-          <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }}>
+          <svg
+            viewBox="0 0 1400 1000"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ width: "100%", height: "100%" }}
+          >
             <defs>
-              <pattern id="impactGrid" width="80" height="80" patternUnits="userSpaceOnUse">
-                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(0, 64, 137, 0.08)" strokeWidth="0.5"/>
+              <pattern
+                id="impactGrid"
+                width="80"
+                height="80"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 80 0 L 0 0 0 80"
+                  fill="none"
+                  stroke="rgba(0, 64, 137, 0.08)"
+                  strokeWidth="0.5"
+                />
               </pattern>
-              <linearGradient id="impactOrangeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="var(--primary-orange)" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="var(--primary-orange)" stopOpacity="0.0" />
+              <linearGradient
+                id="impactOrangeGlow"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="var(--primary-orange)"
+                  stopOpacity="0.25"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--primary-orange)"
+                  stopOpacity="0.0"
+                />
               </linearGradient>
             </defs>
             <rect width="1400" height="1000" fill="url(#impactGrid)" />
-            
+
             {/* Aggressive Schematic Detail Loops - Dense & Complex */}
-            <circle cx="700" cy="100" r="300" stroke="rgba(0, 64, 137, 0.1)" strokeWidth="1" fill="none" strokeDasharray="10 5" />
-            <circle cx="700" cy="100" r="280" stroke="rgba(255, 115, 36, 0.15)" strokeWidth="2" fill="none" opacity="0.6" />
-            <circle cx="700" cy="100" r="250" stroke="rgba(0, 64, 137, 0.08)" strokeWidth="0.5" fill="none" />
-            
+            <circle
+              cx="700"
+              cy="100"
+              r="300"
+              stroke="rgba(0, 64, 137, 0.1)"
+              strokeWidth="1"
+              fill="none"
+              strokeDasharray="10 5"
+            />
+            <circle
+              cx="700"
+              cy="100"
+              r="280"
+              stroke="rgba(255, 115, 36, 0.15)"
+              strokeWidth="2"
+              fill="none"
+              opacity="0.6"
+            />
+            <circle
+              cx="700"
+              cy="100"
+              r="250"
+              stroke="rgba(0, 64, 137, 0.08)"
+              strokeWidth="0.5"
+              fill="none"
+            />
+
             {/* Complex Intersecting Curvature */}
-            <path d="M-100,500 C 200,300 1200,700 1500,400" stroke="rgba(0, 64, 137, 0.15)" strokeWidth="10" fill="none" opacity="0.2" />
-            <path d="M0,200 L1400,800" stroke="var(--primary-orange)" strokeWidth="2" opacity="0.2" strokeDasharray="5 15" />
-            
+            <path
+              d="M-100,500 C 200,300 1200,700 1500,400"
+              stroke="rgba(0, 64, 137, 0.15)"
+              strokeWidth="10"
+              fill="none"
+              opacity="0.2"
+            />
+            <path
+              d="M0,200 L1400,800"
+              stroke="var(--primary-orange)"
+              strokeWidth="2"
+              opacity="0.2"
+              strokeDasharray="5 15"
+            />
+
             {/* Ruler & Measure Markings */}
             {[...Array(12)].map((_, i) => (
-              <line key={`ruler-${i}`} x1={40} y1={100 + i * 80} x2={60} y2={100 + i * 80} stroke="rgba(0, 64, 137, 0.4)" strokeWidth="1" />
+              <line
+                key={`ruler-${i}`}
+                x1={40}
+                y1={100 + i * 80}
+                x2={60}
+                y2={100 + i * 80}
+                stroke="rgba(0, 64, 137, 0.4)"
+                strokeWidth="1"
+              />
             ))}
-            <text x="70" y="115" fontSize="12" fill="rgba(0, 64, 137, 0.3)" fontFamily="monospace">REF_MOD_01</text>
-            
+            <text
+              x="70"
+              y="115"
+              fontSize="12"
+              fill="rgba(0, 64, 137, 0.3)"
+              fontFamily="monospace"
+            >
+              REF_MOD_01
+            </text>
+
             {/* Technical Detail Elements */}
             {[...Array(8)].map((_, i) => (
-              <rect key={`tech-node-${i}`} x={100 + i * 180} y={900} width="8" height="8" fill="var(--primary-orange)" opacity="0.3" transform={`rotate(${i * 45} ${104 + i * 180} 904)`} />
+              <rect
+                key={`tech-node-${i}`}
+                x={100 + i * 180}
+                y={900}
+                width="8"
+                height="8"
+                fill="var(--primary-orange)"
+                opacity="0.3"
+                transform={`rotate(${i * 45} ${104 + i * 180} 904)`}
+              />
             ))}
-            
+
             {/* Diagonal Hatch Patterns */}
-            <path d="M1200,400 L1400,600 M1220,400 L1400,580 M1240,400 L1400,560" stroke="rgba(255, 115, 36, 0.1)" strokeWidth="0.5" />
-            <path d="M0,800 L200,1000 M0,820 L180,1000 M0,840 L160,1000" stroke="rgba(255, 115, 36, 0.1)" strokeWidth="0.5" />
-            
+            <path
+              d="M1200,400 L1400,600 M1220,400 L1400,580 M1240,400 L1400,560"
+              stroke="rgba(255, 115, 36, 0.1)"
+              strokeWidth="0.5"
+            />
+            <path
+              d="M0,800 L200,1000 M0,820 L180,1000 M0,840 L160,1000"
+              stroke="rgba(255, 115, 36, 0.1)"
+              strokeWidth="0.5"
+            />
+
             {/* Glow Focal Points */}
             <circle cx="200" cy="800" r="180" fill="url(#impactOrangeGlow)" />
           </svg>
         </div>
 
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="impact-header-new anim-hidden anim-up" style={{ marginBottom: '60px', textAlign: "left" }}>
-            <h2 className="section-title" style={{ color: '#0f172a', fontSize: '3.5rem', fontFamily: '"Playfair Display", serif' }}>
-              Our Global <span className="text-gradient">Impact in Numbers</span>
+        <div className="container" style={{ position: "relative", zIndex: 2 }}>
+          <div
+            className="impact-header-new anim-hidden anim-up"
+            style={{ marginBottom: "60px", textAlign: "left" }}
+          >
+            <h2
+              className="section-title"
+              style={{
+                color: "#0f172a",
+                fontSize: "3.5rem",
+                fontFamily: '"Playfair Display", serif',
+              }}
+            >
+              Our Global{" "}
+              <span className="text-gradient">Impact in Numbers</span>
             </h2>
-            <p className="section-subtitle" style={{ textAlign: "left", marginLeft: "0", color: '#64748b', fontSize: '1.2rem', maxWidth: '600px' }}>
-              Quantifying our commitment to international student success worldwide.
+            <p
+              className="section-subtitle"
+              style={{
+                textAlign: "left",
+                marginLeft: "0",
+                color: "#64748b",
+                fontSize: "1.2rem",
+                maxWidth: "600px",
+              }}
+            >
+              Quantifying our commitment to international student success
+              worldwide.
             </p>
           </div>
 
-          <div className="impact-main-card anim-hidden anim-zoom" style={{ background: '#0f172a', padding: '80px', borderRadius: '60px', boxShadow: '0 40px 100px rgba(15, 23, 42, 0.2)' }}>
-            <div className="impact-grid-new" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '80px' }}>
-              <div className="impact-col-left" style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+          <div
+            className="impact-main-card anim-hidden anim-zoom"
+            style={{
+              background: "#0f172a",
+              padding: "80px",
+              borderRadius: "60px",
+              boxShadow: "0 40px 100px rgba(15, 23, 42, 0.2)",
+            }}
+          >
+            <div
+              className="impact-grid-new"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr 1fr",
+                gap: "80px",
+              }}
+            >
+              <div
+                className="impact-col-left"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "60px",
+                }}
+              >
                 {[
-                  { 
-                    num: '50,000+', 
-                    title: 'Students Successfully Placed',
-                    desc: 'Over 50,000 students worldwide have benefited from MATSOLS guidance, progressing through our pathways to top universities abroad.'
+                  {
+                    num: "50,000+",
+                    title: "Students Successfully Placed",
+                    desc: "Over 50,000 students worldwide have benefited from MATSOLS guidance, progressing through our pathways to top universities abroad.",
                   },
-                  { 
-                    num: '120+', 
-                    title: 'Nationalities Represented Annually',
-                    desc: 'Students from over 120 countries join our programs each year, creating a diverse global learning environment.'
+                  {
+                    num: "120+",
+                    title: "Nationalities Represented Annually",
+                    desc: "Students from over 120 countries join our programs each year, creating a diverse global learning environment.",
                   },
-                  { 
-                    num: '70+', 
-                    title: 'University Partners Worldwide',
-                    desc: 'We collaborate with more than 70 trusted university partners, including 21 in the QS World Top 200.'
-                  }
+                  {
+                    num: "70+",
+                    title: "University Partners Worldwide",
+                    desc: "We collaborate with more than 70 trusted university partners, including 21 in the QS World Top 200.",
+                  },
                 ].map((item, idx) => (
-                  <div key={idx} className={`impact-item-new anim-hidden anim-left delay-${idx * 200}`}>
-                    <div className="impact-num" style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--primary-orange)', marginBottom: '10px' }}>{item.num}</div>
-                    <div className="impact-title" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'white', marginBottom: '12px' }}>{item.title}</div>
-                    <p style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '1rem', margin: 0 }}>{item.desc}</p>
+                  <div
+                    key={idx}
+                    className={`impact-item-new anim-hidden anim-left delay-${idx * 200}`}
+                  >
+                    <div
+                      className="impact-num"
+                      style={{
+                        fontSize: "3.5rem",
+                        fontWeight: 800,
+                        color: "var(--primary-orange)",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      {item.num}
+                    </div>
+                    <div
+                      className="impact-title"
+                      style={{
+                        fontSize: "1.4rem",
+                        fontWeight: 700,
+                        color: "white",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      {item.title}
+                    </div>
+                    <p
+                      style={{
+                        color: "rgba(255,255,255,0.6)",
+                        lineHeight: 1.6,
+                        fontSize: "1rem",
+                        margin: 0,
+                      }}
+                    >
+                      {item.desc}
+                    </p>
                   </div>
                 ))}
               </div>
-              <div className="impact-col-right" style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+              <div
+                className="impact-col-right"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "60px",
+                }}
+              >
                 {[
-                  { 
-                    num: '135+', 
-                    title: 'Study Centres Across 40+ Countries',
-                    desc: 'Our international network ensures students have access to consistent, high-quality guidance wherever they are.'
+                  {
+                    num: "135+",
+                    title: "Study Centres Across 40+ Countries",
+                    desc: "Our international network ensures students have access to consistent, high-quality guidance wherever they are.",
                   },
-                  { 
-                    num: '89%', 
-                    title: 'Achieve a 2:1 or Higher',
-                    desc: 'An impressive 89% of our students achieve strong academic performance globally.'
-                  }
+                  {
+                    num: "89%",
+                    title: "Achieve a 2:1 or Higher",
+                    desc: "An impressive 89% of our students achieve strong academic performance globally.",
+                  },
                 ].map((item, idx) => (
-                  <div key={idx} className={`impact-item-new anim-hidden anim-right delay-${(idx + 1) * 200}`}>
-                    <div className="impact-num" style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--primary-orange)', marginBottom: '10px' }}>{item.num}</div>
-                    <div className="impact-title" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'white', marginBottom: '12px' }}>{item.title}</div>
-                    <p style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '1rem', margin: 0 }}>{item.desc}</p>
+                  <div
+                    key={idx}
+                    className={`impact-item-new anim-hidden anim-right delay-${(idx + 1) * 200}`}
+                  >
+                    <div
+                      className="impact-num"
+                      style={{
+                        fontSize: "3.5rem",
+                        fontWeight: 800,
+                        color: "var(--primary-orange)",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      {item.num}
+                    </div>
+                    <div
+                      className="impact-title"
+                      style={{
+                        fontSize: "1.4rem",
+                        fontWeight: 700,
+                        color: "white",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      {item.title}
+                    </div>
+                    <p
+                      style={{
+                        color: "rgba(255,255,255,0.6)",
+                        lineHeight: 1.6,
+                        fontSize: "1rem",
+                        margin: 0,
+                      }}
+                    >
+                      {item.desc}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -1878,9 +2568,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-
-
 
       {/* Path Section */}
       <section className="section-path" ref={pathRef}>
@@ -2127,7 +2814,9 @@ function Home() {
               margin: "0 auto",
             }}
           >
-            <div className="section-badge center-badge">ACADEMIC EXCELLENCE</div>
+            <div className="section-badge center-badge">
+              ACADEMIC EXCELLENCE
+            </div>
             <h2 className="animate-bento-header">
               Premier Education Consulting
             </h2>
@@ -2152,10 +2841,12 @@ function Home() {
                   ></iconify-icon>
                 </div>
                 <p>
-                  MATSOLS provides access to top universities abroad and programs across multiple countries, 
-                  including the UK, Malta, and Turkey. Our international education consultancy ensures that 
-                  students from all over the world receive expert guidance and support, connecting you to 
-                  global education opportunities no matter where you are.
+                  MATSOLS provides access to top universities abroad and
+                  programs across multiple countries, including the UK, Malta,
+                  and Turkey. Our international education consultancy ensures
+                  that students from all over the world receive expert guidance
+                  and support, connecting you to global education opportunities
+                  no matter where you are.
                 </p>
                 <div
                   style={{
@@ -2177,7 +2868,8 @@ function Home() {
                 </div>
                 <h3>Expert Guidance</h3>
                 <p className="hover-desc">
-                  Providing expert on-the-ground support in every major academic hub.
+                  Providing expert on-the-ground support in every major academic
+                  hub.
                 </p>
               </div>
             </div>
@@ -2211,10 +2903,12 @@ function Home() {
                   </div>
                 </div>
                 <p style={{ marginTop: "auto" }}>
-                  With a proven track record, over 50,000 students have successfully secured admission to 
-                  world-leading universities through MATSOLS. Our study abroad consultants focus on 
-                  achieving strong academic outcomes, helping students meet university requirements and 
-                  maximize their potential for global success.
+                  With a proven track record, over 50,000 students have
+                  successfully secured admission to world-leading universities
+                  through MATSOLS. Our study abroad consultants focus on
+                  achieving strong academic outcomes, helping students meet
+                  university requirements and maximize their potential for
+                  global success.
                 </p>
               </div>
               <div className="card-hover-content">
@@ -2227,7 +2921,8 @@ function Home() {
                 </div>
                 <h3>Academic Excellence</h3>
                 <p className="hover-desc">
-                  Focusing on strong academic outcomes and potential maximization.
+                  Focusing on strong academic outcomes and potential
+                  maximization.
                 </p>
               </div>
             </div>
@@ -2244,10 +2939,12 @@ function Home() {
                   ></iconify-icon>
                 </div>
                 <p style={{ marginTop: "20px", fontSize: "1rem" }}>
-                  We respect your privacy and provide professional, secure support throughout your 
-                  education journey. As a trusted education consultancy for international students, 
-                  MATSOLS ensures that all your personal information, applications, and documentation 
-                  are handled with full confidentiality and integrity.
+                  We respect your privacy and provide professional, secure
+                  support throughout your education journey. As a trusted
+                  education consultancy for international students, MATSOLS
+                  ensures that all your personal information, applications, and
+                  documentation are handled with full confidentiality and
+                  integrity.
                 </p>
                 <div style={{ marginTop: "auto", opacity: 0.3 }}>
                   <iconify-icon
@@ -2266,7 +2963,8 @@ function Home() {
                 </div>
                 <h3>Total Integrity</h3>
                 <p className="hover-desc">
-                  Military-grade discretion for all high-profile university placements.
+                  Military-grade discretion for all high-profile university
+                  placements.
                 </p>
               </div>
             </div>
@@ -2301,10 +2999,12 @@ function Home() {
                   ></div>
                 </div>
                 <p style={{ marginTop: "30px" }}>
-                  Every student is unique, and so is our guidance. MATSOLS designs personalized education 
-                  pathways based on your goals, academic background, and career aspirations. From 
-                  international university applications to student visa guidance, we ensure a 
-                  step-by-step plan that aligns with your ambitions and opens doors to global study opportunities.
+                  Every student is unique, and so is our guidance. MATSOLS
+                  designs personalized education pathways based on your goals,
+                  academic background, and career aspirations. From
+                  international university applications to student visa
+                  guidance, we ensure a step-by-step plan that aligns with your
+                  ambitions and opens doors to global study opportunities.
                 </p>
               </div>
               <div className="card-hover-content">
@@ -2401,22 +3101,32 @@ function Home() {
       {/* Destinations 3D */}
       <section className="section-dest" ref={destRef}>
         <div className="container">
-          <h2 style={{ fontSize: "3rem", marginBottom: "12px", textAlign: "left" }}>
+          <h2
+            style={{
+              fontSize: "3rem",
+              marginBottom: "12px",
+              textAlign: "left",
+            }}
+          >
             Where Will You Excel?
           </h2>
-          <p className="section-subtitle" style={{ marginBottom: "40px", textAlign: "left", marginLeft: "0" }}>
-            Discover your ideal study destination among the world's leading academic hubs.
+          <p
+            className="section-subtitle"
+            style={{ marginBottom: "40px", textAlign: "left", marginLeft: "0" }}
+          >
+            Discover your ideal study destination among the world's leading
+            academic hubs.
           </p>
           <div className="cards-row">
             <div className="dest-card anim-hidden anim-left">
-              <img
-                alt="UK"
-                src={ukDest}
-              />
+              <img alt="UK" src={ukDest} />
               <div className="dest-info">
                 <h3>United Kingdom</h3>
                 <div className="dest-details">
-                  <p>Home to world-leading universities like Oxford, Cambridge, and Imperial College London.</p>
+                  <p>
+                    Home to world-leading universities like Oxford, Cambridge,
+                    and Imperial College London.
+                  </p>
                   <span
                     style={{ color: "var(--primary-orange)", fontWeight: 600 }}
                   >
@@ -2426,14 +3136,14 @@ function Home() {
               </div>
             </div>
             <div className="dest-card anim-hidden anim-up">
-              <img
-                alt="Istanbul"
-                src={istanbulDest}
-              />
+              <img alt="Istanbul" src={istanbulDest} />
               <div className="dest-info">
                 <h3>Istanbul, Turkey</h3>
                 <div className="dest-details">
-                  <p>A vibrant bridge between East and West, offering rich cultural heritage and modern academic excellence.</p>
+                  <p>
+                    A vibrant bridge between East and West, offering rich
+                    cultural heritage and modern academic excellence.
+                  </p>
                   <span
                     style={{ color: "var(--primary-orange)", fontWeight: 600 }}
                   >
@@ -2443,14 +3153,14 @@ function Home() {
               </div>
             </div>
             <div className="dest-card anim-hidden anim-right">
-              <img
-                alt="Malta"
-                src={maltaDest}
-              />
+              <img alt="Malta" src={maltaDest} />
               <div className="dest-info">
                 <h3>Malta</h3>
                 <div className="dest-details">
-                  <p>Study in a Mediterranean paradise with high-quality English-taught programs and a booming career landscape.</p>
+                  <p>
+                    Study in a Mediterranean paradise with high-quality
+                    English-taught programs and a booming career landscape.
+                  </p>
                   <span
                     style={{ color: "var(--primary-orange)", fontWeight: 600 }}
                   >
@@ -2487,21 +3197,24 @@ function Home() {
             >
               {[
                 {
-                  quote: "Stressed by paperwork and choices, I turned to MATSOLS. They simplified everything, guiding me to SBM Malta for Business. I’m now thriving in a global environment with a clear career path ahead.",
+                  quote:
+                    "Stressed by paperwork and choices, I turned to MATSOLS. They simplified everything, guiding me to SBM Malta for Business. I’m now thriving in a global environment with a clear career path ahead.",
                   name: "Emma L.",
                   uni: "SBM Malta",
                   course: "Business Administration",
                   img: story1,
                 },
                 {
-                  quote: "MATSOLS turned application chaos into a clear strategy. From interview prep to enrollment, they handled it all. I’m now studying IT in the UK, already building projects for my future career.",
+                  quote:
+                    "MATSOLS turned application chaos into a clear strategy. From interview prep to enrollment, they handled it all. I’m now studying IT in the UK, already building projects for my future career.",
                   name: "James K.",
                   uni: "UK University",
                   course: "Information Technology",
                   img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80",
                 },
                 {
-                  quote: "The cost of studying abroad felt impossible until MATSOLS found my scholarships. They built a financial roadmap that worked. Today, I’m studying Finance in Malta, debt-managed and future-ready.",
+                  quote:
+                    "The cost of studying abroad felt impossible until MATSOLS found my scholarships. They built a financial roadmap that worked. Today, I’m studying Finance in Malta, debt-managed and future-ready.",
                   name: "Sofia R.",
                   uni: "SBM Malta",
                   course: "Finance & Accounting",
@@ -2524,7 +3237,9 @@ function Home() {
                       <p className="testi-quote">{story.quote}</p>
                       <div className="testi-author">
                         <h4>{story.name}</h4>
-                        <p>{story.uni} — {story.course}</p>
+                        <p>
+                          {story.uni} — {story.course}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -2534,8 +3249,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-
 
       {/* FAQ Section */}
       <section className="section-faq">
@@ -2727,7 +3440,9 @@ function Home() {
                     ></iconify-icon>
                   </div>
                   <div className="faq-answer">
-                    <p>{item.a}</p>
+                    <div className="faq-answer-content">
+                      <p>{item.a}</p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -2737,63 +3452,202 @@ function Home() {
       </section>
 
       {/* Process Sticky - Extreme Overhaul */}
-      <section className="section-process" ref={processRef} style={{ position: 'relative' }}>
-        <div className="process-bg-abstract" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
-            {/* Cinematic Asset BG */}
-            <img 
-              src={blueprintBg} 
-              alt="" 
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.15, filter: 'grayscale(100%) brightness(0.5)' }} 
-            />
-            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 70% 50%, rgba(4, 16, 33, 0) 0%, rgba(4, 16, 33, 0.9) 100%)' }}></div>
-            
-            <svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1 }}>
-              <defs>
-                <pattern id="engineerGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-                  <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#06b6d4" strokeWidth="0.5" opacity="0.1"/>
-                </pattern>
-                <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.1" />
-                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-              
-              <rect width="1400" height="1000" fill="url(#engineerGrid)" />
+      <section
+        className="section-process"
+        ref={processRef}
+        style={{ position: "relative" }}
+      >
+        <div
+          className="process-bg-abstract"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        >
+          {/* Cinematic Asset BG */}
+          <img
+            src={blueprintBg}
+            alt=""
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.15,
+              filter: "grayscale(100%) brightness(0.5)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(circle at 70% 50%, rgba(4, 16, 33, 0) 0%, rgba(4, 16, 33, 0.9) 100%)",
+            }}
+          ></div>
 
-              {/* Center Concentric Hub */}
-              <circle cx="700" cy="500" r="480" stroke="#06b6d4" strokeWidth="1" fill="none" opacity="0.05" />
-              <circle cx="700" cy="500" r="400" stroke="#06b6d4" strokeWidth="0.5" fill="none" opacity="0.1" strokeDasharray="5,5" />
-              <circle cx="700" cy="500" r="320" stroke="#06b6d4" strokeWidth="2" fill="none" opacity="0.15" />
-              <circle cx="700" cy="500" r="150" stroke="#06b6d4" strokeWidth="1" fill="none" opacity="0.2" />
-
-              {/* Radial Technical Markers */}
-              {[...Array(24)].map((_, i) => (
-                <line 
-                  key={`radial-${i}`}
-                  x1="700" y1="500"
-                  x2={700 + Math.cos(i * 15 * Math.PI / 180) * 1000}
-                  y2={500 + Math.sin(i * 15 * Math.PI / 180) * 1000}
-                  stroke="#06b6d4" strokeWidth="0.5" opacity="0.05"
+          <svg
+            viewBox="0 0 1400 1000"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "relative",
+              zIndex: 1,
+            }}
+          >
+            <defs>
+              <pattern
+                id="engineerGrid"
+                width="60"
+                height="60"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 60 0 L 0 0 0 60"
+                  fill="none"
+                  stroke="#06b6d4"
+                  strokeWidth="0.5"
+                  opacity="0.1"
                 />
-              ))}
+              </pattern>
+              <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.1" />
+                <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
+              </linearGradient>
+            </defs>
 
-              {/* Corner Accents */}
-              <path d="M40,40 L180,40 M40,40 L40,180" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
-              <path d="M1360,40 L1220,40 M1360,40 L1360,180" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
-              <path d="M40,960 L180,960 M40,960 L40,820" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
-              <path d="M1360,960 L1220,960 M1360,960 L1360,820" stroke="#06b6d4" strokeWidth="2" opacity="0.4" fill="none" />
-              
-              {/* Data Points */}
-              <circle cx="200" cy="200" r="3" fill="#06b6d4" opacity="0.6" />
-              <text x="210" y="205" fill="#06b6d4" fontSize="10" fontFamily="monospace" opacity="0.4">NODE_ALPHA_01</text>
-              <circle cx="1200" cy="800" r="3" fill="#06b6d4" opacity="0.6" />
-              <text x="1210" y="805" fill="#06b6d4" fontSize="10" fontFamily="monospace" opacity="0.4">SYNC_COMPLETE</text>
+            <rect width="1400" height="1000" fill="url(#engineerGrid)" />
 
-              {/* Ruler Markings */}
-              {[...Array(30)].map((_, i) => (
-                <line key={`v-rule-${i}`} x1={40} y1={50 + i * 30} x2={55} y2={50 + i * 30} stroke="#06b6d4" strokeWidth="1" opacity="0.3" />
-              ))}
-            </svg>
+            {/* Center Concentric Hub */}
+            <circle
+              cx="700"
+              cy="500"
+              r="480"
+              stroke="#06b6d4"
+              strokeWidth="1"
+              fill="none"
+              opacity="0.05"
+            />
+            <circle
+              cx="700"
+              cy="500"
+              r="400"
+              stroke="#06b6d4"
+              strokeWidth="0.5"
+              fill="none"
+              opacity="0.1"
+              strokeDasharray="5,5"
+            />
+            <circle
+              cx="700"
+              cy="500"
+              r="320"
+              stroke="#06b6d4"
+              strokeWidth="2"
+              fill="none"
+              opacity="0.15"
+            />
+            <circle
+              cx="700"
+              cy="500"
+              r="150"
+              stroke="#06b6d4"
+              strokeWidth="1"
+              fill="none"
+              opacity="0.2"
+            />
+
+            {/* Radial Technical Markers */}
+            {[...Array(24)].map((_, i) => (
+              <line
+                key={`radial-${i}`}
+                x1="700"
+                y1="500"
+                x2={700 + Math.cos((i * 15 * Math.PI) / 180) * 1000}
+                y2={500 + Math.sin((i * 15 * Math.PI) / 180) * 1000}
+                stroke="#06b6d4"
+                strokeWidth="0.5"
+                opacity="0.05"
+              />
+            ))}
+
+            {/* Corner Accents */}
+            <path
+              d="M40,40 L180,40 M40,40 L40,180"
+              stroke="#06b6d4"
+              strokeWidth="2"
+              opacity="0.4"
+              fill="none"
+            />
+            <path
+              d="M1360,40 L1220,40 M1360,40 L1360,180"
+              stroke="#06b6d4"
+              strokeWidth="2"
+              opacity="0.4"
+              fill="none"
+            />
+            <path
+              d="M40,960 L180,960 M40,960 L40,820"
+              stroke="#06b6d4"
+              strokeWidth="2"
+              opacity="0.4"
+              fill="none"
+            />
+            <path
+              d="M1360,960 L1220,960 M1360,960 L1360,820"
+              stroke="#06b6d4"
+              strokeWidth="2"
+              opacity="0.4"
+              fill="none"
+            />
+
+            {/* Data Points */}
+            <circle cx="200" cy="200" r="3" fill="#06b6d4" opacity="0.6" />
+            <text
+              x="210"
+              y="205"
+              fill="#06b6d4"
+              fontSize="10"
+              fontFamily="monospace"
+              opacity="0.4"
+            >
+              NODE_ALPHA_01
+            </text>
+            <circle cx="1200" cy="800" r="3" fill="#06b6d4" opacity="0.6" />
+            <text
+              x="1210"
+              y="805"
+              fill="#06b6d4"
+              fontSize="10"
+              fontFamily="monospace"
+              opacity="0.4"
+            >
+              SYNC_COMPLETE
+            </text>
+
+            {/* Ruler Markings */}
+            {[...Array(30)].map((_, i) => (
+              <line
+                key={`v-rule-${i}`}
+                x1={40}
+                y1={50 + i * 30}
+                x2={55}
+                y2={50 + i * 30}
+                stroke="#06b6d4"
+                strokeWidth="1"
+                opacity="0.3"
+              />
+            ))}
+          </svg>
         </div>
 
         <div className="process-layout">
@@ -2878,7 +3732,6 @@ function Home() {
         </div>
       </section>
 
-
       {/* Lead Magnet */}
       <div className="container">
         <section className="magnet-section">
@@ -2955,7 +3808,9 @@ function Home() {
               </div>
               <div className="input-group">
                 <select className="input-field select-field" defaultValue="">
-                  <option value="" disabled>Country of Residence</option>
+                  <option value="" disabled>
+                    Country of Residence
+                  </option>
                   <option value="UK">United Kingdom</option>
                   <option value="US">United States</option>
                   <option value="CA">Canada</option>
