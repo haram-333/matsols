@@ -140,18 +140,22 @@
 }
 
 .step-circle {
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
   background: white;
   border: 2px solid #e0e3ea;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-weight: 600;
   color: #94a3b8;
   transition: all 0.3s ease;
   font-size: 14px;
+  flex-shrink: 0 !important;
+  aspect-ratio: 1/1 !important;
 }
 
 .step-item.completed .step-circle {
