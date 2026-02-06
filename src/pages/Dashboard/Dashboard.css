@@ -98,7 +98,18 @@
 
 .app-tracker {
   position: relative;
-  padding: 20px 40px; /* Add horizontal padding to accommodate width calculation */
+  padding: 20px 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-tracker::-webkit-scrollbar {
+  height: 4px;
+}
+
+.app-tracker::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
 }
 
 .steps-container {
@@ -106,14 +117,14 @@
   justify-content: space-between;
   position: relative;
   z-index: 2;
-  /* Ensure circles sit on top of the line */
+  min-width: 500px; /* Ensure steps don't squash too much */
 }
 
 .progress-bar {
   position: absolute;
-  top: 20px; /* Aligns with center of 40px circle (circle height/2) */
-  left: 60px; /* Center of first item (120px/2) */
-  right: 60px; /* Center of last item */
+  top: 20px; 
+  left: 50px; 
+  right: 50px; 
   width: auto;
   height: 3px;
   background: #f1f5f9;
@@ -134,7 +145,7 @@
   align-items: center;
   gap: 12px;
   text-align: center;
-  width: 120px;
+  width: 100px;
   position: relative;
   z-index: 2;
 }
