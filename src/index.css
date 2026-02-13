@@ -3962,6 +3962,21 @@ img {
     grid-template-columns: repeat(2, 1fr);
     gap: 40px;
   }
+
+  /* Force left alignment for tablet menu items */
+  .mobile-menu-links {
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+    padding: 0 40px; /* Match typical container padding */
+  }
+
+  .mobile-link {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 768px) {

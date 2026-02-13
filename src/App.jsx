@@ -59,7 +59,7 @@ function App() {
         
         <Route path="/free-consultation" element={<FreeConsultation />} />
       </Routes>
-      <AIChat />
+      {/* <AIChat /> */}
     </Router>
   );
 }

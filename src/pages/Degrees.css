@@ -473,3 +473,17 @@
         padding-top: 80px;
     }
 }
+
+/* Tablet View - Match navbar height */
+@media (max-width: 1100px) {
+    .degrees-page {
+        padding-top: 80px;
+    }
+}
+
+/* Mobile View - Match navbar height */
+@media (max-width: 768px) {
+    .degrees-page {
+        padding-top: 60px;
+    }
+}
