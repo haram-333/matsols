@@ -22,10 +22,39 @@ const Header = () => {
   }, [isMenuOpen]);
 
   return (
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <div className="container">
-        <div className="nav-wrapper">
-          <Link to="/" className="logo">
+    <nav className={`navbar ${scrolled ? "scrolled" : ""} ${isMenuOpen ? "menu-open" : ""}`}>
+      <div className="nav-container">
+        <div className="nav-main">
+          <Link 
+            to="/" 
+            className="nav-logo"
+          >
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2L2 7L12 12L22 7L12 2Z"
+                fill="var(--primary-orange)"
+              ></path>
+              <path
+                d="M2 17L12 22L22 17"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+              <path
+                d="M2 12L12 17L22 12"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+            </svg>
             MATSOLS
           </Link>
 
@@ -48,33 +77,49 @@ const Header = () => {
               </div>
             </div>
 
-            <Link to="/universities" className="nav-link">Universities</Link>
+            <Link to="/degrees" className="nav-link">Degrees</Link>
             <Link to="/faqs" className="nav-link">FAQs</Link>
             <a href="#" className="nav-link">Contact</a>
           </div>
 
           <div className="nav-actions">
-            <Link to="/login" className="btn-icon" aria-label="Sign In">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <Link 
+              to="/login" 
+              className="btn-icon" 
+              aria-label="Sign In"
+              style={{
+                marginRight: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "44px",
+                height: "44px",
+                borderRadius: "50%",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                background: "rgba(255, 255, 255, 0.05)",
+                color: "white",
+                transition: "all 0.3s ease",
+              }}
+            >
+              <svg 
+                width="22" 
+                height="22" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ display: "block" }}
+              >
                 <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
             <Link to="/free-consultation" className="btn btn-primary nav-cta">Free Consultation</Link>
             
-            <div className="mobile-nav-controls">
-              <Link to="/login" className="mobile-user-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
-              <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-              </button>
-            </div>
+            <button className="hamburger desktop-hide" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+              <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+              <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
+            </button>
           </div>
         </div>
       </div>
@@ -97,6 +142,7 @@ const Header = () => {
                 </div>
 
                 <Link to="/universities" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Universities</Link>
+                <Link to="/degrees" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Degrees</Link>
                 <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
                 <a href="#" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Contact</a>
                 

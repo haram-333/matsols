@@ -1,0 +1,223 @@
+/* University Search Page Styles */
+.uni-discovery-page {
+  padding-top: 100px;
+  min-height: 100vh;
+  background: #041021;
+  color: white;
+}
+
+.uni-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 30px 80px;
+}
+
+.uni-header {
+  margin-bottom: 50px;
+  text-align: left;
+}
+
+.uni-header h1 {
+  font-family: "Outfit", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #06b6d4, #ff863c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Layout: Filters + Grid */
+.uni-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+}
+
+/* Sidebar Filters */
+.uni-filters {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 120px;
+}
+
+.filter-group {
+  margin-bottom: 30px;
+}
+
+.filter-group h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #06b6d4;
+  margin-bottom: 16px;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filter-checkbox:hover {
+  color: white;
+}
+
+.filter-checkbox input {
+  accent-color: #06b6d4;
+}
+
+/* Main Grid */
+.uni-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.uni-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  position: relative;
+}
+
+.uni-card:hover {
+  transform: translateY(-12px);
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+.uni-card-img {
+  height: 180px;
+  position: relative;
+}
+
+.uni-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.uni-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 12px;
+  background: rgba(4, 16, 33, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #06b6d4;
+  text-transform: uppercase;
+}
+
+.uni-card-content {
+  padding: 24px;
+}
+
+.uni-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.uni-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.uni-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.uni-meta-item iconify-icon {
+  color: #ff863c;
+}
+
+.uni-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.uni-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.uni-price span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.btn-apply {
+  padding: 10px 20px;
+  background: var(--primary-orange);
+  color: white;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px var(--orange-glow);
+}
+
+.btn-apply:hover {
+  background: #ff9d66;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--orange-glow);
+}
+
+/* Responsive University Page */
+@media (max-width: 1024px) {
+  .uni-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .uni-filters {
+    display: none; /* Mobile filter modal could be added later */
+  }
+}
+
+@media (max-width: 768px) {
+  .uni-header h1 {
+    font-size: 32px;
+  }
+
+  .uni-grid {
+    grid-template-columns: 1fr;
+  }
+}

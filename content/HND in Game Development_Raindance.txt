@@ -1,0 +1,90 @@
+Degree Name
+HND in Game Development
+
+________________________________________
+Code Number of Degree
+Not specified
+________________________________________
+About
+This is a full-time practical course designed for those who aspire to build a career in the games and interactive entertainment industries. The programme provides hands-on training in game design, animation, asset creation, game engines, and coding, equipping students with the creative and technical skills to produce original playable experiences. You’ll learn how to take an idea from concept to completion, working with industry-standard tools such as Unreal Engine, Unity, Autodesk Maya, Blender, and Adobe Substance 3D.
+The HND Level 5 Diploma is a vocational qualification equivalent to the first two years of a UK university degree. It offers a direct route to a BA (Hons) top-up degree or an entry-level role in the games, animation, or interactive media industries. Students will graduate with a professional portfolio showcasing their game design, technical development, and artistic production skills, ready to progress into a fast-growing global sector.
+________________________________________
+Key Information
+The Higher National Diploma (HND) is an internationally recognised UK qualification that provides specialist vocational learning at levels 4 and 5. HNDs are delivered by universities and colleges, and are considered the equivalent of the first two years of a three-year university degree course. Students can often progress onto the final year of the BA Top Up degree programme to obtain a full B.A. (Hons).________________________________________
+Overview
+PROGRAMME OVERVIEW
+________________________________________
+Programme Structure
+Module A: Process and Practice [Year 1]
+Assessment 1: Concept and Development – 85 Credits
+This unit introduces you to the creative and technical foundations of games development. You’ll explore the core principles of game design, including mechanics, dynamics, and player experience. Through concept design, illustration, and concept art, you’ll develop your own original game worlds, characters, and environments.
+You’ll learn to visualise ideas through storyboards, mood boards, and prototypes, using industry tools such as Photoshop, Procreate, Blender, and Autodesk Maya. You’ll also gain an understanding of level design, narrative structure, and asset creation pipelines, preparing you to build game-ready content. The unit concludes with a concept portfolio including environment sketches, character designs, storyboards, and a playable or visual prototype.
+Assessment 2: Creative Project – 35 Credits
+In this practical unit, you’ll design and produce a short playable game or interactive demo based on a set brief. You’ll create assets, environments, and animations, and assemble them within a game engine such as Unreal Engine or Unity.
+You’ll gain experience in 3D modelling, texture painting, rigging, animation, and basic coding using C# or Blueprints, bringing your designs to life in an interactive space. You’ll also learn about user interface design, camera control, and sound integration. The module concludes with a finished prototype or short playable demo, accompanied by a production journal and reflective evaluation outlining your design decisions and technical workflow.
+Module B: Professional Creative Practice [Year 2]
+Assessment 1: Personal Professional Development – 45 Credits
+This unit focuses on collaboration, industry workflows, and professional identity. You’ll work as part of a multidisciplinary team—alongside animators, sound designers, and VFX artists—to deliver a collaborative game project or interactive experience for an external or simulated client.
+You’ll take on professional roles such as game designer, level designer, technical artist, or programmer, developing production management and teamwork skills. You’ll learn how to manage a game development pipeline using tools like ShotGrid, Perforce, and GitHub, while enhancing your creative portfolio and professional profile to reflect your chosen career path within the games industry.
+Assessment 2: Advanced Specialist Practice – 75 Credits
+This capstone unit allows you to specialise in a chosen field within games development such as 3D environment art, animation, technical design, or game programming. You’ll develop and produce a major project or playable prototype that demonstrates advanced artistic and technical ability.
+You’ll apply your skills in coding, game mechanics, rendering, lighting, and optimisation, working within professional software pipelines such as Unreal Engine 5, Unity HDRP, or Maya/Blender for asset creation. The unit concludes with a portfolio-ready project, pipeline documentation, and a critical reflection that evidences your readiness for employment or further study within the global games development industry.
+________________________________________
+Admission & Entry Requirements
+Students under 21 years should ideally have GCSE English at grade A*-C (grade 9 – 4) and a full Level 3 qualification such as BTEC, A Level or an Access to HE Course. If you have industry experience, we can consider your application on a case-by-case basis.
+Students over 21 can apply as mature students providing they can demonstrate the ability (and experience) to study at the appropriate level. Employment history will be advantageous and qualifications taken several years ago will also be taken into account.
+________________________________________
+Fees And Funding
+The tuition fees for this course are GBP £6,350 if you are a UK Student and GBP £9,950 if you are an International Student. Payment plans are available.
+________________________________________
+Scholarships
+Not specified
+________________________________________
+Visa Information
+Not specified
+________________________________________
+Work Permit
+Not specified
+________________________________________
+Tuition Fee / Year
+The tuition fees for this course are GBP £6,350 if you are a UK Student and GBP £9,950 if you are an International Student. Payment plans are available.
+________________________________________
+Duration Of The Degree
+2 years
+________________________________________
+Apply Date, Start Date
+Applications open for September 2026
+________________________________________
+Intake Months
+Not specified
+________________________________________
+Campus Location
+London.
+________________________________________
+Taught In
+Raindance Film School, London.
+________________________________________
+Name Of University Affiliation
+Not specified
+________________________________________
+Progressions & Careers
+Leading to BA (Hon’s)
+Upon successful completion and approval, students can progress onto the Raindance Bachelor of Art’s one-year top-up programme in Film and Performing Arts Practices, allowing them to obtain a Bachelor’s Degree within 3 years of starting this course.
+For jobs, students can enter employment in a wide range of roles within the film industry. Careers include screenwriting, directing, producing, documentary filmmaking or cinematography________________________________________
+General Info & FAQs
+What days do I need to go in?
+Although the HND programme is full-time, we have structured it to allow you to work around your work/life commitments. The course runs two days per week, from 10:30 to 17:30.
+Raindance Professional courses run at various times during evenings and weekends.
+What is the typical class size?
+We aim to restrict class sizes to 15 per group. This allows us to run practical workshops and give all our students on-going hands-on support throughout their learning.
+Do you offer accomodation?
+For more information about your stay in London during the course, please see our London Accomodation section
+How is the course assessed?
+Assessment is through a series of assignments including research modules, hands-on practical exercises and group projects.
+Units are interlinked to replicate “real world” scenarios and offer the opportunity for students to build a range of skills to maximise employment opportunities.
+Will I need any special equipment or materials?
+You will just need a laptop computer that meets the requirements to run the Adobe Creative Suite.
+How do I apply?
+Go to the Raindance Undergraduate Application.
+When we have received your application we will contact you to arrange an interview time.
+

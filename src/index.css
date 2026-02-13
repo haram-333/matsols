@@ -5139,7 +5139,7 @@ img {
   }
 
   .nav-actions .hamburger.desktop-hide {
-    display: none !important;
+    display: flex !important;
   }
 
   /* Show Mobile Elements */

@@ -39,6 +39,7 @@ const Footer = () => {
               <a href="#">Admissions</a>
               <a href="#">Visa Support</a>
               <a href="#">Scholarships</a>
+              <Link to="/admin">Staff Portal</Link>
             </nav>
           </div>
           <div className="footer-col">

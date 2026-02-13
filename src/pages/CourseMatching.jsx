@@ -4,8 +4,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import "../index.css";
 import "./CourseMatching.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 // Local Project Assets
 import path1 from "../assets/images/smiling-students-standing-with-notepad.jpg.jpeg";
@@ -19,24 +20,10 @@ import supportBg from "../assets/images/support-bg.webp";
 gsap.registerPlugin(ScrollTrigger);
 
 function CourseMatching() {
-  const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileSubmenuOpen, setIsMobileSubmenuOpen] = useState(false);
   const [faqActive, setFaqActive] = useState(null);
 
-  useEffect(() => {
-    // Reset mobile submenu when main menu is closed
-    if (!isMenuOpen) {
-      setIsMobileSubmenuOpen(false);
-    }
-  }, [isMenuOpen]);
 
   useEffect(() => {
-    // Scroll listener for navbar
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
 
     // CSS Animation Observer
     const observer = new IntersectionObserver((entries) => {
@@ -63,7 +50,6 @@ function CourseMatching() {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
       lenis.destroy();
     };
@@ -92,89 +78,7 @@ function CourseMatching() {
 
   return (
     <div className="cm-page">
-      {/* NAVBAR */}
-      <nav className={`navbar ${scrolled ? "scrolled" : ""} ${isMenuOpen ? "menu-open" : ""}`}>
-        <div className="nav-container">
-          <div className="nav-main">
-            <div className="nav-logo">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="var(--primary-orange)"></path>
-                <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-              </svg>
-              MATSOLS
-            </div>
-            <div className="nav-menu">
-              <Link to="/" className="nav-link">Home</Link>
-              <Link to="/about" className="nav-link">About Us</Link>
-              <div className="nav-item-dropdown">
-                <Link to="/what-we-offer" className="nav-link nav-dropdown active">
-                  What we Offer
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </Link>
-                <div className="nav-dropdown-menu">
-                  <Link to="/what-we-offer/university-admissions" className="dropdown-link">University Admissions</Link>
-                  <Link to="/what-we-offer/course-matching" className="dropdown-link active">Course Matching</Link>
-                  <Link to="/what-we-offer/visa-support" className="dropdown-link">Visa Support</Link>
-                  <Link to="/what-we-offer/institutional-representation" className="dropdown-link">Institutional Representation</Link>
-                </div>
-              </div>
-              <a href="#" className="nav-link">Universities</a>
-              <Link to="/faqs" className="nav-link">FAQs</Link>
-              <a href="#" className="nav-link">Contact</a>
-            </div>
-
-            <div className="nav-actions">
-              <Link to="/login" className="nav-link" style={{marginRight: '20px'}}>Sign In</Link>
-              <Link to="/free-consultation" className="btn btn-primary nav-cta">Free Consultation</Link>
-              <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-                <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`mobile-menu ${isMenuOpen ? "active" : ""}`}>
-          <div className="mobile-menu-viewport">
-            <div className="mobile-menu-slider" style={{transform: isMobileSubmenuOpen ? 'translateX(-50%)' : 'translateX(0)'}}>
-              <div className="mobile-menu-view">
-                <div className="mobile-menu-links">
-                  <Link to="/" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
-                  <Link to="/about" className="mobile-link" onClick={() => setIsMenuOpen(false)}>About Us</Link>
-                  <div className="mobile-link mobile-forward-link" style={{cursor:'default'}}>
-                    <Link to="/what-we-offer" onClick={() => setIsMenuOpen(false)} style={{ color: 'inherit', textDecoration: 'none' }}>What we Offer</Link>
-                    <div onClick={(e) => { e.stopPropagation(); setIsMobileSubmenuOpen(true); }} style={{ cursor: 'pointer', paddingLeft: '20px', display: 'flex', alignItems: 'center', height: '100%' }}>
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                    </div>
-                  </div>
-                  <a href="#" className="mobile-link">Universities</a>
-                  <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
-                  <a href="#" className="mobile-link">Contact</a>
-                  <Link to="/login" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Sign In</Link>
-                  <Link to="/free-consultation" className="btn btn-primary">Free Consultation</Link>
-                </div>
-              </div>
-              <div className="mobile-menu-view">
-                <button className="mobile-back-btn" onClick={() => setIsMobileSubmenuOpen(false)}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </button>
-                <div style={{height: '60px'}}></div>
-                <div className="mobile-menu-links">
-                  <Link to="/what-we-offer/university-admissions" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>University Admissions</Link>
-                  <Link to="/what-we-offer/course-matching" className="mobile-sublink active" onClick={() => setIsMenuOpen(false)}>Course Matching</Link>
-                  <Link to="/what-we-offer/visa-support" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Visa Support</Link>
-                  <Link to="/what-we-offer/institutional-representation" className="mobile-sublink" onClick={() => setIsMenuOpen(false)}>Institutional Representation</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* HERO SECTION */}
       <section className="cm-hero">
@@ -401,46 +305,7 @@ function CourseMatching() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="watermark-text">MATSOLS</div>
-        <div className="container">
-          <div className="footer-grid">
-            <div className="footer-col" style={{ gridColumn: "span 2" }}>
-              <div className="footer-logo">MATSOLS</div>
-              <p>Building bridges to global education since 2005. We are the architects of your international career.</p>
-              <div className="footer-social">
-                <a href="#" className="social-icon"><iconify-icon icon="line-md:linkedin" width="22" height="22"></iconify-icon></a>
-                <a href="#" className="social-icon"><iconify-icon icon="line-md:twitter-x" width="22" height="22"></iconify-icon></a>
-                <a href="#" className="social-icon"><iconify-icon icon="line-md:instagram" width="22" height="22"></iconify-icon></a>
-              </div>
-            </div>
-            <div className="footer-col">
-              <h4>Destinations</h4>
-              <nav className="footer-links">
-                <a href="#">Study in UK</a>
-                <a href="#">Study in USA</a>
-                <a href="#">Study in Canada</a>
-                <a href="#">Study in Australia</a>
-              </nav>
-            </div>
-            <div className="footer-col">
-              <h4>Services</h4>
-              <nav className="footer-links">
-                <a href="#">Admissions</a>
-                <a href="#">Visa Support</a>
-                <a href="#">Scholarships</a>
-              </nav>
-            </div>
-            <div className="footer-col">
-              <h4>Newsletter</h4>
-              <p className="footer-newsletter-text">Weekly insights on visa regulations.</p>
-              <input type="email" className="newsletter-input" placeholder="Email address" />
-            </div>
-          </div>
-          <div className="footer-bottom">Copyright © 2026 MATSOLS. Built for Excellence.</div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
