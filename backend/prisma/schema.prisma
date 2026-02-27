@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Degree {
+  id                    String   @id @default(uuid())
+  name                  String
+  code                  String?
+  about                 String?
+  keyInformation        String?
+  overview              String?
+  structure             String?
+  admissionRequirements String?
+  fees                  String?
+  scholarships          String?
+  visaInfo              String?
+  workPermit            String?
+  tuitionFee            String?
+  duration              String?
+  applyDate             String?
+  intake               String?
+  campusLocation        String?
+  taughtIn              String?
+  universityAffiliation String?
+  progression           String?
+  faqs                  String?
+  slug                  String   @unique
+  level                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Lead {
+  id            String   @id @default(uuid())
+  fullName      String
+  email         String
+  phone         String?
+  citizenship   String?
+  targetCountry String?
+  status        String   @default("New")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  sessionId String
+  role      String   // "user" or "agent"
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Update {
+  id        String   @id @default(uuid())
+  title     String
+  category  String
+  date      String
+  excerpt   String
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   @default("STUDENT") // ADMIN or STUDENT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

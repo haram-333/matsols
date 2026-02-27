@@ -56,7 +56,6 @@ const Login = () => {
                                 placeholder="name@example.com"
                                 required 
                             />
-                            <iconify-icon icon="ri:mail-line" class="input-icon"></iconify-icon>
                         </div>
                     </div>
 
@@ -70,7 +69,6 @@ const Login = () => {
                                 placeholder="Enter your password"
                                 required 
                             />
-                            <iconify-icon icon="ri:lock-password-line" class="input-icon"></iconify-icon>
                         </div>
                     </div>
 
@@ -96,18 +94,7 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="divider-with-text">
-                    <div className="divider-line"></div>
-                    <span>Or continue with</span>
-                    <div className="divider-line"></div>
-                </div>
 
-                <div className="social-buttons">
-                    <button className="btn-social" style={{ width: '100%', justifyContent: 'center' }}>
-                        <iconify-icon icon="flat-color-icons:google" width="24"></iconify-icon>
-                        Continue with Google
-                    </button>
-                </div>
             </div>
         </div>
     );

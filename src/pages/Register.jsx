@@ -55,7 +55,6 @@ const Register = () => {
                                 placeholder="Your full name"
                                 required 
                             />
-                            <iconify-icon icon="ri:user-line" class="input-icon"></iconify-icon>
                         </div>
                     </div>
 
@@ -69,7 +68,6 @@ const Register = () => {
                                 placeholder="name@example.com"
                                 required 
                             />
-                            <iconify-icon icon="ri:mail-line" class="input-icon"></iconify-icon>
                         </div>
                     </div>
 
@@ -83,7 +81,6 @@ const Register = () => {
                                 placeholder="Create a password"
                                 required 
                             />
-                            <iconify-icon icon="ri:lock-password-line" class="input-icon"></iconify-icon>
                         </div>
                     </div>
 
@@ -97,7 +94,6 @@ const Register = () => {
                                 placeholder="Repeat password"
                                 required 
                             />
-                            <iconify-icon icon="ri:lock-check-line" class="input-icon"></iconify-icon>
                         </div>
                     </div>
 

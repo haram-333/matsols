@@ -1,52 +1,72 @@
-import React, { useState } from 'react';
-import { initialUpdates } from '../../data/updatesData';
+import React, { useState, useEffect } from 'react';
+import { apiService } from '../../services/api';
 
 const UpdatesManagement = () => {
-  const [updates, setUpdates] = useState(() => {
-    const saved = localStorage.getItem('matsols_updates');
-    return saved ? JSON.parse(saved) : initialUpdates;
-  });
+  const [updates, setUpdates] = useState({ hero: [], grid: [] });
+  const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
   const [activeTab, setActiveTab] = useState('hero'); // 'hero' or 'grid'
 
-  const updateAndSave = (newUpdates) => {
-    setUpdates(newUpdates);
-    localStorage.setItem('matsols_updates', JSON.stringify(newUpdates));
+  useEffect(() => {
+    fetchUpdates();
+  }, []);
+
+  const fetchUpdates = async () => {
+    setLoading(true);
+    try {
+      const data = await apiService.getUpdates();
+      // Categorize flat array into hero/grid
+      const categorized = {
+        hero: data.filter(u => u.category === 'hero'),
+        grid: data.filter(u => u.category === 'grid')
+      };
+      setUpdates(categorized);
+    } catch (error) {
+      console.error("Failed to fetch updates:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (type, id) => {
-    const newUpdates = {
-      ...updates,
-      [type]: updates[type].filter(item => item.id !== id)
-    };
-    updateAndSave(newUpdates);
+  const handleDelete = async (type, id) => {
+    if (!window.confirm("Are you sure you want to delete this update?")) return;
+    try {
+      await apiService.deleteUpdate(id);
+      fetchUpdates();
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
   const handleEdit = (item) => {
     setEditingItem({ ...item });
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    const type = activeTab;
-    let newUpdates;
-    if (editingItem.id) {
-      // Edit
-      newUpdates = {
-        ...updates,
-        [type]: updates[type].map(item => item.id === editingItem.id ? editingItem : item)
+    try {
+      // Image is optional, and we'll use 'category' to match activeTab
+      const payload = {
+        ...editingItem,
+        category: activeTab,
+        date: activeTab === 'grid' ? editingItem.date : (editingItem.cta || 'Apply Now') // Just a fallback
       };
-    } else {
-      // New
-      const newItem = { ...editingItem, id: Date.now() };
-      newUpdates = {
-        ...updates,
-        [type]: [...updates[type], newItem]
-      };
+      
+      await apiService.createUpdate(payload);
+      setEditingItem(null);
+      fetchUpdates();
+    } catch (error) {
+      console.error("Save failed:", error);
     }
-    updateAndSave(newUpdates);
-    setEditingItem(null);
   };
+
+  if (loading) {
+    return (
+      <div className="admin-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
+        <iconify-icon icon="eos-icons:loading" width="48" style={{ color: '#06b6d4' }}></iconify-icon>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-content">
@@ -57,7 +77,7 @@ const UpdatesManagement = () => {
         </div>
         <button 
           className="btn btn-primary"
-          onClick={() => setEditingItem({ badge: '', title: '', desc: '', date: '', cta: '', subtitle: '' })}
+          onClick={() => setEditingItem({ title: '', excerpt: '', date: '', image: '' })}
         >
           + Add New Update
         </button>
@@ -86,10 +106,9 @@ const UpdatesManagement = () => {
             <table style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #e2e8f0', textAlign: 'left' }}>
-                  <th style={{ padding: '12px' }}>Badge</th>
                   <th style={{ padding: '12px' }}>Title</th>
-                  {activeTab === 'hero' && <th style={{ padding: '12px' }}>Subtitle</th>}
-                  <th style={{ padding: '12px' }}>{activeTab === 'hero' ? 'CTA' : 'Date'}</th>
+                  <th style={{ padding: '12px' }}>Content Snippet</th>
+                  <th style={{ padding: '12px' }}>{activeTab === 'hero' ? 'CTA/Label' : 'Date'}</th>
                   <th style={{ padding: '12px' }}>Actions</th>
                 </tr>
               </thead>
@@ -97,16 +116,12 @@ const UpdatesManagement = () => {
                 {updates[activeTab].map(item => (
                   <tr key={item.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
                     <td style={{ padding: '12px' }}>
-                      <span className={`insight-badge ${item.class || 'badge-important'}`} style={{ display: 'inline-block' }}>
-                        {item.badge}
-                      </span>
+                      <strong>{item.title}</strong>
                     </td>
                     <td style={{ padding: '12px' }}>
-                      <strong>{item.title}</strong>
-                      <p style={{ fontSize: '12px', color: '#64748b', margin: '4px 0 0', maxWidth: '300px' }}>{item.desc}</p>
+                      <p style={{ fontSize: '12px', color: '#64748b', margin: '0', maxWidth: '400px' }}>{item.excerpt}</p>
                     </td>
-                    {activeTab === 'hero' && <td style={{ padding: '12px' }}>{item.subtitle}</td>}
-                    <td style={{ padding: '12px' }}>{item.cta || item.date}</td>
+                    <td style={{ padding: '12px' }}>{item.date}</td>
                     <td style={{ padding: '12px' }}>
                       <div style={{ display: 'flex', gap: '10px' }}>
                         <button onClick={() => handleEdit(item)} style={{ background: 'none', border: 'none', color: '#06b6d4', cursor: 'pointer' }}>Edit</button>
@@ -127,21 +142,6 @@ const UpdatesManagement = () => {
             <h3>{editingItem.id ? 'Edit Update' : 'New Update'}</h3>
             <form onSubmit={handleSave} style={{ marginTop: '20px' }}>
               <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Badge Type (Status)</label>
-                <select 
-                  className="ai-input" 
-                  value={editingItem.badge} 
-                  onChange={e => setEditingItem({...editingItem, badge: e.target.value})}
-                  style={{ width: '100%', height: '40px', padding: '0 10px', borderRadius: '8px', border: '1px solid #e2e8f0', color: '#1e293b' }}
-                >
-                  <option value="Important">Important</option>
-                  <option value="Admission">Admission</option>
-                  <option value="Scholarship">Scholarship</option>
-                  <option value="Event">Event</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div style={{ marginBottom: '15px' }}>
                 <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Title</label>
                 <input 
                   type="text" 
@@ -149,37 +149,28 @@ const UpdatesManagement = () => {
                   value={editingItem.title} 
                   onChange={e => setEditingItem({...editingItem, title: e.target.value})}
                   style={{ width: '100%', height: '40px', padding: '0 10px', borderRadius: '8px', border: '1px solid #e2e8f0', color: '#1e293b' }}
+                  required
                 />
               </div>
-              {activeTab === 'hero' && (
-                <div style={{ marginBottom: '15px' }}>
-                  <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Subtitle</label>
-                  <input 
-                    type="text" 
-                    className="ai-input" 
-                    value={editingItem.subtitle} 
-                    onChange={e => setEditingItem({...editingItem, subtitle: e.target.value})}
-                    style={{ width: '100%', height: '40px', padding: '0 10px', borderRadius: '8px', border: '1px solid #e2e8f0', color: '#1e293b' }}
-                  />
-                </div>
-              )}
               <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Description</label>
+                <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Content / Excerpt</label>
                 <textarea 
                   className="ai-input" 
-                  value={editingItem.desc} 
-                  onChange={e => setEditingItem({...editingItem, desc: e.target.value})}
+                  value={editingItem.excerpt} 
+                  onChange={e => setEditingItem({...editingItem, excerpt: e.target.value})}
                   style={{ width: '100%', height: '80px', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0', color: '#1e293b' }}
+                  required
                 />
               </div>
               <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>{activeTab === 'hero' ? 'CTA Text' : 'Date/Label'}</label>
+                <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>{activeTab === 'hero' ? 'CTA Text (e.g. Join Now)' : 'Date/Label'}</label>
                 <input 
                   type="text" 
                   className="ai-input" 
-                  value={activeTab === 'hero' ? editingItem.cta : editingItem.date} 
-                  onChange={e => setEditingItem({...editingItem, [activeTab === 'hero' ? 'cta' : 'date']: e.target.value})}
+                  value={editingItem.date}
+                  onChange={e => setEditingItem({...editingItem, date: e.target.value})}
                   style={{ width: '100%', height: '40px', padding: '0 10px', borderRadius: '8px', border: '1px solid #e2e8f0', color: '#1e293b' }}
+                  required
                 />
               </div>
               <div style={{ display: 'flex', gap: '10px', marginTop: '30px' }}>

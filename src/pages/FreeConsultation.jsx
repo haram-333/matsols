@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { apiService } from "../services/api";
 import "./FreeConsultation.css";
 
 const FreeConsultation = () => {
@@ -15,12 +16,14 @@ const FreeConsultation = () => {
         }
     ]);
 
+    const [sessionId] = useState(() => `sess_${Date.now()}`);
+
     useEffect(() => {
         // Scroll to bottom only when messages change to prevent "jumping" on typing state
         chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }, [messages]);
 
-    const handleSend = (text = input) => {
+    const handleSend = async (text = input) => {
         if (!text.trim()) return;
 
         // Add User Message
@@ -29,13 +32,18 @@ const FreeConsultation = () => {
         setInput("");
         setIsTyping(true);
 
-        // Simulate Bot Response
-        setTimeout(() => {
-            const botResponse = getBotResponse(text);
-            const botMsg = { id: Date.now() + 1, sender: "bot", text: botResponse };
+        try {
+            // Get Real/Simulated Response from Backend
+            const data = await apiService.getAIChatResponse(text, sessionId);
+            const botMsg = { id: Date.now() + 1, sender: "bot", text: data.content || data.reply };
             setMessages(prev => [...prev, botMsg]);
+        } catch (error) {
+            console.error('Chat error:', error);
+            const errorMsg = { id: Date.now() + 1, sender: "bot", text: "I'm having trouble connecting to the MATSOLS server. Please try again in a moment." };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
             setIsTyping(false);
-        }, 1500); // 1.5s delay for realism
+        }
     };
 
     const handleKeyDown = (e) => {

@@ -12,6 +12,11 @@ import Register from "./pages/Register";
 import DashboardLayout from "./layouts/DashboardLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardHome from "./pages/Dashboard/DashboardHome";
+import MyApplications from "./pages/Dashboard/MyApplications";
+import StudentUniversitySearch from "./pages/Dashboard/StudentUniversitySearch";
+import Documents from "./pages/Dashboard/Documents";
+import Messages from "./pages/Dashboard/Messages";
+import Settings from "./pages/Dashboard/Settings";
 import AdminOverview from "./pages/Admin/AdminOverview";
 import LeadManagement from "./pages/Admin/LeadManagement";
 import UniversityManagement from "./pages/Admin/UniversityManagement";
@@ -47,6 +52,11 @@ function App() {
         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
+          <Route path="applications" element={<MyApplications />} />
+          <Route path="universities" element={<StudentUniversitySearch />} />
+          <Route path="documents" element={<Documents />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>

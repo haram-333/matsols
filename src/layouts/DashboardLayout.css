@@ -141,7 +141,8 @@
   margin-left: 280px;
   display: flex;
   flex-direction: column;
-  width: calc(100% - 280px);
+  min-width: 0; /* Allow flex to shrink if needed */
+  overflow-x: hidden;
 }
 
 .dash-header {

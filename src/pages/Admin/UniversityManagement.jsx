@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const UniversityManagement = () => {
-  const universities = [
+  const [universities, setUniversities] = useState([
     { id: 1, name: 'Imperial College London', country: 'UK', status: 'Active' },
     { id: 2, name: 'University of Toronto', country: 'Canada', status: 'Active' },
     { id: 3, name: 'Stanford University', country: 'USA', status: 'Under Review' },
-  ];
+  ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newUni, setNewUni] = useState({
+    name: '',
+    country: '',
+    status: 'Active'
+  });
+
+  const handleAddUniversity = (e) => {
+    e.preventDefault();
+    const uni = {
+      ...newUni,
+      id: universities.length + 1
+    };
+    setUniversities([...universities, uni]);
+    setNewUni({ name: '', country: '', status: 'Active' });
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="admin-content">
@@ -14,7 +32,12 @@ const UniversityManagement = () => {
           <h1>University Management</h1>
           <p>Configure institutional partners and program offerings.</p>
         </div>
-        <button className="btn btn-primary">+ Add University</button>
+        <button 
+          className="btn btn-primary"
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Add University
+        </button>
       </div>
 
       <div className="admin-card-list" style={{ marginTop: '24px' }}>
@@ -55,6 +78,59 @@ const UniversityManagement = () => {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal">
+            <div className="modal-header">
+              <h3>Add New University</h3>
+              <button className="btn-close" onClick={() => setIsModalOpen(false)}>
+                <iconify-icon icon="ri:close-line"></iconify-icon>
+              </button>
+            </div>
+            <form onSubmit={handleAddUniversity}>
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>University Name</label>
+                <input 
+                  type="text" 
+                  className="ai-input" 
+                  required 
+                  value={newUni.name}
+                  onChange={(e) => setNewUni({...newUni, name: e.target.value})}
+                  placeholder="e.g. Harvard University"
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>Country</label>
+                <input 
+                  type="text" 
+                  className="ai-input" 
+                  required 
+                  value={newUni.country}
+                  onChange={(e) => setNewUni({...newUni, country: e.target.value})}
+                  placeholder="e.g. USA"
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>Initial Status</label>
+                <select 
+                  className="ai-input"
+                  value={newUni.status}
+                  onChange={(e) => setNewUni({...newUni, status: e.target.value})}
+                >
+                  <option value="Active">Active</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+              <div className="modal-actions" style={{ display: 'flex', gap: '10px' }}>
+                <button type="button" className="btn-outline" style={{ flex: 1, padding: '10px' }} onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit" className="btn-apply" style={{ flex: 1, padding: '10px' }}>Add University</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

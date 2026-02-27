@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import '../../layouts/AdminLayout.css';
 
 const AdminOverview = () => {
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportComplete, setExportComplete] = useState(false);
+
   const data = [
     { name: 'Mon', students: 45 },
     { name: 'Tue', students: 52 },
@@ -19,6 +23,20 @@ const AdminOverview = () => {
     { name: 'Australia', value: 210, color: '#16a34a' },
   ];
 
+  const handleExport = () => {
+    setIsExporting(true);
+    setExportComplete(false);
+    
+    // Simulate API call/Generation
+    setTimeout(() => {
+      setIsExporting(false);
+      setExportComplete(true);
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => setExportComplete(false), 3000);
+    }, 2000);
+  };
+
   return (
     <div className="admin-overview">
       <div className="admin-header">
@@ -26,7 +44,32 @@ const AdminOverview = () => {
           <h1>System Overview</h1>
           <p>Real-time analytics and student registration performance.</p>
         </div>
-        <button className="btn-apply" style={{ padding: '10px 20px' }}>Export Report</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          {exportComplete && (
+            <span style={{ color: '#10b981', fontSize: '14px', fontWeight: '600', animation: 'fadeIn 0.3s' }}>
+              <iconify-icon icon="ri:check-line" style={{ verticalAlign: 'middle', marginRight: '5px' }}></iconify-icon>
+              Report Downloaded
+            </span>
+          )}
+          <button 
+            className={`btn-apply ${isExporting ? 'loading' : ''}`} 
+            style={{ padding: '10px 20px', minWidth: '140px', position: 'relative' }}
+            onClick={handleExport}
+            disabled={isExporting}
+          >
+            {isExporting ? (
+              <>
+                <iconify-icon icon="line-md:loading-twotone-loop" style={{ marginRight: '8px', verticalAlign: 'middle' }}></iconify-icon>
+                Generating...
+              </>
+            ) : (
+              <>
+                <iconify-icon icon="ri:download-2-line" style={{ marginRight: '8px', verticalAlign: 'middle' }}></iconify-icon>
+                Export Report
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       <div className="admin-stats-grid">

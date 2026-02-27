@@ -1,7 +1,7 @@
 /* Auth Pages Container */
 .auth-page {
   min-height: 100vh;
-  background-color: #041021; /* Dark Deep Blue */
+  background-color: #041021;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,7 +11,6 @@
   font-family: "Inter", sans-serif;
 }
 
-/* Background Abstract Elements */
 .auth-bg-overlay {
   position: absolute;
   top: 0;
@@ -35,7 +34,6 @@
   background: var(--primary-orange);
   top: -100px;
   right: -100px;
-  animation: float 20s infinite ease-in-out;
 }
 
 .auth-blob.blue {
@@ -44,15 +42,8 @@
   background: #004089;
   bottom: -150px;
   left: -150px;
-  animation: float 25s infinite ease-in-out reverse;
 }
 
-@keyframes float {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(30px, -30px); }
-}
-
-/* Glass Card */
 .auth-card {
   width: 100%;
   max-width: 480px;
@@ -64,13 +55,6 @@
   padding: 48px 40px;
   position: relative;
   z-index: 10;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-}
-
-/* Header */
-.auth-header {
-  text-align: center;
-  margin-bottom: 40px;
 }
 
 .auth-logo {
@@ -91,26 +75,22 @@
   font-weight: 700;
   color: white;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .auth-subtitle {
   color: rgba(255, 255, 255, 0.6);
   font-size: 15px;
-  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .auth-subtitle a {
   color: var(--primary-orange);
   text-decoration: none;
   font-weight: 600;
-  transition: opacity 0.3s ease;
 }
 
-.auth-subtitle a:hover {
-  opacity: 0.8;
-}
-
-/* Form */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -132,43 +112,27 @@
 
 .form-input-wrap {
   position: relative;
-  display: flex;
-  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.form-input-wrap:focus-within {
+  border-color: var(--primary-orange);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .form-input {
   width: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 14px 16px 14px 44px;
+  background: transparent;
+  border: none;
+  padding: 14px 16px;
   color: white;
   font-size: 15px;
-  transition: all 0.3s ease;
   outline: none;
 }
 
-.form-input:focus {
-  border-color: var(--primary-orange);
-  background: rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 0 4px rgba(255, 134, 60, 0.1);
-}
-
-.input-icon {
-  position: absolute;
-  left: 14px;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 20px;
-  pointer-events: none;
-  transition: color 0.3s ease;
-}
-
-.form-input:focus + .input-icon,
-.form-input:not(:placeholder-shown) + .input-icon {
-  color: var(--primary-orange);
-}
-
-/* Action Rows */
 .form-actions {
   display: flex;
   justify-content: space-between;
@@ -185,26 +149,14 @@
   font-size: 14px;
 }
 
-.remember-me input {
-  accent-color: var(--primary-orange);
-  width: 16px;
-  height: 16px;
-}
-
 .forgot-password {
   color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-.forgot-password:hover {
-  color: white;
-}
-
-/* Submit Button */
 .btn-auth-submit {
-  background: linear-gradient(135deg, var(--primary-orange) 0%, #ff6b2c 100%);
+  background: var(--primary-orange);
   color: white;
   border: none;
   border-radius: 12px;
@@ -216,49 +168,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255, 134, 60, 0.3);
   margin-top: 10px;
 }
 
-.btn-auth-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 134, 60, 0.4);
-}
-
-.btn-auth-submit:active {
-  transform: translateY(0);
-}
-
-.social-auth {
-  margin-top: 30px;
-  text-align: center;
-  position: relative;
-}
-
-.social-auth::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  z-index: 0;
-}
-
-.social-text {
-  position: relative;
-  z-index: 1;
-  background: #041021; /* Matches page bg specifically within context if needed, but card is glass. Trickier. */
-  /* Since card is glass, we can't reliably hide the line behind text without solid bg. 
-     Instead, let's use flexbox for lines */
-  background: transparent; 
-  display: inline-block;
-  padding: 0 10px;
-}
-
-/* Actually, a better separator approach for glass backgrounds */
 .divider-with-text {
   display: flex;
   align-items: center;
@@ -267,7 +179,6 @@
   color: rgba(255, 255, 255, 0.4);
   font-size: 13px;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .divider-line {
@@ -293,29 +204,13 @@
   gap: 10px;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 14px;
-  font-weight: 600;
 }
 
-.btn-social:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Animations */
 .anim-fade-up {
-  animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  opacity: 0;
-  transform: translateY(20px);
+  animation: fadeUp 0.8s ease forwards;
 }
 
 @keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 32px 24px;
-  }
 }

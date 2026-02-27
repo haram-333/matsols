@@ -53,7 +53,7 @@ const DashboardHome = () => {
       <section className="tracker-section">
         <div className="section-header">
           <h3>Application Status: Imperial College London</h3>
-          <Link to="/dashboard/applications/123" className="btn-sm">View Details &rarr;</Link>
+          <Link to="/dashboard/applications" className="btn-sm">View Details &rarr;</Link>
         </div>
         
         <div className="app-tracker">
@@ -101,7 +101,7 @@ const DashboardHome = () => {
                 <div className="todo-title">Upload Passport Copy</div>
                 <div className="todo-desc">Required for Imperial College Application</div>
               </div>
-              <div className="todo-action">Upload</div>
+              <div className="todo-action" onClick={() => alert("Opening file picker...")}>Upload</div>
             </div>
             <div className="todo-item">
               <div className="todo-check"></div>
@@ -109,7 +109,7 @@ const DashboardHome = () => {
                 <div className="todo-title">Complete Profile Information</div>
                 <div className="todo-desc">Add your emergency contact details</div>
               </div>
-              <div className="todo-action">Complete</div>
+              <div className="todo-action" onClick={() => window.location.href='/dashboard/settings'}>Complete</div>
             </div>
             <div className="todo-item">
               <div className="todo-check checked"><iconify-icon icon="ri:check-line"></iconify-icon></div>

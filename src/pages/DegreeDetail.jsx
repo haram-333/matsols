@@ -1,7 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { degreesData } from '../data/degreesData';
+import { apiService } from '../services/api';
 import { useEffect, useState, useMemo } from 'react';
 import './Degrees.css';
 
@@ -109,8 +109,28 @@ const FormattedContent = ({ content, type }) => {
 const DegreeDetail = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
-    const degree = degreesData.find(d => d.slug === slug);
+    const [degree, setDegree] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [activeSection, setActiveSection] = useState('');
+
+    useEffect(() => {
+        const fetchDegree = async () => {
+            try {
+                const data = await apiService.getDegreeBySlug(slug);
+                if (data) {
+                    setDegree(data);
+                } else {
+                    navigate('/degrees');
+                }
+            } catch (error) {
+                console.error('Error fetching degree:', error);
+                navigate('/degrees');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDegree();
+    }, [slug, navigate]);
 
     const sections = useMemo(() => [
         { id: 'about', label: 'About Course', content: degree?.about, icon: 'lucide:info' },
@@ -134,17 +154,12 @@ const DegreeDetail = () => {
     ].filter(s => s.content && s.content !== "Not specified" && s.content.trim() !== ""), [degree]);
 
     useEffect(() => {
-        if (!degree) {
-            navigate('/degrees');
-            return;
-        }
         if (sections.length > 0 && !activeSection) {
             setActiveSection(sections[0].id);
         }
     }, [degree, navigate, sections, activeSection]);
 
-
-    if (!degree) return null;
+    if (loading || !degree) return null;
 
     const currentSection = sections.find(s => s.id === activeSection) || sections[0];
 

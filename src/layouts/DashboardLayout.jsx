@@ -101,11 +101,11 @@ const DashboardLayout = () => {
           </div>
           
           <div className="header-actions">
-            <button className="btn-icon">
+            <button className="btn-icon" onClick={() => alert("Checking for new notifications...")}>
               <iconify-icon icon="ri:notification-3-line" style={{ fontSize: '20px' }}></iconify-icon>
               <span className="badge-dot"></span>
             </button>
-            <button className="btn-icon">
+            <button className="btn-icon" onClick={() => alert("Opening support & help center...")}>
               <iconify-icon icon="ri:question-line" style={{ fontSize: '20px' }}></iconify-icon>
             </button>
           </div>

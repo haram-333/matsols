@@ -2,16 +2,44 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { degreesData } from '../data/degreesData';
+import { apiService } from '../services/api';
 import './Degrees.css';
 
 const DegreeListing = () => {
     const [filter, setFilter] = useState('All');
+    const [degrees, setDegrees] = useState([]);
+    const [loading, setLoading] = useState(true);
     const categories = ['All', 'BA', 'HND', 'MA', 'Certificate'];
 
+    useEffect(() => {
+        const fetchDegrees = async () => {
+            try {
+                const data = await apiService.getAllDegrees();
+                setDegrees(data);
+            } catch (error) {
+                console.error('Error fetching degrees:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDegrees();
+    }, []);
+
     const filteredDegrees = filter === 'All' 
-        ? degreesData 
-        : degreesData.filter(d => d.level === filter);
+        ? degrees 
+        : degrees.filter(d => d.level === filter);
+
+    if (loading) {
+        return (
+            <div className="degrees-page">
+                <Header />
+                <div style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <iconify-icon icon="line-md:loading-twotone-loop" style={{ fontSize: '48px', color: '#06b6d4' }}></iconify-icon>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div className="degrees-page">
