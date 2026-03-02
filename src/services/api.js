@@ -6,7 +6,7 @@ import { degreesData } from "../data/degreesData";
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
-    : "/api";
+    : "https://matsols.onrender.com/api";
 
 export const apiService = {
   // Degrees
