@@ -1,30 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { apiService } from '../../services/api';
 import './Dashboard.css';
 
 const Messages = () => {
-    const [messages, setMessages] = useState([
-        { id: 1, role: 'bot', content: "Hello Haram! I'm your assigned consultant, Sarah. I've reviewed your Passport copy and it's perfect. Do you have your original transcripts ready?", time: "10:20 AM" },
-        { id: 2, role: 'user', content: "Hi Sarah, yes I have them. Should I upload them as a single PDF or separate files?", time: "11:05 AM" },
-        { id: 3, role: 'bot', content: "Single PDF is preferred. Also, make sure to include the back side if there are any official stamps.", time: "11:08 AM" }
-    ]);
+    const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
+    const [loading, setLoading] = useState(true);
+    const messagesEndRef = useRef(null);
 
-    const handleSend = () => {
-        if (!inputValue.trim()) return;
-        const newMsg = {
-            id: messages.length + 1,
-            role: 'user',
-            content: inputValue,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            const history = await apiService.fetchChatHistory();
+            setMessages(history);
+            setLoading(false);
+            scrollToBottom();
         };
-        setMessages([...messages, newMsg]);
+        fetchHistory();
+    }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const handleSend = async () => {
+        if (!inputValue.trim()) return;
+
+        const userMsgContent = inputValue;
         setInputValue('');
+
+        // 1. Optimistic Update (Optional, but let's wait for backend to be safe or just show loading)
+        // For now, let's just wait for the response to avoid duplicate logic
+
+        try {
+            const response = await apiService.getAIChatResponse(userMsgContent);
+            // Refresh history or just append both
+            const history = await apiService.fetchChatHistory();
+            setMessages(history);
+        } catch (error) {
+            console.error("Failed to send message:", error);
+        }
     };
 
     return (
         <div className="messages-page fade-in">
             <div className="section-header">
-                <p className="section-subtitle">Chat with your consultants and support team.</p>
+                <p className="section-subtitle">Chat with your AI advisor and support team.</p>
             </div>
 
             <div className="messages-container">
@@ -35,24 +59,13 @@ const Messages = () => {
                     </div>
                     <div className="contacts-list">
                         <div className="contact-item active">
-                            <img src="https://ui-avatars.com/api/?name=Sarah+Consultant&background=ff863c&color=fff" alt="Sarah" className="contact-avatar" />
+                            <img src="https://ui-avatars.com/api/?name=AI+Advisor&background=ff863c&color=fff" alt="AI" className="contact-avatar" />
                             <div className="contact-info">
-                                <div className="contact-name">Sarah (Consultant)</div>
-                                <div className="contact-preview">Single PDF is preferred...</div>
+                                <div className="contact-name">AI Advisor</div>
+                                <div className="contact-preview">Always here to help...</div>
                             </div>
                             <div className="contact-meta">
-                                <div className="contact-time">11:08</div>
                                 <div className="unread-badge"></div>
-                            </div>
-                        </div>
-                        <div className="contact-item">
-                            <img src="https://ui-avatars.com/api/?name=Admin+Support&background=041021&color=fff" alt="Support" className="contact-avatar" />
-                            <div className="contact-info">
-                                <div className="contact-name">Support Team</div>
-                                <div className="contact-preview">Your account is verified.</div>
-                            </div>
-                            <div className="contact-meta">
-                                <div className="contact-time">Yesterday</div>
                             </div>
                         </div>
                     </div>
@@ -61,36 +74,41 @@ const Messages = () => {
                 <div className="chat-window">
                     <div className="chat-header">
                         <div className="active-contact">
-                            <img src="https://ui-avatars.com/api/?name=Sarah+Consultant&background=ff863c&color=fff" alt="Sarah" className="header-avatar" />
+                            <img src="https://ui-avatars.com/api/?name=AI+Advisor&background=ff863c&color=fff" alt="AI" className="header-avatar" />
                             <div>
-                                <h4 className="header-contact-name">Sarah</h4>
+                                <h4 className="header-contact-name">AI Advisor</h4>
                                 <div className="header-status">Online</div>
                             </div>
                         </div>
                         <div className="chat-actions">
-                            <button title="Call"><iconify-icon icon="ri:phone-line"></iconify-icon></button>
-                            <button title="Video"><iconify-icon icon="ri:video-chat-line"></iconify-icon></button>
                             <button title="More"><iconify-icon icon="ri:more-2-fill"></iconify-icon></button>
                         </div>
                     </div>
 
                     <div className="chat-messages">
-                        {messages.map(msg => (
-                            <div key={msg.id} className={`chat-bubble-container ${msg.role}`}>
-                                <div className="chat-bubble">
-                                    {msg.content}
-                                    <span className="bubble-time">{msg.time}</span>
+                        {loading ? (
+                            <div className="chat-loading">Loading chat history...</div>
+                        ) : messages.length > 0 ? (
+                            messages.map(msg => (
+                                <div key={msg.id} className={`chat-bubble-container ${msg.role === 'user' ? 'user' : 'bot'}`}>
+                                    <div className="chat-bubble">
+                                        {msg.content}
+                                        <span className="bubble-time">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <div className="no-messages">Start a conversation with your advisor!</div>
+                        )}
+                        <div ref={messagesEndRef} />
                     </div>
 
                     <div className="chat-input-area">
                         <button className="btn-attach"><iconify-icon icon="ri:attachment-2"></iconify-icon></button>
-                        <input 
-                            type="text" 
-                            className="chat-input" 
-                            placeholder="Type a message..." 
+                        <input
+                            type="text"
+                            className="chat-input"
+                            placeholder="Type a message..."
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSend()}

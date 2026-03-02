@@ -1,25 +1,56 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useAuth();
+
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    });
 
     // Initial simple fade-in effect
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const handleLogin = (e) => {
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+        setError("");
+    };
+
+    const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
-        
-        // Simulate API call
-        setTimeout(() => {
+        setError("");
+
+        try {
+            const result = await login(formData.email, formData.password);
+
+            if (result.success) {
+                // Determine redirect path
+                const from = location.state?.from?.pathname;
+
+                if (result.role === "ADMIN") {
+                    navigate(from && from.startsWith("/admin") ? from : "/admin");
+                } else {
+                    navigate(from && from.startsWith("/dashboard") ? from : "/dashboard");
+                }
+            } else {
+                setError(result.error);
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again.");
+        } finally {
             setLoading(false);
-            navigate("/dashboard");
-        }, 1500);
+        }
     };
 
     return (
@@ -45,16 +76,25 @@ const Login = () => {
                     </p>
                 </div>
 
+                {error && (
+                    <div className="auth-error-msg anim-shake">
+                        <iconify-icon icon="ri:error-warning-fill"></iconify-icon>
+                        {error}
+                    </div>
+                )}
+
                 <form className="auth-form" onSubmit={handleLogin}>
                     <div className="form-group">
                         <label className="form-label" htmlFor="email">Email Address</label>
                         <div className="form-input-wrap">
-                            <input 
-                                type="email" 
-                                id="email" 
-                                className="form-input" 
+                            <input
+                                type="email"
+                                id="email"
+                                className="form-input"
                                 placeholder="name@example.com"
-                                required 
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                     </div>
@@ -62,13 +102,22 @@ const Login = () => {
                     <div className="form-group">
                         <label className="form-label" htmlFor="password">Password</label>
                         <div className="form-input-wrap">
-                            <input 
-                                type="password" 
-                                id="password" 
-                                className="form-input" 
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                className="form-input"
                                 placeholder="Enter your password"
-                                required 
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
                             />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                <iconify-icon icon={showPassword ? "ri:eye-off-line" : "ri:eye-line"}></iconify-icon>
+                            </button>
                         </div>
                     </div>
 
@@ -93,8 +142,6 @@ const Login = () => {
                         )}
                     </button>
                 </form>
-
-
             </div>
         </div>
     );

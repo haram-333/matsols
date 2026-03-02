@@ -1,14 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { apiService } from '../../services/api';
 import './Dashboard.css';
 
 const Documents = () => {
-    const documents = [
-        { id: 1, name: "Passport_Copy.pdf", type: "PDF", size: "1.2 MB", date: "Oct 12, 2024", status: "Verified" },
-        { id: 2, name: "Academic_Transcript.pdf", type: "PDF", size: "2.4 MB", date: "Oct 12, 2024", status: "Verified" },
-        { id: 3, name: "Offer_Letter_Imperial.pdf", type: "PDF", size: "0.8 MB", date: "Oct 24, 2024", status: "New" },
-        { id: 4, name: "IELTS_Score_Report.jpg", type: "Image", size: "3.1 MB", date: "Sep 30, 2024", status: "Verified" },
-        { id: 5, name: "SOP_Draft_v2.docx", type: "DOCX", size: "0.4 MB", date: "Oct 20, 2024", status: "Pending Review" }
-    ];
+    const [documents, setDocuments] = useState([]);
+    const [requiredActions, setRequiredActions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const [docsData, summaryData] = await Promise.all([
+                apiService.getDocuments(),
+                apiService.getDashboardSummary()
+            ]);
+            setDocuments(docsData);
+            if (summaryData && summaryData.actions) {
+                setRequiredActions(summaryData.actions.filter(a => a.type === 'upload' && !a.isCompleted));
+            }
+            setLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    const stats = {
+        verified: documents.filter(d => d.status === "Verified").length,
+        pending: documents.filter(d => d.status === "Pending Review").length,
+        required: requiredActions.length
+    };
+
+    if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading documents...</div>;
+
 
     return (
         <div className="documents-page fade-in">
@@ -26,7 +47,7 @@ const Documents = () => {
                         <iconify-icon icon="ri:checkbox-circle-line"></iconify-icon>
                     </div>
                     <div className="stat-info">
-                        <h3>3</h3>
+                        <h3>{stats.verified}</h3>
                         <p>Verified</p>
                     </div>
                 </div>
@@ -35,7 +56,7 @@ const Documents = () => {
                         <iconify-icon icon="ri:time-line"></iconify-icon>
                     </div>
                     <div className="stat-info">
-                        <h3>1</h3>
+                        <h3>{stats.pending}</h3>
                         <p>Pending</p>
                     </div>
                 </div>
@@ -44,7 +65,7 @@ const Documents = () => {
                         <iconify-icon icon="ri:error-warning-line"></iconify-icon>
                     </div>
                     <div className="stat-info">
-                        <h3>2</h3>
+                        <h3>{stats.required}</h3>
                         <p>Required</p>
                     </div>
                 </div>
@@ -73,7 +94,7 @@ const Documents = () => {
                                 </td>
                                 <td>{doc.type}</td>
                                 <td>{doc.size}</td>
-                                <td>{doc.date}</td>
+                                <td>{new Date(doc.uploadedAt).toLocaleDateString()}</td>
                                 <td>
                                     <span className={`doc-status-tag ${doc.status.toLowerCase().replace(' ', '-')}`}>
                                         {doc.status}
@@ -95,20 +116,17 @@ const Documents = () => {
             <div className="required-docs">
                 <h3 className="sub-section-title">Required Documents</h3>
                 <div className="req-docs-list">
-                    <div className="req-doc-item">
-                        <div className="req-doc-info">
-                            <h4>Statement of Purpose (SOP)</h4>
-                            <p>Required for Stanford University application.</p>
+                    {requiredActions.length > 0 ? requiredActions.map(action => (
+                        <div key={action.id} className="req-doc-item">
+                            <div className="req-doc-info">
+                                <h4>{action.title}</h4>
+                                <p>{action.description}</p>
+                            </div>
+                            <button className="btn-upload-req" onClick={() => alert("Opening upload dialog...")}>Upload</button>
                         </div>
-                        <button className="btn-upload-req">Upload</button>
-                    </div>
-                    <div className="req-doc-item">
-                        <div className="req-doc-info">
-                            <h4>Letter of Recommendation (LOR)</h4>
-                            <p>At least 2 required for all UK universities.</p>
-                        </div>
-                        <button className="btn-upload-req">Upload</button>
-                    </div>
+                    )) : (
+                        <p style={{ padding: '20px', opacity: 0.5 }}>No additional documents required at this time.</p>
+                    )}
                 </div>
             </div>
         </div>

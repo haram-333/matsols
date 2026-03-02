@@ -24,6 +24,7 @@ import titan1 from "../assets/images/path-1.webp";
 import titan2 from "../assets/images/path-2.webp";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { apiService } from "../services/api";
 
 import ukDest from "../assets/destinations/uk.png";
 import istanbulDest from "../assets/destinations/istanbul.png";
@@ -58,10 +59,26 @@ function Home() {
   const heroRef = useRef(null);
   const heroVideoRef = useRef(null);
 
-  const [cmsUpdates, setCmsUpdates] = useState(() => {
-    const saved = localStorage.getItem('matsols_updates');
-    return saved ? JSON.parse(saved) : initialUpdates;
-  });
+  const [updates, setUpdates] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await apiService.getUpdates();
+      if (data) setUpdates(data);
+    };
+    fetchData();
+  }, []);
+
+  const now = new Date();
+  const importantEvent =
+    updates && Array.isArray(updates) ? updates.find((u) => u.isImportant) : null;
+  const stdEvents =
+    updates && Array.isArray(updates)
+      ? updates.filter(
+        (u) =>
+          !u.isImportant && (!u.expiryDate || new Date(u.expiryDate) > now),
+      )
+      : [];
 
   const hasBeenAutoUnmuted = useRef(false);
 
@@ -141,7 +158,7 @@ function Home() {
           .then(() => {
             console.log(
               "Hero: Unmuted success via " +
-                (e ? e.type : "manual interaction"),
+              (e ? e.type : "manual interaction"),
             );
             interactiveEvents.forEach((evt) =>
               window.removeEventListener(evt, handleInteraction),
@@ -152,6 +169,7 @@ function Home() {
             if (heroVideoRef.current) {
               heroVideoRef.current.muted = true;
               setIsVideoMuted(true);
+              // Show a toast or subtle hint if needed
             }
           });
       }
@@ -188,7 +206,7 @@ function Home() {
         // Google Chrome (Standard) & Mobile: Visuals-First (Muted)
         heroVid.muted = true;
         setIsVideoMuted(true);
-        heroVid.play().catch(() => {});
+        heroVid.play().catch(() => { });
       }
     }
 
@@ -1459,82 +1477,82 @@ function Home() {
         </div>
 
         <div className="pinned-full-width">
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            pagination={{
-              clickable: true,
-              renderBullet: function (index, className) {
-                return (
-                  '<span class="' +
-                  className +
-                  ' custom-pagination-bullet"></span>'
-                );
-              },
-            }}
-            autoplay={{ delay: 6000, disableOnInteraction: false }}
-            slidesPerView={1}
-            loop={true}
-            className="cinematic-swiper no-nav-buttons"
-          >
-            {cmsUpdates.hero.map((hero, i) => (
-              <SwiperSlide key={hero.id}>
-                <div className="cinematic-strip">
-                  <div className="cinematic-bg">
-                    <img src={hero.image} alt="Hero Background" />
-                    <div className="cinematic-overlay"></div>
-                  </div>
-
-                  <div className="cinematic-content">
-                    <span className="hero-badge-pill">{hero.badge}</span>
-                    <h1 className="hero-title-large">{hero.title}</h1>
-                    <h2 className="hero-subtitle">{hero.subtitle}</h2>
-                    <p className="hero-desc">{hero.desc}</p>
-                    <a href="#" className="hero-cta-btn">
-                      {hero.cta}{" "}
-                      <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
-                    </a>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
-        <div className="container">
-          <div className="insights-grid">
-            {cmsUpdates.grid.map((item, idx) => (
-              <div
-                key={item.id}
-                className="insight-card anim-hidden anim-pop"
-                style={{ transitionDelay: `${idx * 0.1}s` }}
-              >
-                <span className={`insight-badge ${item.class || 'badge-important'}`}>
-                  {item.badge}
-                </span>
-                <h3 className="insight-title">{item.title}</h3>
-                <p className="insight-desc">{item.desc}</p>
-                <div className="insight-footer">
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      opacity: 0.6,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
-                  >
-                    <iconify-icon icon="ri:time-line"></iconify-icon>{" "}
-                    {item.date}
-                  </span>
-                  <a href="#" className="btn-insight">
-                    Details{" "}
-                    <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
-                  </a>
-                </div>
+          {importantEvent && (
+            <div className="cinematic-strip">
+              <div className="cinematic-bg">
+                <img
+                  src={importantEvent.image || heroBg}
+                  alt={importantEvent.title}
+                  onError={(e) => {
+                    e.target.src = heroBg;
+                    e.target.onerror = null;
+                  }}
+                />
+                <div className="cinematic-overlay"></div>
               </div>
-            ))}
-          </div>
+
+              <div className="cinematic-content">
+                <span className="hero-badge-pill">{importantEvent.category || 'IMPORTANT'}</span>
+                <h1 className="hero-title-large">{importantEvent.title}</h1>
+                <p className="hero-desc">{importantEvent.excerpt}</p>
+                {(importantEvent.ctaLink || importantEvent.ctaText) && (
+                  <Link to={importantEvent.ctaLink || '#'} className="hero-cta-btn">
+                    {importantEvent.ctaText || 'Learn More'}{" "}
+                    <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
         </div>
+
+        {stdEvents.length > 0 && (
+          <div className="container">
+            <div className="insights-grid">
+              {stdEvents.map((item, idx) => (
+                <div
+                  key={item.id}
+                  className="insight-card anim-hidden anim-pop"
+                  style={{ transitionDelay: `${idx * 0.1}s` }}
+                >
+                  <span className="insight-badge badge-admission">
+                    {item.category || 'EVENT'}
+                  </span>
+                  <h3 className="insight-title">{item.title}</h3>
+                  <p className="insight-desc">{item.excerpt}</p>
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt=""
+                      style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '10px' }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  )}
+                  <div className="insight-footer">
+                    <span
+                      style={{
+                        fontSize: "12px",
+                        opacity: 0.6,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      <iconify-icon icon="ri:time-line"></iconify-icon>{" "}
+                      {item.date}
+                    </span>
+                    {(item.ctaLink || item.ctaText) && (
+                      <Link to={item.ctaLink || '#'} className="btn-insight">
+                        {item.ctaText || 'Details'}{" "}
+                        <iconify-icon icon="ri:arrow-right-line"></iconify-icon>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* NEW: Why Choose / Analysis Section (Stair Layout) */}

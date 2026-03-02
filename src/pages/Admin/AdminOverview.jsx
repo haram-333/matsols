@@ -1,41 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { apiService } from '../../services/api';
 import '../../layouts/AdminLayout.css';
 
 const AdminOverview = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [exportComplete, setExportComplete] = useState(false);
+  const [stats, setStats] = useState(null);
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const data = [
-    { name: 'Mon', students: 45 },
-    { name: 'Tue', students: 52 },
-    { name: 'Wed', students: 48 },
-    { name: 'Thu', students: 70 },
-    { name: 'Fri', students: 61 },
-    { name: 'Sat', students: 38 },
-    { name: 'Sun', students: 42 },
-  ];
-
-  const countryData = [
-    { name: 'UK', value: 450, color: '#06b6d4' },
-    { name: 'Canada', value: 380, color: '#ff863c' },
-    { name: 'USA', value: 310, color: '#9333ea' },
-    { name: 'Australia', value: 210, color: '#16a34a' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const [statsRes, chartsRes] = await Promise.all([
+        apiService.getAdminStats(),
+        apiService.getAdminCharts()
+      ]);
+      setStats(statsRes);
+      setChartData(chartsRes);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
 
   const handleExport = () => {
     setIsExporting(true);
     setExportComplete(false);
-    
+
     // Simulate API call/Generation
     setTimeout(() => {
       setIsExporting(false);
       setExportComplete(true);
-      
+
       // Reset success message after 3 seconds
       setTimeout(() => setExportComplete(false), 3000);
     }, 2000);
   };
+
+  if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading System Overview...</div>;
 
   return (
     <div className="admin-overview">
@@ -51,8 +53,8 @@ const AdminOverview = () => {
               Report Downloaded
             </span>
           )}
-          <button 
-            className={`btn-apply ${isExporting ? 'loading' : ''}`} 
+          <button
+            className={`btn-apply ${isExporting ? 'loading' : ''}`}
             style={{ padding: '10px 20px', minWidth: '140px', position: 'relative' }}
             onClick={handleExport}
             disabled={isExporting}
@@ -79,11 +81,11 @@ const AdminOverview = () => {
               <iconify-icon icon="ri:user-add-line"></iconify-icon>
             </div>
             <div className="stat-trend trend-up">
-              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> 12%
+              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
             </div>
           </div>
-          <div className="stat-value">1,284</div>
-          <div className="stat-label">Total Registrations</div>
+          <div className="stat-value">{stats?.totalStudents?.toLocaleString() || 0}</div>
+          <div className="stat-label">Total Students</div>
         </div>
 
         <div className="admin-stat-card">
@@ -92,10 +94,10 @@ const AdminOverview = () => {
               <iconify-icon icon="ri:file-list-3-line"></iconify-icon>
             </div>
             <div className="stat-trend trend-up">
-              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> 5%
+              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
             </div>
           </div>
-          <div className="stat-value">842</div>
+          <div className="stat-value">{stats?.applicationsUnderReview?.toLocaleString() || 0}</div>
           <div className="stat-label">Applications Under Review</div>
         </div>
 
@@ -105,11 +107,11 @@ const AdminOverview = () => {
               <iconify-icon icon="ri:message-line"></iconify-icon>
             </div>
             <div className="stat-trend trend-down">
-              <iconify-icon icon="ri:arrow-right-down-line"></iconify-icon> 2%
+              <iconify-icon icon="ri:arrow-right-down-line"></iconify-icon> --
             </div>
           </div>
-          <div className="stat-value">312</div>
-          <div className="stat-label">Consultations Booked</div>
+          <div className="stat-value">{stats?.totalLeads?.toLocaleString() || 0}</div>
+          <div className="stat-label">Total Leads</div>
         </div>
 
         <div className="admin-stat-card">
@@ -118,11 +120,11 @@ const AdminOverview = () => {
               <iconify-icon icon="ri:money-dollar-circle-line"></iconify-icon>
             </div>
             <div className="stat-trend trend-up">
-              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> 18%
+              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
             </div>
           </div>
-          <div className="stat-value">$142.5k</div>
-          <div className="stat-label">Revenue Target</div>
+          <div className="stat-value">{stats?.revenue || "£0"}</div>
+          <div className="stat-label">Estimated Revenue</div>
         </div>
       </div>
 
@@ -130,23 +132,19 @@ const AdminOverview = () => {
         <div className="admin-chart-card">
           <div className="chart-header">
             <h3>Registration Trend</h3>
-            <select className="ai-input" style={{ width: 'auto', padding: '5px 15px', color: '#1e293b', background: '#f1f5f9' }}>
-              <option>Last 7 Days</option>
-              <option>Last 30 Days</option>
-            </select>
           </div>
           <div style={{ height: '300px', width: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
+              <AreaChart data={chartData?.weeklyData || []}>
                 <defs>
                   <linearGradient id="colorStudents" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
                 <Tooltip />
                 <Area type="monotone" dataKey="students" stroke="#06b6d4" fillOpacity={1} fill="url(#colorStudents)" strokeWidth={3} />
               </AreaChart>
@@ -160,13 +158,13 @@ const AdminOverview = () => {
           </div>
           <div style={{ height: '300px', width: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={countryData} layout="vertical">
+              <BarChart data={chartData?.countryData || []} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
                 <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
-                <Tooltip cursor={{fill: 'transparent'}} />
+                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip cursor={{ fill: 'transparent' }} />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={20}>
-                  {countryData.map((entry, index) => (
+                  {(chartData?.countryData || []).map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Bar>

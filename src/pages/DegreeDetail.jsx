@@ -7,18 +7,18 @@ import './Degrees.css';
 
 const renderTextWithLinks = (text) => {
     if (!text) return null;
-    
+
     // Improved Regex for URLs and Emails (excludes trailing punctuation)
     const urlPattern = /((?:https?:\/\/|www\.)[^\s]*[^\s.,!?:;])/;
     const emailPattern = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/;
     // Custom Hyperlink Pattern: (text(hyperlink:url))
     const customLinkPattern = /\((.+?)\(hyperlink:(.+?)\)\)/;
-    
+
     // Combine patterns for splitting
     const combinedPattern = /((?:(?:https?:\/\/|www\.)[^\s]*[^\s.,!?:;])|(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})|(?:\(.+?\(hyperlink:.+?\)\)))/g;
-    
+
     const parts = text.split(combinedPattern);
-    
+
     return parts.map((part, i) => {
         if (customLinkPattern.test(part)) {
             const match = customLinkPattern.exec(part);
@@ -42,9 +42,9 @@ const renderTextWithLinks = (text) => {
         }
         if (emailPattern.test(part)) {
             return (
-                <a 
-                    key={i} 
-                    href={`mailto:${part}`} 
+                <a
+                    key={i}
+                    href={`mailto:${part}`}
                     className="content-link"
                     onClick={(e) => {
                         e.preventDefault();
@@ -63,7 +63,7 @@ const FormattedContent = ({ content, type }) => {
     if (!content) return null;
 
     const lines = content.split('\n');
-    
+
     return (
         <div className={`formatted-content content-type-${type}`}>
             {lines.map((line, index) => {
@@ -116,7 +116,7 @@ const DegreeDetail = () => {
     useEffect(() => {
         const fetchDegree = async () => {
             try {
-                const data = await apiService.getDegreeBySlug(slug);
+                const data = await apiService.getDegreeDetail(slug);
                 if (data) {
                     setDegree(data);
                 } else {
@@ -166,7 +166,7 @@ const DegreeDetail = () => {
     return (
         <div className="degrees-page">
             <Header />
-            
+
             {/* Header / Hero */}
             <div className="detail-hero">
                 <div className="degrees-container relative z-10">
@@ -214,8 +214,8 @@ const DegreeDetail = () => {
                             <h4 className="nav-title">Course Navigation</h4>
                             <div className="nav-links">
                                 {sections.map(s => (
-                                    <button 
-                                        key={s.id} 
+                                    <button
+                                        key={s.id}
                                         onClick={() => setActiveSection(s.id)}
                                         className={`sidebar-btn ${activeSection === s.id ? 'active' : ''}`}
                                     >

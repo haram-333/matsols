@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
+  const { isAuthenticated, user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileSubmenuOpen, setIsMobileSubmenuOpen] = useState(false);
@@ -25,8 +27,8 @@ const Header = () => {
     <nav className={`navbar ${scrolled ? "scrolled" : ""} ${isMenuOpen ? "menu-open" : ""}`}>
       <div className="nav-container">
         <div className="nav-main">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="nav-logo"
           >
             <svg
@@ -77,16 +79,18 @@ const Header = () => {
               </div>
             </div>
 
+            <Link to="/universities" className="nav-link">Universities</Link>
             <Link to="/degrees" className="nav-link">Degrees</Link>
             <Link to="/faqs" className="nav-link">FAQs</Link>
             <a href="#" className="nav-link">Contact</a>
           </div>
 
           <div className="nav-actions">
-            <Link 
-              to="/login" 
-              className="btn-icon" 
-              aria-label="Sign In"
+            {/* Desktop User Icon */}
+            <Link
+              to={isAuthenticated ? (user?.role === "ADMIN" ? "/admin" : "/dashboard") : "/login"}
+              className="btn-icon"
+              aria-label={isAuthenticated ? "Dashboard" : "Sign In"}
               style={{
                 marginRight: "12px",
                 display: "flex",
@@ -101,20 +105,30 @@ const Header = () => {
                 transition: "all 0.3s ease",
               }}
             >
-              <svg 
-                width="22" 
-                height="22" 
-                viewBox="0 0 24 24" 
-                fill="none" 
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ display: "block" }}
               >
-                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke={isAuthenticated ? "var(--primary-orange)" : "white"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke={isAuthenticated ? "var(--primary-orange)" : "white"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
+
+            {/* Mobile User Icon (Visible inside controls) */}
+            <div className="mobile-nav-controls">
+              <Link to={isAuthenticated ? (user?.role === "ADMIN" ? "/admin" : "/dashboard") : "/login"} className="mobile-user-icon" aria-label="Profile">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isAuthenticated ? "var(--primary-orange)" : "white"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" />
+                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" />
+                </svg>
+              </Link>
+            </div>
+
             <Link to="/free-consultation" className="btn btn-primary nav-cta">Free Consultation</Link>
-            
+
             <button className="hamburger desktop-hide" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
               <div className={`bar ${isMenuOpen ? "active" : ""}`}></div>
@@ -131,7 +145,7 @@ const Header = () => {
               <div className="mobile-menu-links">
                 <Link to="/" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Home</Link>
                 <Link to="/about" className="mobile-link" onClick={() => setIsMenuOpen(false)}>About Us</Link>
-                
+
                 <div className="mobile-link mobile-forward-link">
                   <Link to="/what-we-offer" onClick={() => setIsMenuOpen(false)} style={{ color: "inherit", textDecoration: "none" }}>What we Offer</Link>
                   <div onClick={(e) => { e.stopPropagation(); setIsMobileSubmenuOpen(true); }} style={{ cursor: "pointer", paddingLeft: "20px", display: "flex", alignItems: "center", height: "100%" }}>
@@ -145,7 +159,7 @@ const Header = () => {
                 <Link to="/degrees" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Degrees</Link>
                 <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
                 <a href="#" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Contact</a>
-                
+
                 <div className="mobile-actions">
                   <Link to="/free-consultation" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }} onClick={() => setIsMenuOpen(false)}>Free Consultation</Link>
                 </div>

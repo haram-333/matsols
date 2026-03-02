@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Degree {
@@ -43,13 +43,15 @@ model Lead {
   citizenship   String?
   targetCountry String?
   status        String   @default("New")
+  priority      String   @default("med")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
 model ChatMessage {
   id        String   @id @default(uuid())
-  sessionId String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   role      String   // "user" or "agent"
   content   String
   createdAt DateTime @default(now())
@@ -62,6 +64,10 @@ model Update {
   date      String
   excerpt   String
   image     String?
+  isImportant Boolean @default(false)
+  expiryDate  DateTime?
+  ctaText     String?
+  ctaLink     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -70,7 +76,83 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
-  role      String   @default("STUDENT") // ADMIN or STUDENT
+  fullName  String?
+  phone     String?
+  bio       String?
+  location  String?
+  avatar    String?
+  applications Application[]
+  documents    Document[]
+  chatMessages ChatMessage[]
+  actions      DashboardAction[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model DashboardAction {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  title       String
+  description String?
+  type        String   @default("task") // task, upload, info
+  link        String?
+  isCompleted Boolean  @default(false)
+  priority    String   @default("med") // high, med, low
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Application {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+  courseName   String
+  status       String   @default("Submitted") // Submitted, Documents Verified, Under Review, Offer Decision, Visa Process
+  step         Int      @default(1)
+  appliedDate  DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  type      String   // PDF, Image, DOCX
+  size      String
+  url       String?  // URL to the file
+  status    String   @default("New") // New, Pending Review, Verified, Rejected
+  uploadedAt DateTime @default(now())
+}
+
+model University {
+  id        String   @id @default(uuid())
+  name      String
+  country   String
+  image      String?
+  websiteUrl String?
+  description String?
+  about       String?
+  campusLife  String?
+  admissionCriteria String?
+  rank        String?
+  location    String?
+  status     String   @default("Active") // Active, Under Review, Inactive
+  applications Application[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model SystemSetting {
+  id                    String   @id @default("singleton")
+  maintenanceMode       Boolean  @default(false)
+  aiAgentVisible        Boolean  @default(true)
+  twoFactorAuth         Boolean  @default(false)
+  staffIpFiltering      Boolean  @default(false)
+  supportEmail          String   @default("support@matsols.com")
+  supportPhone          String   @default("+44 123 456 7890")
+  siteName              String   @default("MATSOLS")
+  updatedAt             DateTime @updatedAt
 }

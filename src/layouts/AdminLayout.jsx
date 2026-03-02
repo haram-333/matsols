@@ -13,7 +13,7 @@ const AdminLayout = () => {
       <aside className="admin-sidebar">
         <div className="sidebar-header">
           <Link to="/admin" className="admin-logo">
-            <iconify-icon icon="ri:government-line" style={{fontSize: '24px'}}></iconify-icon>
+            <iconify-icon icon="ri:government-line" style={{ fontSize: '24px' }}></iconify-icon>
             MATSOLS HUB
           </Link>
           <button className="sidebar-close md-show" onClick={() => setIsSidebarOpen(false)}>
@@ -29,6 +29,10 @@ const AdminLayout = () => {
           <Link to="/admin/leads" className={`admin-nav-item ${isActive('/admin/leads') ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}>
             <iconify-icon icon="ri:user-follow-line"></iconify-icon>
             Student Leads
+          </Link>
+          <Link to="/admin/applications" className={`admin-nav-item ${isActive('/admin/applications') ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}>
+            <iconify-icon icon="ri:file-list-3-line"></iconify-icon>
+            App Management
           </Link>
           <Link to="/admin/updates" className={`admin-nav-item ${isActive('/admin/updates') ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)}>
             <iconify-icon icon="ri:notification-3-line"></iconify-icon>
@@ -59,9 +63,9 @@ const AdminLayout = () => {
           <span className="portal-name">Staff Portal</span>
         </header>
 
-      <main className="admin-main">
-        <Outlet />
-      </main>
+        <main className="admin-main">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

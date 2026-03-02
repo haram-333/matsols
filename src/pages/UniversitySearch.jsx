@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { apiService } from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Lenis from 'lenis';
@@ -10,6 +11,9 @@ import './UniversitySearch.css';
 const UniversitySearch = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [universities, setUniversities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const lenis = new Lenis();
@@ -18,84 +22,39 @@ const UniversitySearch = () => {
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
+
+    // Fetch data
+    const loadUniversities = async () => {
+      try {
+        const data = await apiService.getUniversities();
+        setUniversities(data);
+      } catch (err) {
+        console.error("Failed to fetch universities:", err);
+        setError("Could not load universities. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUniversities();
+
     return () => lenis.destroy();
   }, []);
 
-  const universities = [
-    {
-      id: 1,
-      name: "Imperial College London",
-      country: "UK",
-      city: "London",
-      ranking: "#6 QS World",
-      tuition: "£28,000",
-      image: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?q=80&w=1080&auto=format&fit=crop",
-      tags: ["Engineering", "Medicine", "STEM"]
-    },
-    {
-      id: 2,
-      name: "University of Toronto",
-      country: "Canada",
-      city: "Toronto",
-      ranking: "#21 QS World",
-      tuition: "$45,000",
-      image: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=1080&auto=format&fit=crop",
-      tags: ["Research", "Business", "CS"]
-    },
-    {
-      id: 3,
-      name: "Australian National University",
-      country: "Australia",
-      city: "Canberra",
-      ranking: "#34 QS World",
-      tuition: "$38,000",
-      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1080&auto=format&fit=crop",
-      tags: ["Law", "Medicine", "Environment"]
-    },
-    {
-      id: 4,
-      name: "Stanford University",
-      country: "USA",
-      city: "California",
-      ranking: "#3 QS World",
-      tuition: "$56,000",
-      image: "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1080&auto=format&fit=crop",
-      tags: ["Tech", "Entrepreneurship", "AI"]
-    },
-    {
-      id: 5,
-      name: "University of Manchester",
-      country: "UK",
-      city: "Manchester",
-      ranking: "#32 QS World",
-      tuition: "£22,000",
-      image: "https://images.unsplash.com/photo-1506765336936-bb05e7e06295?q=80&w=1080&auto=format&fit=crop",
-      tags: ["History", "Engineering", "Arts"]
-    },
-    {
-      id: 6,
-      name: "University of Melbourne",
-      country: "Australia",
-      city: "Melbourne",
-      ranking: "#14 QS World",
-      tuition: "$42,000",
-      image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?q=80&w=1080&auto=format&fit=crop",
-      tags: ["Med-Tech", "Arts", "Science"]
-    }
-  ];
+  // const universities = [ ... ] removed because we use state now
 
-  const filteredUnis = universities.filter(uni => {
+  const filteredUnis = Array.isArray(universities) ? universities.filter(uni => {
     const matchesFilter = activeFilter === 'All' || uni.country === activeFilter;
-    const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          uni.city.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (uni.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (uni.country?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
-  });
+  }) : [];
 
   return (
     <div className="export-wrapper">
       <div className="uni-discovery-page">
         <Header />
-        
+
         <div className="uni-container">
           <div className="uni-header">
             <h1 style={{ fontFamily: 'Playfair Display, serif' }}>Explore World-Class Universities</h1>
@@ -111,8 +70,8 @@ const UniversitySearch = () => {
                 <div className="filter-options">
                   {['All', 'UK', 'USA', 'Canada', 'Australia'].map(dest => (
                     <label key={dest} className="filter-checkbox" style={{ fontFamily: 'Inter, sans-serif' }}>
-                      <input 
-                        type="radio" 
+                      <input
+                        type="radio"
                         name="destination"
                         checked={activeFilter === dest}
                         onChange={() => setActiveFilter(dest)}
@@ -150,44 +109,59 @@ const UniversitySearch = () => {
 
             <div className="uni-main">
               <div className="search-bar-wrap" style={{ marginBottom: '40px', position: 'relative' }}>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search by University name or city..."
                   className="ai-input"
                   style={{ width: '100%', height: '54px', fontSize: '16px', fontFamily: 'Inter, sans-serif' }}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <iconify-icon 
-                  icon="ri:search-2-line" 
+                <iconify-icon
+                  icon="ri:search-2-line"
                   style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, fontSize: '20px' }}
                 ></iconify-icon>
               </div>
 
               <div className="uni-grid">
-                {filteredUnis.map(uni => (
+                {loading ? (
+                  <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px' }}>
+                    <iconify-icon icon="line-md:loading-twotone-loop" style={{ fontSize: '48px', color: '#06b6d4' }}></iconify-icon>
+                    <p style={{ marginTop: '10px' }}>Loading institutional partners...</p>
+                  </div>
+                ) : error ? (
+                  <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: '#ef4444' }}>
+                    <iconify-icon icon="ri:error-warning-line" style={{ fontSize: '48px' }}></iconify-icon>
+                    <p style={{ marginTop: '10px' }}>{error}</p>
+                  </div>
+                ) : filteredUnis.map(uni => (
                   <div key={uni.id} className="uni-card">
                     <div className="uni-card-img">
-                      <img src={uni.image} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      <div className="uni-badge">{uni.ranking}</div>
+                      <img src={uni.image || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=1080&auto=format&fit=crop'} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <div className="uni-badge">{uni.status || "Active"} Partner</div>
                     </div>
                     <div className="uni-card-content">
                       <h3 className="uni-name" style={{ fontFamily: 'Playfair Display, serif' }}>{uni.name}</h3>
                       <div className="uni-meta">
                         <div className="uni-meta-item" style={{ fontFamily: 'Inter, sans-serif' }}>
                           <iconify-icon icon="ri:map-pin-2-fill"></iconify-icon>
-                          {uni.city}, {uni.country}
+                          {uni.country}
                         </div>
                         <div className="uni-meta-item" style={{ fontFamily: 'Inter, sans-serif' }}>
                           <iconify-icon icon="ri:graduation-cap-fill"></iconify-icon>
-                          {uni.tags.join(' • ')}
+                          University Partner
                         </div>
                       </div>
                       <div className="uni-card-footer">
-                        <div className="uni-price" style={{ fontFamily: 'Inter, sans-serif' }}>
-                          {uni.tuition} <span style={{ fontFamily: 'Inter, sans-serif' }}>/ year</span>
+                        <div className="uni-price" style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <iconify-icon icon="ri:medal-line" style={{ color: '#06b6d4' }}></iconify-icon>
+                          {uni.rank ? (
+                            <>World Rank <span style={{ fontFamily: 'Inter, sans-serif', color: '#06b6d4', fontWeight: '800' }}>#{uni.rank}</span></>
+                          ) : (
+                            <span style={{ opacity: 0.6 }}>Platinum Partner</span>
+                          )}
                         </div>
-                        <Link to="/register" className="btn-apply" style={{ fontFamily: 'Inter, sans-serif' }}>Explore Details</Link>
+                        <Link to={`/universities/${uni.id}`} className="btn-apply" style={{ fontFamily: 'Inter, sans-serif', background: '#0f172a', fontWeight: '600' }}>Explore Details</Link>
                       </div>
                     </div>
                   </div>

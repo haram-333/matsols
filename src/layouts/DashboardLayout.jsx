@@ -1,31 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./DashboardLayout.css";
 
 const DashboardLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Scroll top on route change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setIsSidebarOpen(false); // Close sidebar on mobile nav
-  }, [location.pathname]);
-
-  const isActive = (path) => {
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
-  };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = () => {
-    // Simulate logout
+    logout();
     navigate("/login");
   };
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div className="dashboard-layout">
       {/* Mobile Overlay */}
-      <div 
+      <div
         className={`menu-overlay ${isSidebarOpen ? "open" : ""}`}
         onClick={() => setIsSidebarOpen(false)}
       ></div>
@@ -70,14 +64,14 @@ const DashboardLayout = () => {
 
         <div className="sidebar-user">
           <div className="user-card">
-            <img src="https://ui-avatars.com/api/?name=Haram+Cho&background=041021&color=fff" alt="User" className="user-avatar" />
+            <img src={`https://ui-avatars.com/api/?name=${user.fullName}&background=041021&color=fff`} alt="User" className="user-avatar" />
             <div className="user-info">
-              <div className="user-name">Haram Cho</div>
-              <div className="user-email">haram@example.com</div>
+              <div className="user-name">{user.fullName}</div>
+              <div className="user-email">{user.email}</div>
             </div>
             <button className="btn-logout" onClick={handleLogout} title="Logout">
-              <iconify-icon icon="ri:logout-box-r-line" style={{fontSize: '18px'}}></iconify-icon>
-              <span style={{marginLeft: '8px', fontSize: '14px', fontWeight: '500'}}>Logout</span>
+              <iconify-icon icon="ri:logout-box-r-line" style={{ fontSize: '18px' }}></iconify-icon>
+              <span style={{ marginLeft: '8px', fontSize: '14px', fontWeight: '500' }}>Logout</span>
             </button>
           </div>
         </div>
@@ -99,7 +93,7 @@ const DashboardLayout = () => {
               {location.pathname.includes("settings") && "Settings"}
             </h1>
           </div>
-          
+
           <div className="header-actions">
             <button className="btn-icon" onClick={() => alert("Checking for new notifications...")}>
               <iconify-icon icon="ri:notification-3-line" style={{ fontSize: '20px' }}></iconify-icon>

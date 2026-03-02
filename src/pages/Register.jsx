@@ -1,24 +1,62 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Auth.css";
 
 const Register = () => {
     const navigate = useNavigate();
+    const { register } = useAuth();
+
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [formData, setFormData] = useState({
+        fullname: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+    });
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const handleRegister = (e) => {
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+        setError("");
+    };
+
+    const handleRegister = async (e) => {
         e.preventDefault();
+
+        if (formData.password !== formData.confirmPassword) {
+            setError("Passwords do not match!");
+            return;
+        }
+
         setLoading(true);
-        
-        // Simulate API call
-        setTimeout(() => {
+        setError("");
+
+        try {
+            const result = await register({
+                email: formData.email,
+                password: formData.password,
+                role: "STUDENT" // Default role for new registrations
+            });
+
+            if (result.success) {
+                // Redirect to login after successful registration
+                // Alternatively, we could auto-login, but login redirection is safer
+                navigate("/login", { state: { message: "Account created! Please sign in." } });
+            } else {
+                setError(result.error);
+            }
+        } catch (err) {
+            setError("Registration failed. Please try again.");
+        } finally {
             setLoading(false);
-            navigate("/dashboard");
-        }, 1500);
+        }
     };
 
     return (
@@ -44,16 +82,25 @@ const Register = () => {
                     </p>
                 </div>
 
+                {error && (
+                    <div className="auth-error-msg anim-shake">
+                        <iconify-icon icon="ri:error-warning-fill"></iconify-icon>
+                        {error}
+                    </div>
+                )}
+
                 <form className="auth-form" onSubmit={handleRegister}>
                     <div className="form-group">
                         <label className="form-label" htmlFor="fullname">Full Name</label>
                         <div className="form-input-wrap">
-                            <input 
-                                type="text" 
-                                id="fullname" 
-                                className="form-input" 
+                            <input
+                                type="text"
+                                id="fullname"
+                                className="form-input"
                                 placeholder="Your full name"
-                                required 
+                                value={formData.fullname}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                     </div>
@@ -61,12 +108,14 @@ const Register = () => {
                     <div className="form-group">
                         <label className="form-label" htmlFor="email">Email Address</label>
                         <div className="form-input-wrap">
-                            <input 
-                                type="email" 
-                                id="email" 
-                                className="form-input" 
+                            <input
+                                type="email"
+                                id="email"
+                                className="form-input"
                                 placeholder="name@example.com"
-                                required 
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                     </div>
@@ -74,26 +123,45 @@ const Register = () => {
                     <div className="form-group">
                         <label className="form-label" htmlFor="password">Password</label>
                         <div className="form-input-wrap">
-                            <input 
-                                type="password" 
-                                id="password" 
-                                className="form-input" 
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                className="form-input"
                                 placeholder="Create a password"
-                                required 
+                                value={formData.password}
+                                onChange={handleChange}
+                                minLength="6"
+                                required
                             />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                <iconify-icon icon={showPassword ? "ri:eye-off-line" : "ri:eye-line"}></iconify-icon>
+                            </button>
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label" htmlFor="confirm-password">Confirm Password</label>
+                        <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
                         <div className="form-input-wrap">
-                            <input 
-                                type="password" 
-                                id="confirm-password" 
-                                className="form-input" 
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                id="confirmPassword"
+                                className="form-input"
                                 placeholder="Repeat password"
-                                required 
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                required
                             />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                                <iconify-icon icon={showConfirmPassword ? "ri:eye-off-line" : "ri:eye-line"}></iconify-icon>
+                            </button>
                         </div>
                     </div>
 
@@ -109,7 +177,7 @@ const Register = () => {
                             </>
                         )}
                     </button>
-                    
+
                     <p style={{ textAlign: 'center', fontSize: '13px', color: 'rgba(255,255,255,0.4)', marginTop: '0px' }}>
                         By registering, you agree to our Terms & Conditions.
                     </p>

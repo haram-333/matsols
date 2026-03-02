@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { degreesData } from "../../src/data/degreesData.js";
+import { degreesData, initialUpdates } from "./seed-data.js";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🚀 Starting bulk migration from degreesData.js...");
+  console.log("🚀 Starting bulk migration from seed-data.js...");
   console.log(`📊 Found ${degreesData.length} entries to migrate.`);
 
   for (const degree of degreesData) {
@@ -48,7 +48,6 @@ async function main() {
 
   // --- Migrate Updates ---
   console.log("\n🚀 Starting migration of Updates & Insights...");
-  const { initialUpdates } = await import("../../src/data/updatesData.js");
 
   // initialUpdates is an object with { hero: [], grid: [] }
   const allUpdates = [

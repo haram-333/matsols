@@ -1,36 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { apiService } from "../../services/api";
 import "./Dashboard.css";
 
 const MyApplications = () => {
-  const applications = [
-    {
-      id: 1,
-      university: "Imperial College London",
-      course: "MSc in Advanced Computing",
-      status: "Under Review",
-      appliedDate: "Oct 12, 2024",
-      logo: "https://ui-avatars.com/api/?name=ICL&background=041021&color=fff",
-      step: 3,
-    },
-    {
-      id: 2,
-      university: "University of Toronto",
-      course: "Bachelor of Computer Science",
-      status: "Documents Verified",
-      appliedDate: "Sep 28, 2024",
-      logo: "https://ui-avatars.com/api/?name=UofT&background=004089&color=fff",
-      step: 2,
-    },
-    {
-      id: 3,
-      university: "Stanford University",
-      course: "MS in Engineering",
-      status: "Offer Received",
-      appliedDate: "Nov 05, 2024",
-      logo: "https://ui-avatars.com/api/?name=Stan&background=8c1515&color=fff",
-      step: 4,
-    },
-  ];
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchApps = async () => {
+      const data = await apiService.getApplications();
+      setApplications(data);
+      setLoading(false);
+    };
+    fetchApps();
+  }, []);
 
   const steps = [
     "Submitted",
@@ -39,6 +22,9 @@ const MyApplications = () => {
     "Offer Decision",
     "Visa Process",
   ];
+
+  if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading applications...</div>;
+
 
   return (
     <div className="my-applications fade-in">
@@ -53,14 +39,18 @@ const MyApplications = () => {
           <div key={app.id} className="application-card">
             <div className="app-card-header">
               <div className="app-info">
-                <img src={app.logo} alt={app.university} className="app-logo" />
+                <img
+                  src={app.university?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(app.university?.name || app.courseName)}&background=random&color=fff`}
+                  alt={app.university?.name}
+                  className="app-logo"
+                />
                 <div>
-                  <h3 className="app-uni">{app.university}</h3>
-                  <p className="app-course">{app.course}</p>
+                  <h3 className="app-uni">{app.university?.name || app.courseName}</h3>
+                  <p className="app-course">{app.courseName}</p>
                 </div>
               </div>
               <div className="app-meta">
-                <span className="app-date">Applied: {app.appliedDate}</span>
+                <span className="app-date">Applied: {new Date(app.appliedDate).toLocaleDateString()}</span>
                 <button className="btn-view-details">View Details →</button>
               </div>
             </div>
