@@ -102,7 +102,8 @@ app.get("/api/degrees", async (req, res) => {
     });
     res.json(degrees);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch degrees" });
+    console.error("Fetch Degrees Error:", error);
+    res.status(500).json({ error: "Failed to fetch degrees", details: error.message });
   }
 });
 
@@ -262,7 +263,8 @@ app.get("/api/updates", async (req, res) => {
     });
     res.json(updates);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch updates" });
+    console.error("Fetch Updates Error:", error);
+    res.status(500).json({ error: "Failed to fetch updates", details: error.message });
   }
 });
 
