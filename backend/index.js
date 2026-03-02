@@ -14,6 +14,22 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// --- Health Check ---
+app.get("/api/health", async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: "ok", database: "connected" });
+  } catch (error) {
+    console.error("Health Check Error:", error);
+    res.status(500).json({
+      status: "error",
+      database: "disconnected",
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});
+
 // --- Authentication Middleware ---
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -103,7 +119,9 @@ app.get("/api/degrees", async (req, res) => {
     res.json(degrees);
   } catch (error) {
     console.error("Fetch Degrees Error:", error);
-    res.status(500).json({ error: "Failed to fetch degrees", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch degrees", details: error.message });
   }
 });
 
@@ -264,7 +282,9 @@ app.get("/api/updates", async (req, res) => {
     res.json(updates);
   } catch (error) {
     console.error("Fetch Updates Error:", error);
-    res.status(500).json({ error: "Failed to fetch updates", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch updates", details: error.message });
   }
 });
 
