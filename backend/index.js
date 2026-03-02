@@ -56,9 +56,12 @@ app.post("/api/auth/register", async (req, res) => {
       .status(201)
       .json({ message: "User registered successfully", userId: user.id });
   } catch (error) {
+    console.error("Registration Error:", error);
     if (error.code === "P2002")
       return res.status(400).json({ error: "Email already exists" });
-    res.status(500).json({ error: "Registration failed" });
+    res
+      .status(500)
+      .json({ error: "Registration failed", details: error.message });
   }
 });
 
