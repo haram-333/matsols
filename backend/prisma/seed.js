@@ -1,5 +1,21 @@
+import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { degreesData, initialUpdates } from "./seed-data.js";
+
+const dbUrl = process.env.DATABASE_URL;
+if (
+  !dbUrl ||
+  (!dbUrl.startsWith("postgresql://") && !dbUrl.startsWith("postgres://"))
+) {
+  console.error(
+    "❌ ERROR: DATABASE_URL must start with 'postgresql://' or 'postgres://'",
+  );
+  console.error(
+    "Current DATABASE_URL:",
+    dbUrl ? dbUrl.substring(0, 20) + "..." : "undefined",
+  );
+  process.exit(1);
+}
 
 const prisma = new PrismaClient();
 

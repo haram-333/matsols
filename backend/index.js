@@ -18,14 +18,19 @@ app.use(express.json());
 app.get("/api/health", async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ status: "ok", database: "connected" });
+    res.json({
+      status: "ok",
+      database: "connected",
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
     console.error("Health Check Error:", error);
     res.status(500).json({
       status: "error",
       database: "disconnected",
       error: error.message,
-      stack: error.stack,
+      // Only show partial URL for security if available
+      db_initialized: !!process.env.DATABASE_URL,
     });
   }
 });
@@ -75,9 +80,11 @@ app.post("/api/auth/register", async (req, res) => {
     console.error("Registration Error:", error);
     if (error.code === "P2002")
       return res.status(400).json({ error: "Email already exists" });
-    res
-      .status(500)
-      .json({ error: "Registration failed", details: error.message });
+    res.status(500).json({
+      error: "Registration failed",
+      details: error.message,
+      code: error.code,
+    });
   }
 });
 
@@ -282,9 +289,11 @@ app.get("/api/updates", async (req, res) => {
     res.json(updates);
   } catch (error) {
     console.error("Fetch Updates Error:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch updates", details: error.message });
+    res.status(500).json({
+      error: "Failed to fetch updates",
+      details: error.message,
+      code: error.code,
+    });
   }
 });
 
