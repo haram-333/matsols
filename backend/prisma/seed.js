@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { degreesData, initialUpdates } from "./seed-data.js";
+import bcrypt from "bcryptjs";
 
 const dbUrl = process.env.DATABASE_URL;
 if (
@@ -20,6 +21,28 @@ if (
 const prisma = new PrismaClient();
 
 async function main() {
+  // --- Create Admin User ---
+  console.log("\n🚀 Creating Admin User...");
+  const adminEmail = "admin@matsols.com";
+  const adminPassword = "admin123";
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
+
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {
+      password: hashedAdminPassword,
+      role: "ADMIN",
+      fullName: "System Admin",
+    },
+    create: {
+      email: adminEmail,
+      password: hashedAdminPassword,
+      role: "ADMIN",
+      fullName: "System Admin",
+    },
+  });
+  console.log("✅ Admin user created/updated.");
+
   console.log("🚀 Starting bulk migration from seed-data.js...");
   console.log(`📊 Found ${degreesData.length} entries to migrate.`);
 
