@@ -1,14 +1,24 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { apiService } from '../../services/api';
 import '../../layouts/AdminLayout.css';
 
 const AdminOverview = () => {
+  const navigate = useNavigate();
   const [isExporting, setIsExporting] = useState(false);
   const [exportComplete, setExportComplete] = useState(false);
   const [stats, setStats] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('matsols_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +32,8 @@ const AdminOverview = () => {
     };
     fetchData();
   }, []);
+
+  const hasRole = (roles) => roles.includes(user?.role);
 
   const handleExport = () => {
     setIsExporting(true);
@@ -37,7 +49,12 @@ const AdminOverview = () => {
     }, 2000);
   };
 
-  if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading System Overview...</div>;
+  if (loading) return (
+    <div className="fuckin-loader-overlay">
+      <div className="fuckin-loader"></div>
+      <div className="loader-text">Loading System Overview...</div>
+    </div>
+  );
 
   return (
     <div className="admin-overview">
@@ -46,7 +63,7 @@ const AdminOverview = () => {
           <h1>System Overview</h1>
           <p>Real-time analytics and student registration performance.</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div className="admin-header-actions">
           {exportComplete && (
             <span style={{ color: '#10b981', fontSize: '14px', fontWeight: '600', animation: 'fadeIn 0.3s' }}>
               <iconify-icon icon="ri:check-line" style={{ verticalAlign: 'middle', marginRight: '5px' }}></iconify-icon>
@@ -75,58 +92,113 @@ const AdminOverview = () => {
       </div>
 
       <div className="admin-stats-grid">
-        <div className="admin-stat-card">
-          <div className="stat-header">
-            <div className="stat-icon-wrap" style={{ background: '#f0fdf4', color: '#16a34a' }}>
-              <iconify-icon icon="ri:user-add-line"></iconify-icon>
+        {hasRole(['ADMIN', 'EDITOR', 'MARKETING']) && (
+          <div className="admin-stat-card" onClick={() => navigate('/admin/users')}>
+            <div className="stat-header">
+              <div className="stat-icon-wrap" style={{ background: '#f0fdf4', color: '#16a34a' }}>
+                <iconify-icon icon="ri:user-add-line"></iconify-icon>
+              </div>
+              <div className="stat-trend trend-up">
+                <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
+              </div>
             </div>
-            <div className="stat-trend trend-up">
-              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
-            </div>
+            <div className="stat-value">{stats?.totalStudents?.toLocaleString() || 0}</div>
+            <div className="stat-label">Total Students</div>
           </div>
-          <div className="stat-value">{stats?.totalStudents?.toLocaleString() || 0}</div>
-          <div className="stat-label">Total Students</div>
-        </div>
+        )}
 
-        <div className="admin-stat-card">
-          <div className="stat-header">
-            <div className="stat-icon-wrap" style={{ background: '#fef3f2', color: '#ef4444' }}>
-              <iconify-icon icon="ri:file-list-3-line"></iconify-icon>
+        {hasRole(['ADMIN']) && (
+          <div className="admin-stat-card" onClick={() => navigate('/admin/applications')}>
+            <div className="stat-header">
+              <div className="stat-icon-wrap" style={{ background: '#fef3f2', color: '#ef4444' }}>
+                <iconify-icon icon="ri:file-list-3-line"></iconify-icon>
+              </div>
+              <div className="stat-trend trend-up">
+                <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
+              </div>
             </div>
-            <div className="stat-trend trend-up">
-              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
-            </div>
+            <div className="stat-value">{stats?.applicationsUnderReview?.toLocaleString() || 0}</div>
+            <div className="stat-label">Applications Under Review</div>
           </div>
-          <div className="stat-value">{stats?.applicationsUnderReview?.toLocaleString() || 0}</div>
-          <div className="stat-label">Applications Under Review</div>
-        </div>
+        )}
 
-        <div className="admin-stat-card">
-          <div className="stat-header">
-            <div className="stat-icon-wrap" style={{ background: '#eff6ff', color: '#3b82f6' }}>
-              <iconify-icon icon="ri:message-line"></iconify-icon>
+        {hasRole(['ADMIN', 'MARKETING']) && (
+          <div className="admin-stat-card" onClick={() => navigate('/admin/leads')}>
+            <div className="stat-header">
+              <div className="stat-icon-wrap" style={{ background: '#eff6ff', color: '#3b82f6' }}>
+                <iconify-icon icon="ri:message-line"></iconify-icon>
+              </div>
+              <div className="stat-trend trend-down">
+                <iconify-icon icon="ri:arrow-right-down-line"></iconify-icon> --
+              </div>
             </div>
-            <div className="stat-trend trend-down">
-              <iconify-icon icon="ri:arrow-right-down-line"></iconify-icon> --
-            </div>
+            <div className="stat-value">{stats?.totalLeads?.toLocaleString() || 0}</div>
+            <div className="stat-label">Total Leads</div>
           </div>
-          <div className="stat-value">{stats?.totalLeads?.toLocaleString() || 0}</div>
-          <div className="stat-label">Total Leads</div>
-        </div>
+        )}
 
-        <div className="admin-stat-card">
-          <div className="stat-header">
-            <div className="stat-icon-wrap" style={{ background: '#faf5ff', color: '#9333ea' }}>
-              <iconify-icon icon="ri:money-dollar-circle-line"></iconify-icon>
+        {hasRole(['ADMIN']) && (
+          <div className="admin-stat-card">
+            <div className="stat-header">
+              <div className="stat-icon-wrap" style={{ background: '#faf5ff', color: '#9333ea' }}>
+                <iconify-icon icon="ri:money-dollar-circle-line"></iconify-icon>
+              </div>
+              <div className="stat-trend trend-up">
+                <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
+              </div>
             </div>
-            <div className="stat-trend trend-up">
-              <iconify-icon icon="ri:arrow-right-up-line"></iconify-icon> --
-            </div>
+            <div className="stat-value">{stats?.revenue || "£0"}</div>
+            <div className="stat-label">Estimated Revenue</div>
           </div>
-          <div className="stat-value">{stats?.revenue || "£0"}</div>
-          <div className="stat-label">Estimated Revenue</div>
-        </div>
+        )}
       </div>
+
+      <style>{`
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .admin-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .admin-header-actions {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            .btn-apply {
+                width: 100%;
+            }
+        }
+        .admin-stat-card {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #0f172a !important; /* Ensure text is dark and visible */
+        }
+        .stat-value, .admin-stat-card .stat-value {
+            color: #0f172a !important;
+        }
+        .stat-label, .admin-stat-card .stat-label {
+            color: #475569 !important;
+        }
+        .admin-stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+        .admin-stat-card:active {
+            transform: scale(0.98);
+        }
+      `}</style>
 
       <div className="admin-charts-grid">
         <div className="admin-chart-card">
@@ -173,7 +245,7 @@ const AdminOverview = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
                 }));
             } catch (e) {
                 console.error("Invalid token", e);
-                logout();
+                logout(true); // Pass true to indicate a redirect is desired if token is invalid
             }
         }
         setLoading(false);
@@ -62,11 +62,16 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("matsols_user", JSON.stringify(newUser));
     };
 
-    const logout = () => {
+    const logout = (shouldRedirect = true) => {
         localStorage.removeItem("matsols_token");
         localStorage.removeItem("matsols_user");
         setToken(null);
         setUser(null);
+        // Force a full reload to clear any sensitive state and prevent back-button access
+        // ONLY if we aren't already on the login page to avoid infinite loops
+        if (shouldRedirect && window.location.pathname !== "/login") {
+            window.location.href = "/login";
+        }
     };
 
     return (

@@ -23,7 +23,9 @@ import LeadManagement from "./pages/Admin/LeadManagement";
 import UniversityManagement from "./pages/Admin/UniversityManagement";
 import UpdatesManagement from "./pages/Admin/UpdatesManagement";
 import ApplicationManagement from "./pages/Admin/ApplicationManagement";
+import DegreeManagement from "./pages/Admin/DegreeManagement";
 import SystemSettings from "./pages/Admin/SystemSettings";
+import UserManagement from "./pages/Admin/UserManagement";
 import FreeConsultation from "./pages/FreeConsultation";
 import UniversitySearch from "./pages/UniversitySearch";
 import UniversityDetail from "./pages/UniversityDetail";
@@ -72,16 +74,46 @@ function App() {
           </Route>
 
           <Route path="/admin" element={
-            <ProtectedRoute requiredRole="ADMIN">
+            <ProtectedRoute requiredRole={["ADMIN", "EDITOR", "MARKETING"]}>
               <AdminLayout />
             </ProtectedRoute>
           }>
             <Route index element={<AdminOverview />} />
-            <Route path="leads" element={<LeadManagement />} />
-            <Route path="applications" element={<ApplicationManagement />} />
-            <Route path="updates" element={<UpdatesManagement />} />
-            <Route path="universities" element={<UniversityManagement />} />
-            <Route path="settings" element={<SystemSettings />} />
+            <Route path="leads" element={
+              <ProtectedRoute requiredRole={["ADMIN", "MARKETING"]}>
+                <LeadManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="applications" element={
+              <ProtectedRoute requiredRole={["ADMIN"]}>
+                <ApplicationManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="updates" element={
+              <ProtectedRoute requiredRole={["ADMIN", "EDITOR"]}>
+                <UpdatesManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="universities" element={
+              <ProtectedRoute requiredRole={["ADMIN", "EDITOR"]}>
+                <UniversityManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="degrees" element={
+              <ProtectedRoute requiredRole={["ADMIN", "EDITOR"]}>
+                <DegreeManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="settings" element={
+              <ProtectedRoute requiredRole={["ADMIN"]}>
+                <SystemSettings />
+              </ProtectedRoute>
+            } />
+            <Route path="users" element={
+              <ProtectedRoute requiredRole={["ADMIN"]}>
+                <UserManagement />
+              </ProtectedRoute>
+            } />
           </Route>
 
           <Route path="/free-consultation" element={<FreeConsultation />} />

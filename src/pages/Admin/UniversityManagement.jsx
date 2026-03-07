@@ -5,8 +5,9 @@ const UniversityManagement = () => {
   const [universities, setUniversities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
-  const [newUni, setNewUni] = useState({
+  const initialUniState = {
     name: '',
     country: '',
     image: '',
@@ -17,8 +18,12 @@ const UniversityManagement = () => {
     admissionCriteria: '',
     rank: '',
     location: '',
-    status: 'Active'
-  });
+    status: 'Active',
+    additionalInfo: '[]' // Stored as JSON string
+  };
+
+  const [newUni, setNewUni] = useState(initialUniState);
+  const [extraInfoFields, setExtraInfoFields] = useState([]);
 
   const fetchUniversities = async () => {
     try {
@@ -35,24 +40,58 @@ const UniversityManagement = () => {
     fetchUniversities();
   }, []);
 
-  const handleAddUniversity = async (e) => {
+  const handleOpenModal = (uni = null) => {
+    if (uni) {
+      setEditingId(uni.id);
+      setNewUni({
+        ...uni,
+        additionalInfo: uni.additionalInfo || '[]'
+      });
+      try {
+        setExtraInfoFields(JSON.parse(uni.additionalInfo || '[]'));
+      } catch (e) {
+        setExtraInfoFields([]);
+      }
+    } else {
+      setEditingId(null);
+      setNewUni(initialUniState);
+      setExtraInfoFields([]);
+    }
+    setIsModalOpen(true);
+  };
+
+  const handleAddExtraField = () => {
+    setExtraInfoFields([...extraInfoFields, { label: '', value: '' }]);
+  };
+
+  const handleExtraFieldChange = (index, key, value) => {
+    const updated = [...extraInfoFields];
+    updated[index][key] = value;
+    setExtraInfoFields(updated);
+  };
+
+  const handleRemoveExtraField = (index) => {
+    setExtraInfoFields(extraInfoFields.filter((_, i) => i !== index));
+  };
+
+  const handleSaveUniversity = async (e) => {
     e.preventDefault();
-    await apiService.createUniversity(newUni);
+    const payload = {
+      ...newUni,
+      additionalInfo: JSON.stringify(extraInfoFields)
+    };
+
+    if (editingId) {
+      await apiService.updateUniversity(editingId, payload);
+    } else {
+      await apiService.createUniversity(payload);
+    }
+
     await fetchUniversities();
-    setNewUni({
-      name: '',
-      country: '',
-      image: '',
-      websiteUrl: '',
-      description: '',
-      about: '',
-      campusLife: '',
-      admissionCriteria: '',
-      rank: '',
-      location: '',
-      status: 'Active'
-    });
     setIsModalOpen(false);
+    setNewUni(initialUniState);
+    setExtraInfoFields([]);
+    setEditingId(null);
   };
 
   const updateStatus = async (id, status) => {
@@ -76,88 +115,92 @@ const UniversityManagement = () => {
         </div>
         <button
           className="btn btn-primary"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => handleOpenModal()}
         >
           + Add University
         </button>
       </div>
 
-      <div className="admin-card-list" style={{ marginTop: '24px' }}>
-        <div className="admin-chart-card">
-          <div className="admin-table-responsive" style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <th style={{ textAlign: 'left', padding: '12px', background: '#f8fafc' }}>Logo</th>
-                  <th style={{ textAlign: 'left', padding: '12px', background: '#f8fafc' }}>Name</th>
-                  <th style={{ textAlign: 'left', padding: '12px', background: '#f8fafc' }}>Country</th>
-                  <th style={{ textAlign: 'left', padding: '12px', background: '#f8fafc' }}>Status</th>
-                  <th style={{ textAlign: 'left', padding: '12px', background: '#f8fafc' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {universities.map(uni => (
-                  <tr key={uni.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                    <td style={{ padding: '12px' }}>
-                      {uni.image ? (
-                        <img
-                          src={uni.image}
-                          alt={uni.name}
-                          style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }}
-                          onError={(e) => { e.target.src = 'https://placehold.co/40x40?text=Uni'; }}
-                        />
-                      ) : (
-                        <div style={{ width: '40px', height: '40px', borderRadius: '4px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#64748b' }}>No Logo</div>
-                      )}
-                    </td>
-                    <td style={{ padding: '12px' }}>{uni.name}</td>
-                    <td style={{ padding: '12px' }}>{uni.country}</td>
-                    <td style={{ padding: '12px' }}>
-                      <select
-                        value={uni.status}
-                        onChange={(e) => updateStatus(uni.id, e.target.value)}
-                        style={{
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          fontSize: '12px',
-                          border: '1px solid #e2e8f0',
-                          background: uni.status === 'Active' ? '#dcfce7' : uni.status === 'Under Review' ? '#fef9c3' : '#fee2e2',
-                          color: uni.status === 'Active' ? '#166534' : uni.status === 'Under Review' ? '#854d0e' : '#991b1b',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="Active">Active</option>
-                        <option value="Under Review">Under Review</option>
-                        <option value="Inactive">Inactive</option>
-                      </select>
-                    </td>
-                    <td style={{ padding: '12px' }}>
-                      <button
-                        onClick={() => deleteUniversity(uni.id)}
-                        style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '12px' }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div className="admin-table-wrapper" style={{ marginTop: '24px' }}>
+        <table className="modern-table">
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Name</th>
+              <th>Country</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {universities.map(uni => (
+              <tr key={uni.id}>
+                <td>
+                  {uni.image ? (
+                    <img
+                      src={uni.image}
+                      alt={uni.name}
+                      style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }}
+                      onError={(e) => { e.target.src = 'https://placehold.co/40x40?text=Uni'; }}
+                    />
+                  ) : (
+                    <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#64748b' }}>No Logo</div>
+                  )}
+                </td>
+                <td><strong>{uni.name}</strong></td>
+                <td>{uni.country}</td>
+                <td>
+                  <select
+                    className="ai-input"
+                    value={uni.status}
+                    onChange={(e) => updateStatus(uni.id, e.target.value)}
+                    style={{
+                      padding: '4px 8px',
+                      fontSize: '12px',
+                      width: 'auto',
+                      height: 'auto',
+                      background: uni.status === 'Active' ? '#dcfce7' : uni.status === 'Under Review' ? '#fef9c3' : '#fee2e2',
+                      color: uni.status === 'Active' ? '#166534' : uni.status === 'Under Review' ? '#854d0e' : '#991b1b',
+                    }}
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '15px' }}>
+                    <button
+                      onClick={() => handleOpenModal(uni)}
+                      style={{ background: 'none', border: 'none', color: '#06b6d4', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteUniversity(uni.id)}
+                      style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {isModalOpen && (
         <div className="admin-modal-overlay">
           <div className="admin-modal">
             <div className="modal-header">
-              <h3>Add New University</h3>
+              <h3>{editingId ? 'Edit University' : 'Add New University'}</h3>
               <button className="btn-close" onClick={() => setIsModalOpen(false)}>
                 <iconify-icon icon="ri:close-line"></iconify-icon>
               </button>
             </div>
-            <form onSubmit={handleAddUniversity} style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-              <div className="modal-body">
+            <form onSubmit={handleSaveUniversity} style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+              <div className="modal-body" style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
                 <div className="form-group" style={{ marginBottom: '15px' }}>
                   <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>University Name</label>
                   <input
@@ -225,7 +268,7 @@ const UniversityManagement = () => {
                     style={{ color: '#1e293b', minHeight: '80px', padding: '12px', resize: 'vertical' }}
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div className="admin-form-row">
                   <div className="form-group">
                     <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>World Rank</label>
                     <input
@@ -269,8 +312,39 @@ const UniversityManagement = () => {
                     style={{ color: '#1e293b', minHeight: '80px', padding: '12px', resize: 'vertical' }}
                   />
                 </div>
+
                 <div className="form-group" style={{ marginBottom: '20px' }}>
-                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>Initial Status</label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Additional Information</label>
+                    <button type="button" onClick={handleAddExtraField} style={{ fontSize: '12px', padding: '4px 8px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>+ Add Field</button>
+                  </div>
+                  {extraInfoFields.map((field, idx) => (
+                    <div key={idx} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                      <input
+                        type="text"
+                        className="ai-input"
+                        placeholder="Label (e.g. Global Rank)"
+                        value={field.label}
+                        onChange={(e) => handleExtraFieldChange(idx, 'label', e.target.value)}
+                        style={{ flex: 1, color: '#1e293b' }}
+                      />
+                      <input
+                        type="text"
+                        className="ai-input"
+                        placeholder="Value"
+                        value={field.value}
+                        onChange={(e) => handleExtraFieldChange(idx, 'value', e.target.value)}
+                        style={{ flex: 1, color: '#1e293b' }}
+                      />
+                      <button type="button" onClick={() => handleRemoveExtraField(idx)} style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer' }}>
+                        <iconify-icon icon="ri:delete-bin-line"></iconify-icon>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '13px', fontWeight: 'bold' }}>University Status</label>
                   <select
                     className="ai-input"
                     value={newUni.status}
@@ -283,9 +357,11 @@ const UniversityManagement = () => {
                   </select>
                 </div>
               </div>
-              <div className="modal-actions">
+              <div className="modal-actions" style={{ padding: '20px', borderTop: '1px solid #e2e8f0', background: 'white' }}>
                 <button type="button" className="btn-outline" style={{ flex: 1, padding: '12px' }} onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn-apply" style={{ flex: 1, padding: '12px', background: '#0f172a', color: 'white', border: 'none' }}>Add University Partner</button>
+                <button type="submit" className="btn-apply" style={{ flex: 1, padding: '12px', background: '#0f172a', color: 'white', border: 'none' }}>
+                  {editingId ? 'Update University' : 'Add University Partner'}
+                </button>
               </div>
             </form>
           </div>

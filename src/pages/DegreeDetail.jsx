@@ -60,7 +60,25 @@ const renderTextWithLinks = (text) => {
 };
 
 const FormattedContent = ({ content, type }) => {
-    if (!content) return null;
+    if (type === 'specs') {
+        let specs = [];
+        try {
+            specs = JSON.parse(content);
+        } catch (e) {
+            return <p>{content}</p>;
+        }
+
+        return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
+                {specs.map((info, idx) => (
+                    <div key={idx} style={{ padding: '15px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600', textTransform: 'uppercase' }}>{info.label}</div>
+                        <div style={{ fontSize: '16px', color: '#0f172a', fontWeight: '700', marginTop: '4px' }}>{info.value}</div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
 
     const lines = content.split('\n');
 
@@ -150,8 +168,9 @@ const DegreeDetail = () => {
         { id: 'taught-in', label: 'Taught In', content: degree?.taughtIn, icon: 'lucide:languages' },
         { id: 'affiliation', label: 'University Affiliation', content: degree?.universityAffiliation, icon: 'lucide:school' },
         { id: 'progression', label: 'Progressions & Careers', content: degree?.progression, icon: 'lucide:trending-up' },
+        { id: 'specs', label: 'Key Specifications', content: degree?.additionalInfo, icon: 'lucide:settings' },
         { id: 'faqs', label: 'General Info & FAQs', content: degree?.faqs, icon: 'lucide:message-circle' }
-    ].filter(s => s.content && s.content !== "Not specified" && s.content.trim() !== ""), [degree]);
+    ].filter(s => s.content && s.content !== "Not specified" && s.content.trim() !== "" && s.content !== "[]"), [degree]);
 
     useEffect(() => {
         if (sections.length > 0 && !activeSection) {

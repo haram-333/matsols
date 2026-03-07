@@ -33,6 +33,55 @@ export const apiService = {
     }
   },
 
+  async createDegree(data) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/degrees`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+        body: JSON.stringify(data),
+      });
+      return await resp.json();
+    } catch (error) {
+      console.error("Failed to create degree:", error);
+      return { error: "Server error" };
+    }
+  },
+
+  async updateDegree(id, data) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/degrees/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+        body: JSON.stringify(data),
+      });
+      return await resp.json();
+    } catch (error) {
+      console.error("Failed to update degree:", error);
+      return { error: "Server error" };
+    }
+  },
+
+  async deleteDegree(id) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/degrees/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+      });
+      return await resp.json();
+    } catch (error) {
+      console.error("Failed to delete degree:", error);
+      return { success: false };
+    }
+  },
+
   // Leads
   async submitLead(leadData) {
     try {
@@ -92,6 +141,36 @@ export const apiService = {
     } catch (error) {
       console.error("Failed to delete lead:", error);
       return Promise.resolve({ success: false });
+    }
+  },
+
+  async exportLeads(from, to) {
+    try {
+      let url = `${API_BASE_URL}/leads/export`;
+      const params = new URLSearchParams();
+      if (from) params.append("from", from);
+      if (to) params.append("to", to);
+      if (params.toString()) url += `?${params.toString()}`;
+
+      const resp = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+      });
+
+      if (!resp.ok) throw new Error("Export failed");
+
+      const blob = await resp.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = `leads_export_${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error("Leads export failed:", error);
+      alert("Failed to export leads. Please try again.");
     }
   },
 
@@ -168,7 +247,7 @@ export const apiService = {
   },
 
   // AI Chat
-  async getAIChatResponse(message) {
+  async getAIChatResponse(message, history = []) {
     try {
       const resp = await fetch(`${API_BASE_URL}/chat`, {
         method: "POST",
@@ -176,7 +255,7 @@ export const apiService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
         },
-        body: JSON.stringify({ content: message }),
+        body: JSON.stringify({ content: message, history: history }),
       });
       return await resp.json();
     } catch (error) {
@@ -534,6 +613,71 @@ export const apiService = {
       return await resp.json();
     } catch (error) {
       console.error("Admin Document Update Error:", error);
+      return { error: "Server error" };
+    }
+  },
+
+  // --- User Management ---
+  async getUsers() {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin/users`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+      });
+      if (!resp.ok) throw new Error("Failed to fetch users");
+      return await resp.json();
+    } catch (error) {
+      console.error("Admin Users Fetch Error:", error);
+      return [];
+    }
+  },
+
+  async updateUserRole(id, role) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin/users/${id}/role`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+        body: JSON.stringify({ role }),
+      });
+      return await resp.json();
+    } catch (error) {
+      console.error("Admin User Role Update Error:", error);
+      return { error: "Server error" };
+    }
+  },
+
+  async createAdminUser(userData) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+        body: JSON.stringify(userData),
+      });
+      return await resp.json();
+    } catch (error) {
+      console.error("Admin User Creation Error:", error);
+      return { error: "Server connection failed" };
+    }
+  },
+
+  async deleteAdminUser(id) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("matsols_token")}`,
+        },
+      });
+      return await resp.json();
+    } catch (error) {
+      console.error("Admin User Deletion Error:", error);
       return { error: "Server error" };
     }
   },

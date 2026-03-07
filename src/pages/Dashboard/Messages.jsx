@@ -6,6 +6,7 @@ const Messages = () => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [loading, setLoading] = useState(true);
+    const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -24,24 +25,34 @@ const Messages = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, isTyping]);
 
     const handleSend = async () => {
-        if (!inputValue.trim()) return;
+        if (!inputValue.trim() || isTyping) return;
 
         const userMsgContent = inputValue;
         setInputValue('');
 
-        // 1. Optimistic Update (Optional, but let's wait for backend to be safe or just show loading)
-        // For now, let's just wait for the response to avoid duplicate logic
+        // 1. Optimistic Update (Immediate display)
+        const optimisticMsg = {
+            tempId: Date.now(),
+            role: 'user',
+            content: userMsgContent,
+            createdAt: new Date().toISOString()
+        };
+        setMessages(prev => [...prev, optimisticMsg]);
+        setIsTyping(true);
 
         try {
-            const response = await apiService.getAIChatResponse(userMsgContent);
-            // Refresh history or just append both
+            await apiService.getAIChatResponse(userMsgContent, messages);
+            // After AI responds, fetch fresh history from DB which will contain both
             const history = await apiService.fetchChatHistory();
             setMessages(history);
         } catch (error) {
             console.error("Failed to send message:", error);
+            // Optionally remove the optimistic message on failure
+        } finally {
+            setIsTyping(false);
         }
     };
 
@@ -86,17 +97,28 @@ const Messages = () => {
                     </div>
 
                     <div className="chat-messages">
-                        {loading ? (
+                        {loading && messages.length === 0 ? (
                             <div className="chat-loading">Loading chat history...</div>
-                        ) : messages.length > 0 ? (
-                            messages.map(msg => (
-                                <div key={msg.id} className={`chat-bubble-container ${msg.role === 'user' ? 'user' : 'bot'}`}>
-                                    <div className="chat-bubble">
-                                        {msg.content}
-                                        <span className="bubble-time">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        ) : messages.length > 0 || isTyping ? (
+                            <>
+                                {messages.map(msg => (
+                                    <div key={msg.id || msg.tempId} className={`chat-bubble-container ${msg.role === 'user' ? 'user' : 'bot'}`}>
+                                        <div className="chat-bubble">
+                                            {msg.content}
+                                            <span className="bubble-time">{new Date(msg.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))
+                                ))}
+                                {isTyping && (
+                                    <div className="chat-bubble-container bot">
+                                        <div className="chat-bubble typing-indicator-dash">
+                                            <span className="dot"></span>
+                                            <span className="dot"></span>
+                                            <span className="dot"></span>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         ) : (
                             <div className="no-messages">Start a conversation with your advisor!</div>
                         )}
@@ -104,16 +126,17 @@ const Messages = () => {
                     </div>
 
                     <div className="chat-input-area">
-                        <button className="btn-attach"><iconify-icon icon="ri:attachment-2"></iconify-icon></button>
+                        <button className="btn-attach" disabled={isTyping}><iconify-icon icon="ri:attachment-2"></iconify-icon></button>
                         <input
                             type="text"
                             className="chat-input"
                             placeholder="Type a message..."
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                            onKeyPress={(e) => !isTyping && e.key === 'Enter' && handleSend()}
+                            disabled={isTyping}
                         />
-                        <button className="btn-chat-send" onClick={handleSend}>
+                        <button className="btn-chat-send" onClick={handleSend} disabled={isTyping} style={{ opacity: isTyping ? 0.5 : 1, cursor: isTyping ? 'not-allowed' : 'pointer' }}>
                             <iconify-icon icon="ri:send-plane-2-fill"></iconify-icon>
                         </button>
                     </div>

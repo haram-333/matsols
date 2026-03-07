@@ -51,7 +51,12 @@ const SystemSettings = () => {
     }
   };
 
-  if (loading) return <div className="admin-content" style={{ textAlign: 'center', padding: '50px' }}>Loading Portal Configuration...</div>;
+  if (loading) return (
+    <div className="fuckin-loader-overlay">
+      <div className="fuckin-loader"></div>
+      <div className="loader-text">Loading Portal Configuration...</div>
+    </div>
+  );
 
   return (
     <div className="admin-content fade-in">
@@ -84,7 +89,7 @@ const SystemSettings = () => {
         </div>
       )}
 
-      <div className="admin-stats-grid" style={{ marginTop: '24px', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))' }}>
+      <div className="admin-stats-grid" style={{ marginTop: '24px' }}>
         {/* Portal Configuration */}
         <div className="admin-stat-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
@@ -191,6 +196,46 @@ const SystemSettings = () => {
       </div>
 
       <style>{`
+                .admin-stats-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 24px;
+                }
+                @media (max-width: 768px) {
+                    .admin-stats-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    .settings-row {
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 15px;
+                    }
+                    .settings-row > div:first-child {
+                        flex: 1;
+                    }
+                }
+                @media (max-width: 480px) {
+                    .settings-row {
+                        flex-direction: column;
+                        align-items: flex-start !important;
+                    }
+                }
+                .form-responsive-row {
+                  display: flex;
+                  gap: 15px;
+                  margin-bottom: 15px;
+                }
+                @media (max-width: 768px) {
+                  .modal-content {
+                    width: 95% !important;
+                    padding: 20px !important;
+                  }
+                  .form-responsive-row {
+                    flex-direction: column;
+                    gap: 15px;
+                  }
+                }
                 .switch {
                     position: relative;
                     display: inline-block;

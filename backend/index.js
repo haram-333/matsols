@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import ExcelJS from "exceljs";
+import OpenAI from "openai";
 
 const JWT_SECRET = process.env.JWT_SECRET || "matsols-super-secret-key-2026";
 
@@ -56,6 +58,24 @@ const isAdmin = (req, res, next) => {
     return res
       .status(403)
       .json({ error: "Unauthorized. Admin access required." });
+  }
+  next();
+};
+
+const isEditorOrAdmin = (req, res, next) => {
+  if (req.user.role !== "ADMIN" && req.user.role !== "EDITOR") {
+    return res
+      .status(403)
+      .json({ error: "Unauthorized. Admin or Editor access required." });
+  }
+  next();
+};
+
+const isMarketingOrAdmin = (req, res, next) => {
+  if (req.user.role !== "ADMIN" && req.user.role !== "MARKETING") {
+    return res
+      .status(403)
+      .json({ error: "Unauthorized. Admin or Marketing access required." });
   }
   next();
 };
@@ -138,6 +158,7 @@ app.get("/api/degrees/:slug", async (req, res) => {
   try {
     const degree = await prisma.degree.findUnique({
       where: { slug },
+      include: { university: true },
     });
     if (!degree) return res.status(404).json({ error: "Degree not found" });
     res.json(degree);
@@ -145,6 +166,64 @@ app.get("/api/degrees/:slug", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch degree details" });
   }
 });
+
+// Create Degree
+app.post(
+  "/api/degrees",
+  authenticateToken,
+  isEditorOrAdmin,
+  async (req, res) => {
+    try {
+      const degree = await prisma.degree.create({
+        data: req.body,
+      });
+      res.status(201).json(degree);
+    } catch (error) {
+      console.error("Create Degree Error:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to create degree", details: error.message });
+    }
+  },
+);
+
+// Update Degree
+app.put(
+  "/api/degrees/:id",
+  authenticateToken,
+  isEditorOrAdmin,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const degree = await prisma.degree.update({
+        where: { id },
+        data: req.body,
+      });
+      res.json(degree);
+    } catch (error) {
+      console.error("Update Degree Error:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to update degree", details: error.message });
+    }
+  },
+);
+
+// Delete Degree
+app.delete(
+  "/api/degrees/:id",
+  authenticateToken,
+  isEditorOrAdmin,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      await prisma.degree.delete({ where: { id } });
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete degree" });
+    }
+  },
+);
 
 // --- Lead Endpoints ---
 
@@ -162,108 +241,120 @@ app.post("/api/leads", async (req, res) => {
 });
 
 // Admin: Get all leads
-app.get("/api/leads", authenticateToken, isAdmin, async (req, res) => {
-  try {
-    const leads = await prisma.lead.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    res.json(leads);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch leads" });
-  }
-});
+app.get(
+  "/api/leads",
+  authenticateToken,
+  isMarketingOrAdmin,
+  async (req, res) => {
+    try {
+      const leads = await prisma.lead.findMany({
+        orderBy: { createdAt: "desc" },
+      });
+      res.json(leads);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch leads" });
+    }
+  },
+);
+
+// Admin: Export Leads to Excel
+app.get(
+  "/api/leads/export",
+  authenticateToken,
+  isMarketingOrAdmin,
+  async (req, res) => {
+    const { from, to } = req.query;
+    try {
+      const where = {};
+      if (from || to) {
+        where.createdAt = {};
+        if (from) where.createdAt.gte = new Date(from);
+        if (to) where.createdAt.lte = new Date(to);
+      }
+
+      const leads = await prisma.lead.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+      });
+
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Leads");
+
+      worksheet.columns = [
+        { header: "Full Name", key: "fullName", width: 25 },
+        { header: "Email", key: "email", width: 30 },
+        { header: "Phone", key: "phone", width: 15 },
+        { header: "Citizenship", key: "citizenship", width: 20 },
+        { header: "Target Country", key: "targetCountry", width: 20 },
+        { header: "Status", key: "status", width: 15 },
+        { header: "Priority", key: "priority", width: 10 },
+        { header: "Created At", key: "createdAt", width: 20 },
+      ];
+
+      leads.forEach((lead) => {
+        worksheet.addRow({
+          ...lead,
+          createdAt: lead.createdAt.toISOString(),
+        });
+      });
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" +
+          `leads_export_${new Date().toISOString().split("T")[0]}.xlsx`,
+      );
+
+      await workbook.xlsx.write(res);
+      res.end();
+    } catch (error) {
+      console.error("Export Leads Error:", error);
+      res.status(500).json({ error: "Failed to export leads" });
+    }
+  },
+);
 
 // Admin: Update lead status/priority
-app.put("/api/leads/:id", authenticateToken, isAdmin, async (req, res) => {
-  const { id } = req.params;
-  const { status, priority } = req.body;
-  try {
-    const updatedLead = await prisma.lead.update({
-      where: { id },
-      data: {
-        ...(status && { status }),
-        ...(priority && { priority }),
-      },
-    });
-    res.json(updatedLead);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update lead" });
-  }
-});
+app.put(
+  "/api/leads/:id",
+  authenticateToken,
+  isMarketingOrAdmin,
+  async (req, res) => {
+    const { id } = req.params;
+    const { status, priority } = req.body;
+    try {
+      const updatedLead = await prisma.lead.update({
+        where: { id },
+        data: {
+          ...(status && { status }),
+          ...(priority && { priority }),
+        },
+      });
+      res.json(updatedLead);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update lead" });
+    }
+  },
+);
 
 // Admin: Delete lead
-app.delete("/api/leads/:id", authenticateToken, isAdmin, async (req, res) => {
-  const { id } = req.params;
-  try {
-    await prisma.lead.delete({ where: { id } });
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete lead" });
-  }
-});
-
-// Advanced chat endpoint with keyword-search RAG logic
-app.post("/api/chat", authenticateToken, async (req, res) => {
-  const { content } = req.body;
-  const userId = req.user.id;
-
-  if (!content) return res.status(400).json({ error: "Content is required" });
-
-  try {
-    // 1. Persist the user message
-    await prisma.chatMessage.create({
-      data: { userId, role: "user", content },
-    });
-
-    // 2. Simple "RAG" - Search database for context
-    const keywords = content
-      .toLowerCase()
-      .split(" ")
-      .filter((word) => word.length > 3);
-    let contextDegrees = [];
-
-    if (keywords.length > 0) {
-      contextDegrees = await prisma.degree.findMany({
-        where: {
-          OR: [
-            { name: { contains: keywords[0], mode: "insensitive" } },
-            ...keywords
-              .slice(1)
-              .map((kw) => ({ name: { contains: kw, mode: "insensitive" } })),
-            ...keywords.map((kw) => ({
-              about: { contains: kw, mode: "insensitive" },
-            })),
-          ],
-        },
-        take: 3,
-      });
+app.delete(
+  "/api/leads/:id",
+  authenticateToken,
+  isMarketingOrAdmin,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      await prisma.lead.delete({ where: { id } });
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete lead" });
     }
-
-    // 3. Build AI Response (Simulated RAG output)
-    let reply =
-      "I'm your MATSOLS advisor. Could you tell me more about your academic goals?";
-
-    if (contextDegrees.length > 0) {
-      reply = `Based on your interest, I found some great options for you: ${contextDegrees.map((d) => d.name).join(", ")}. Would you like to know about the admission requirements for these?`;
-    } else if (
-      content.toLowerCase().includes("visa") ||
-      content.toLowerCase().includes("apply")
-    ) {
-      reply =
-        "Visa requirements depend on your target country (UK, USA, Canada). I can help you prepare the right documents once you select a program.";
-    }
-
-    // 4. Persist and return the bot response
-    const botMessage = await prisma.chatMessage.create({
-      data: { userId, role: "agent", content: reply },
-    });
-
-    res.status(201).json(botMessage);
-  } catch (error) {
-    console.error("Chat Error:", error);
-    res.status(500).json({ error: "Failed to process chat" });
-  }
-});
+  },
+);
 
 // Get chat history for the logged-in user
 app.get("/api/messages", authenticateToken, async (req, res) => {
@@ -298,53 +389,63 @@ app.get("/api/updates", async (req, res) => {
 });
 
 // Create new update
-app.post("/api/updates", authenticateToken, isAdmin, async (req, res) => {
-  const {
-    title,
-    category,
-    date,
-    excerpt,
-    image,
-    isImportant,
-    expiryDate,
-    ctaText,
-    ctaLink,
-  } = req.body;
+app.post(
+  "/api/updates",
+  authenticateToken,
+  isEditorOrAdmin,
+  async (req, res) => {
+    const {
+      title,
+      category,
+      date,
+      excerpt,
+      image,
+      isImportant,
+      expiryDate,
+      ctaText,
+      ctaLink,
+    } = req.body;
 
-  // Transform empty strings to null for optional fields and handle date parsing
-  const formattedExpiry = expiryDate ? new Date(expiryDate) : null;
+    // Transform empty strings to null for optional fields and handle date parsing
+    const formattedExpiry = expiryDate ? new Date(expiryDate) : null;
 
-  try {
-    const update = await prisma.update.create({
-      data: {
-        title,
-        category,
-        date,
-        excerpt,
-        image: image || null,
-        isImportant: isImportant || false,
-        expiryDate: formattedExpiry,
-        ctaText: ctaText || null,
-        ctaLink: ctaLink || null,
-      },
-    });
-    res.status(201).json(update);
-  } catch (error) {
-    console.error("Failed to create update:", error);
-    res.status(500).json({ error: "Failed to create update" });
-  }
-});
+    try {
+      const update = await prisma.update.create({
+        data: {
+          title,
+          category,
+          date,
+          excerpt,
+          image: image || null,
+          isImportant: isImportant || false,
+          expiryDate: formattedExpiry,
+          ctaText: ctaText || null,
+          ctaLink: ctaLink || null,
+        },
+      });
+      res.status(201).json(update);
+    } catch (error) {
+      console.error("Failed to create update:", error);
+      res.status(500).json({ error: "Failed to create update" });
+    }
+  },
+);
 
 // Delete update
-app.delete("/api/updates/:id", authenticateToken, isAdmin, async (req, res) => {
-  const { id } = req.params;
-  try {
-    await prisma.update.delete({ where: { id } });
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete update" });
-  }
-});
+app.delete(
+  "/api/updates/:id",
+  authenticateToken,
+  isEditorOrAdmin,
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      await prisma.update.delete({ where: { id } });
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete update" });
+    }
+  },
+);
 
 // --- University Endpoints ---
 
@@ -361,48 +462,53 @@ app.get("/api/universities", async (req, res) => {
 });
 
 // Create new university
-app.post("/api/universities", authenticateToken, isAdmin, async (req, res) => {
-  const {
-    name,
-    country,
-    image,
-    websiteUrl,
-    description,
-    about,
-    campusLife,
-    admissionCriteria,
-    rank,
-    location,
-    status,
-  } = req.body;
-  try {
-    const uni = await prisma.university.create({
-      data: {
-        name,
-        country,
-        image,
-        websiteUrl,
-        description,
-        about,
-        campusLife,
-        admissionCriteria,
-        rank,
-        location,
-        status: status || "Active",
-      },
-    });
-    res.status(201).json(uni);
-  } catch (error) {
-    console.error("Create University Error:", error);
-    res.status(500).json({ error: "Failed to create university" });
-  }
-});
+app.post(
+  "/api/universities",
+  authenticateToken,
+  isEditorOrAdmin,
+  async (req, res) => {
+    const {
+      name,
+      country,
+      image,
+      websiteUrl,
+      description,
+      about,
+      campusLife,
+      admissionCriteria,
+      rank,
+      location,
+      status,
+    } = req.body;
+    try {
+      const uni = await prisma.university.create({
+        data: {
+          name,
+          country,
+          image,
+          websiteUrl,
+          description,
+          about,
+          campusLife,
+          admissionCriteria,
+          rank,
+          location,
+          status: status || "Active",
+        },
+      });
+      res.status(201).json(uni);
+    } catch (error) {
+      console.error("Create University Error:", error);
+      res.status(500).json({ error: "Failed to create university" });
+    }
+  },
+);
 
 // Update university
 app.put(
   "/api/universities/:id",
   authenticateToken,
-  isAdmin,
+  isEditorOrAdmin,
   async (req, res) => {
     const { id } = req.params;
     const {
@@ -447,7 +553,7 @@ app.put(
 app.delete(
   "/api/universities/:id",
   authenticateToken,
-  isAdmin,
+  isEditorOrAdmin,
   async (req, res) => {
     const { id } = req.params;
     try {
@@ -691,6 +797,100 @@ app.put("/api/admin/documents/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// --- Admin User Management Endpoints ---
+
+// Get all users (Admin only)
+app.get("/api/admin/users", authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// Create new admin/staff user (Admin only)
+app.post("/api/admin/users", authenticateToken, isAdmin, async (req, res) => {
+  const { email, fullName, role, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password required" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        fullName,
+        role: role || "EDITOR", // Default to EDITOR for staff creation
+        password: hashedPassword,
+      },
+    });
+    delete user.password;
+    res.status(201).json(user);
+  } catch (error) {
+    console.error("User Creation Error:", error);
+    if (error.code === "P2002") {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+    res.status(500).json({ error: "Failed to create user" });
+  }
+});
+
+// Update user role (Admin only)
+app.put(
+  "/api/admin/users/:id/role",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
+    const { role } = req.body;
+    try {
+      const user = await prisma.user.update({
+        where: { id: req.params.id },
+        data: { role },
+        select: { id: true, role: true, email: true, fullName: true },
+      });
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update role" });
+    }
+  },
+);
+
+// Delete user (Admin only)
+app.delete(
+  "/api/admin/users/:id",
+  authenticateToken,
+  isAdmin,
+  async (req, res) => {
+    try {
+      // Prevent admin from deleting themselves
+      if (req.params.id === req.user.id) {
+        return res
+          .status(400)
+          .json({ error: "You cannot delete your own account." });
+      }
+
+      await prisma.user.delete({
+        where: { id: req.params.id },
+      });
+      res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Delete User Error:", error);
+      res.status(500).json({ error: "Failed to delete user" });
+    }
+  },
+);
+
 // --- Student Profile & Dashboard Endpoints ---
 
 app.get("/api/profile", authenticateToken, async (req, res) => {
@@ -825,6 +1025,102 @@ app.post("/api/settings", authenticateToken, async (req, res) => {
   } catch (error) {
     console.error("Settings Update Error:", error);
     res.status(500).json({ error: "Failed to update settings" });
+  }
+});
+
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  : null;
+
+// --- AI Chatbot Endpoint ---
+app.post("/api/chat", async (req, res) => {
+  if (!openai) {
+    return res.status(503).json({ error: "OpenAI API not configured" });
+  }
+
+  const { content, history = [] } = req.body;
+  if (!content)
+    return res.status(400).json({ error: "Message content required" });
+
+  // Optional Authentication for persistence
+  let userId = null;
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      userId = decoded.id;
+    } catch (err) {
+      console.warn("Chat route: Invalid token provided, proceeding as guest");
+    }
+  }
+
+  try {
+    // 1. Persist user message if logged in
+    if (userId) {
+      await prisma.chatMessage.create({
+        data: { userId, role: "user", content },
+      });
+    }
+
+    const systemPrompt = `You are the MATSOLS AI Study Abroad Advisor.
+Your job is to assist students with their study abroad inquiries in a professional, transparent manner.
+You have access to highly accurate internal knowledge regarding SBM Istanbul. For SBM questions, use the data below.
+For all other universities, you must provide general MATSOLS guidance and encourage the student to book a free consultation or speak with a senior counselor.
+
+SBM ISTANBUL KNOWLEDGE BASE:
+- Full Student Journey (10 Steps): 1. Inquiry -> 2. Application (Pay $250 non-refundable reg fee) -> 3. Documents -> 4. Review -> 5. Offer -> 6. Tuition ($300 OTHM body fee if applicable) -> 7. Visa -> 8. Travel & Enrollment.
+- Minimum Bank Balance Requirement: $6,500 (3 months statement).
+- Equivalency (Denklik) is required for those applying from outside Turkey (50% min academic performance).
+- Tuition Fees (Undergrad): $5000 International, $4000 EU, $3000 Turkish (UOW Partnership). Top-up: up to $6000 Int.
+- Tuition Fees (Postgrad): $7500 Int, $6500 EU, $5000 Turkish. MBA Int: $8500.
+- OTHM Fees range from $1500 (Foundation Turkish) to $5000 (Level 5 Int). NCUK ranges up to $7500 (Int).
+- Visa Timeline: 4-6 weeks (decision by Embassy entirely). Applied in-person.
+- Intakes: UOW (Jan, May, Sep), OTHM (Jan, Apr, Jul, Oct), NCUK (Jan, Sep).
+- English accepted: IELTS, Pearson, TOEFL, or MOI (Medium of Instruction). No strict score minimum published.
+
+RESPONSE GUIDELINES:
+- **Do not guarantee visas or jobs.**
+- **Do not provide unofficial financial figures.** Say "For the most updated fees, check the website or contact admissions" if unsure, but you can quote the exact figures listed above for SBM.
+- **Tone**: Professional, helpful, encouraging.
+- If asked about non-education topics (weather, coding, writing poems), politely refuse: "I am a MATSOLS Study Abroad AI Advisor and can only help with educational inquiries."
+- When appropriate, ask lead conversion questions sparingly: "Which intake are you applying for?", "Do you have the required bank balance ready?", or "Do you have an English certificate?"
+`;
+
+    const formattedHistory = history.map((msg) => ({
+      role: msg.sender === "user" || msg.role === "user" ? "user" : "assistant",
+      content: msg.text || msg.content,
+    }));
+
+    const messages = [
+      { role: "system", content: systemPrompt },
+      ...formattedHistory,
+      { role: "user", content },
+    ];
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: messages,
+      max_tokens: 350,
+      temperature: 0.7,
+    });
+
+    const botReply = response.choices[0].message.content;
+
+    // 2. Persist bot reply if logged in
+    if (userId) {
+      await prisma.chatMessage.create({
+        data: { userId, role: "agent", content: botReply },
+      });
+    }
+
+    res.json({ content: botReply });
+  } catch (error) {
+    console.error("AI Chat Error:", error);
+    res.status(500).json({ error: "Failed to generate AI response" });
   }
 });
 

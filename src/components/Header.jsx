@@ -82,7 +82,7 @@ const Header = () => {
             <Link to="/universities" className="nav-link">Universities</Link>
             <Link to="/degrees" className="nav-link">Degrees</Link>
             <Link to="/faqs" className="nav-link">FAQs</Link>
-            <a href="#" className="nav-link">Contact</a>
+            <Link to="/free-consultation" className="nav-link">Contact</Link>
           </div>
 
           <div className="nav-actions">
@@ -158,7 +158,7 @@ const Header = () => {
                 <Link to="/universities" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Universities</Link>
                 <Link to="/degrees" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Degrees</Link>
                 <Link to="/faqs" className="mobile-link" onClick={() => setIsMenuOpen(false)}>FAQs</Link>
-                <a href="#" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Contact</a>
+                <Link to="/free-consultation" className="mobile-link" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
                 <div className="mobile-actions">
                   <Link to="/free-consultation" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }} onClick={() => setIsMenuOpen(false)}>Free Consultation</Link>

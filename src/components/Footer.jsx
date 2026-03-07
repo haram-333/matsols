@@ -27,18 +27,18 @@ const Footer = () => {
           <div className="footer-col">
             <h4>Destinations</h4>
             <nav className="footer-links">
-              <a href="#">Study in UK</a>
-              <a href="#">Study in USA</a>
-              <a href="#">Study in Canada</a>
-              <a href="#">Study in Australia</a>
+              <Link to="/universities">Study in UK</Link>
+              <Link to="/universities">Study in USA</Link>
+              <Link to="/universities">Study in Canada</Link>
+              <Link to="/universities">Study in Australia</Link>
             </nav>
           </div>
           <div className="footer-col">
             <h4>Services</h4>
             <nav className="footer-links">
-              <a href="#">Admissions</a>
-              <a href="#">Visa Support</a>
-              <a href="#">Scholarships</a>
+              <Link to="/what-we-offer/university-admissions">Admissions</Link>
+              <Link to="/what-we-offer/visa-support">Visa Support</Link>
+              <Link to="/degrees">Scholarships</Link>
               <Link to="/admin">Staff Portal</Link>
             </nav>
           </div>

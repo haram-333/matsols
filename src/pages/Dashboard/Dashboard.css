@@ -757,6 +757,9 @@
   display: flex;
   flex-direction: column;
   background: #fff;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
 }
 
 .chat-header {
@@ -765,6 +768,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .active-contact {
@@ -796,6 +800,8 @@
   flex-direction: column;
   gap: 15px;
   background: #fcfcfd;
+  min-height: 0;
+  scroll-behavior: smooth;
 }
 
 .chat-bubble {
@@ -806,6 +812,12 @@
   position: relative;
   line-height: 1.6;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  animation: messagePopDash 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes messagePopDash {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .chat-bubble-container {
@@ -846,6 +858,36 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+/* Dashboard Typing Indicator */
+.typing-indicator-dash {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px !important;
+  background: white !important;
+  border: 1px solid #eef0f5 !important;
+  border-radius: 18px !important;
+  border-bottom-left-radius: 4px !important;
+  width: fit-content;
+}
+
+.typing-indicator-dash .dot {
+  width: 8px;
+  height: 8px;
+  background: #ff863c; /* Dashboard primary orange */
+  border-radius: 50%;
+  animation: typingBounceDash 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator-dash .dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator-dash .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounceDash {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
 .chat-input-area {
   padding: 20px;
   display: flex;
@@ -853,6 +895,7 @@
   align-items: center;
   background: white;
   border-top: 1px solid #f1f5f9;
+  flex-shrink: 0;
 }
 
 .chat-input {

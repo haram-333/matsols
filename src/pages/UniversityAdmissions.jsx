@@ -38,9 +38,9 @@ function UniversityAdmissions() {
           entry.target.classList.add("in-view");
         }
       });
-    }, { 
+    }, {
       threshold: 0.1,
-      rootMargin: "0px 0px -50px 0px" 
+      rootMargin: "0px 0px -50px 0px"
     });
 
     document.querySelectorAll('.anim-hidden').forEach((el) => observer.observe(el));
@@ -78,7 +78,7 @@ function UniversityAdmissions() {
 
       {/* ========== HERO SECTION ========== */}
       <section className="ua-hero">
-        <div className="ua-hero__bg" style={{backgroundImage: `url(${heroBg})`}}></div>
+        <div className="ua-hero__bg" style={{ backgroundImage: `url(${heroBg})` }}></div>
         <div className="ua-hero__overlay"></div>
         <div className="ua-hero__inner">
           <h1 className="ua-hero__title anim-hidden anim-up">
@@ -86,7 +86,7 @@ function UniversityAdmissions() {
             <span className="ua-hero__highlight">Without the Stress</span>
           </h1>
           <p className="ua-hero__desc anim-hidden anim-up delay-100">
-            Personalized guidance to match you with top universities around the world. 
+            Personalized guidance to match you with top universities around the world.
             We handle the research, strategy, and paperwork, so you can focus on your future.
           </p>
           <a href="#what-we-do" className="ua-hero__btn anim-hidden anim-up delay-200">
@@ -295,8 +295,8 @@ function UniversityAdmissions() {
 
           <div className="ua-faq__container">
             {faqData.map((item, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`ua-faq-item ${faqActive === idx ? 'active' : ''}`}
                 onClick={() => setFaqActive(faqActive === idx ? null : idx)}
               >
@@ -320,9 +320,9 @@ function UniversityAdmissions() {
         <div className="container ua-cta__inner">
           <h2 className="anim-hidden anim-up">Ready to Find Your Perfect University?</h2>
           <p className="anim-hidden anim-up delay-100">Book a free consultation today and take the first step toward your dream education.</p>
-          <a href="#" className="ua-cta__btn anim-hidden anim-up delay-200">
+          <Link to="/free-consultation" className="ua-cta__btn anim-hidden anim-up delay-200">
             Schedule Free Consultation
-          </a>
+          </Link>
         </div>
       </section>
 

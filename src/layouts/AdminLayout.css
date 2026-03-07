@@ -257,6 +257,10 @@
     align-items: flex-start;
     gap: 20px;
   }
+
+  .admin-form-row {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* Admin Modal Styles */
@@ -349,4 +353,33 @@
   background: #f8fafc;
   border-color: #cbd5e1;
   color: #0f172a;
+}
+
+/* New Responsive Utilities */
+.admin-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.admin-table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .admin-modal {
+    max-height: 100vh;
+    border-radius: 0;
+    max-width: 100%;
+  }
+  
+  .modal-header, .modal-body, .modal-actions {
+    padding: 15px !important;
+  }
+
+  .admin-main {
+    padding: 20px;
+  }
 }

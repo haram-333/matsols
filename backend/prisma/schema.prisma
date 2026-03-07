@@ -31,6 +31,9 @@ model Degree {
   faqs                  String?
   slug                  String   @unique
   level                 String?
+  universityId          String?
+  university            University? @relation(fields: [universityId], references: [id])
+  additionalInfo        String?    // JSON string for extra details
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
@@ -100,7 +103,7 @@ model DashboardAction {
   link        String?
   isCompleted Boolean  @default(false)
   priority    String   @default("med") // high, med, low
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @now()
   updatedAt   DateTime @updatedAt
 }
 
@@ -142,6 +145,8 @@ model University {
   rank        String?
   location    String?
   status     String   @default("Active") // Active, Under Review, Inactive
+  degrees    Degree[]
+  additionalInfo String?    // JSON string for extra details
   applications Application[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -37,7 +37,7 @@ const FAQItem = ({ item, isActive, onClick, idx }) => {
           {item.q}
           <iconify-icon icon={isActive ? "ri:subtract-line" : "ri:add-line"}></iconify-icon>
         </div>
-        <div 
+        <div
           className="vs-faq-answer-wrapper"
           style={{
             height: isActive ? (answerRef.current?.scrollHeight || 'auto') : 0,
@@ -103,7 +103,7 @@ function VisaSupport() {
 
       {/* HERO SECTION */}
       <section className="vs-hero">
-        <div className="vs-hero__bg" style={{backgroundImage: `url(${heroBg})`}}></div>
+        <div className="vs-hero__bg" style={{ backgroundImage: `url(${heroBg})` }}></div>
         <div className="vs-hero__overlay"></div>
         <div className="vs-hero__content">
           <h1 className="vs-hero__title anim-hidden anim-up">
@@ -114,8 +114,8 @@ function VisaSupport() {
             Advisory, MATSOLS & Dokumentations Guidance
           </p>
           <div className="vs-hero__actions anim-hidden anim-up delay-200">
-            <button className="btn btn-primary">Our Programs</button>
-            <button className="btn btn-outline-white">Join Us</button>
+            <Link to="/degrees" className="btn btn-primary">Our Programs</Link>
+            <Link to="/register" className="btn btn-outline-white">Join Us</Link>
           </div>
         </div>
       </section>
@@ -199,7 +199,7 @@ function VisaSupport() {
               <div key={i} className="vs-process-step anim-hidden anim-up">
                 <div className="vs-p-icon">
                   <div className="vs-p-circle">
-                    <iconify-icon icon={s.icon} width="32" style={{color: 'var(--primary-orange)'}}></iconify-icon>
+                    <iconify-icon icon={s.icon} width="32" style={{ color: 'var(--primary-orange)' }}></iconify-icon>
                   </div>
                 </div>
                 <span>{s.step}</span>
@@ -212,7 +212,7 @@ function VisaSupport() {
       {/* PRIVACY */}
       <section className="vs-privacy">
         <div className="vs-container anim-hidden anim-up">
-          <iconify-icon icon="ri:shield-check-line" width="48" style={{color: 'var(--primary-orange)'}}></iconify-icon>
+          <iconify-icon icon="ri:shield-check-line" width="48" style={{ color: 'var(--primary-orange)' }}></iconify-icon>
           <h2>Your Privacy Is Our Priority</h2>
           <p>We handle all student data with banking-grade security and full confidentiality. Your dreams are safe with us.</p>
           <div className="vs-privacy__meta">
@@ -228,22 +228,22 @@ function VisaSupport() {
         <div className="vs-container">
           <h2 className="vs-section-title anim-hidden anim-up">Visa Success Stories</h2>
           <div className="vs-stories__grid">
-             {[
-               { name: "John D.", uni: "Manchester Met", text: "Got my visa in just 2 weeks! The documentation team was flawless." },
-               { name: "Anita M.", uni: "RMIT University", text: "Their mock interview saved me. I felt so confident in front of the officer." },
-               { name: "Sam K.", uni: "Malta Hub", text: "Complex case handled with ease. Truly grateful for their professional support." }
-             ].map((story, i) => (
-               <div key={i} className="vs-story-card anim-hidden anim-pop">
-                 <p>"{story.text}"</p>
-                 <div className="vs-s-info">
-                   <img src={story1} alt={story.name} />
-                   <div>
-                     <h4>{story.name}</h4>
-                     <span>{story.uni}</span>
-                   </div>
-                 </div>
-               </div>
-             ))}
+            {[
+              { name: "John D.", uni: "Manchester Met", text: "Got my visa in just 2 weeks! The documentation team was flawless." },
+              { name: "Anita M.", uni: "RMIT University", text: "Their mock interview saved me. I felt so confident in front of the officer." },
+              { name: "Sam K.", uni: "Malta Hub", text: "Complex case handled with ease. Truly grateful for their professional support." }
+            ].map((story, i) => (
+              <div key={i} className="vs-story-card anim-hidden anim-pop">
+                <p>"{story.text}"</p>
+                <div className="vs-s-info">
+                  <img src={story1} alt={story.name} />
+                  <div>
+                    <h4>{story.name}</h4>
+                    <span>{story.uni}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -251,18 +251,18 @@ function VisaSupport() {
       {/* FAQ Accordion */}
       <section className="vs-faq">
         <div className="vs-container">
-           <h2 className="vs-section-title anim-hidden anim-up" style={{color: 'white'}}>Visa FAQ</h2>
-           <div className="vs-faq__list">
-             {faqData.map((f, i) => (
-               <FAQItem 
-                 key={i} 
-                 item={f} 
-                 idx={i}
-                 isActive={faqActive === i} 
-                 onClick={() => setFaqActive(faqActive === i ? null : i)} 
-               />
-             ))}
-           </div>
+          <h2 className="vs-section-title anim-hidden anim-up" style={{ color: 'white' }}>Visa FAQ</h2>
+          <div className="vs-faq__list">
+            {faqData.map((f, i) => (
+              <FAQItem
+                key={i}
+                item={f}
+                idx={i}
+                isActive={faqActive === i}
+                onClick={() => setFaqActive(faqActive === i ? null : i)}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -273,12 +273,12 @@ function VisaSupport() {
             <img src={passportImg} alt="Students" />
           </div>
           <div className="vs-cta__content anim-hidden anim-right">
-             <h2>Ready to Secure Your Visa?</h2>
-             <p>Our team of senior consultants is ready to evaluate your case and prepare your documentation for 100% success.</p>
-             <div className="vs-cta__btns">
-               <button className="btn btn-dark">Appy for Research</button>
-               <button className="btn btn-outline-white">Join Us</button>
-             </div>
+            <h2>Ready to Secure Your Visa?</h2>
+            <p>Our team of senior consultants is ready to evaluate your case and prepare your documentation for 100% success.</p>
+            <div className="vs-cta__btns">
+              <Link to="/register" className="btn btn-dark">Apply for Research</Link>
+              <Link to="/register" className="btn btn-outline-white">Join Us</Link>
+            </div>
           </div>
         </div>
       </section>

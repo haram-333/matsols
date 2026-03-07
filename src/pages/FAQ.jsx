@@ -47,7 +47,7 @@ const FAQAccordion = ({ question, answer, isActive, onClick, idx }) => {
           <iconify-icon icon={isActive ? "ri:subtract-fill" : "ri:add-fill"}></iconify-icon>
         </div>
       </div>
-      <div 
+      <div
         className="faq-answer-wrapper"
         style={{ height: isActive ? contentRef.current?.scrollHeight : 0 }}
       >
@@ -108,10 +108,10 @@ function FAQ() {
             </p>
             <div className="faq-search-wrap anim-hidden anim-up">
               <div className="faq-search">
-                  <input type="text" placeholder="Search for answers (e.g., visa requirements)" />
-                  <button className="btn-search">
-                      <iconify-icon icon="ri:search-line"></iconify-icon>
-                  </button>
+                <input type="text" placeholder="Search for answers (e.g., visa requirements)" />
+                <button className="btn-search">
+                  <iconify-icon icon="ri:search-line"></iconify-icon>
+                </button>
               </div>
             </div>
             <button className="btn-secondary anim-hidden anim-up">Explore Most View Questions</button>
@@ -124,8 +124,8 @@ function FAQ() {
         <div className="container">
           <div className="faq-categories__scroll anim-hidden anim-up">
             {faqCategories.map((cat) => (
-              <button 
-                key={cat} 
+              <button
+                key={cat}
                 className={`cat-btn ${activeCategory === cat ? "active" : ""}`}
                 onClick={() => setActiveCategory(cat)}
               >
@@ -141,7 +141,7 @@ function FAQ() {
         <div className="container">
           <div className="faq-accordion-container">
             {faqQuestions.map((item, idx) => (
-              <FAQAccordion 
+              <FAQAccordion
                 key={idx}
                 idx={idx}
                 question={item.q}
@@ -152,90 +152,90 @@ function FAQ() {
             ))}
           </div>
           <div className="faq-bottom-cta anim-hidden anim-up">
-              <h2>Still Have Questions?</h2>
-              <p>Can't find the answer you're looking for? Let our experts help you personally.</p>
-              <button className="btn btn-primary">Contact Our Advisor Support Today</button>
-              <div className="faq-cta-links">
-                  <a href="#">Terms & Conditions</a>
-                  <span>|</span>
-                  <a href="#">Privacy Policy</a>
-              </div>
+            <h2>Still Have Questions?</h2>
+            <p>Can't find the answer you're looking for? Let our experts help you personally.</p>
+            <Link to="/free-consultation" className="btn btn-primary">Contact Our Advisor Support Today</Link>
+            <div className="faq-cta-links">
+              <a href="#">Terms & Conditions</a>
+              <span>|</span>
+              <a href="#">Privacy Policy</a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* POPULAR TOPICS */}
       <section className="faq-topics">
-          <div className="container">
-              <div className="faq-topics__header anim-hidden anim-up">
-                  <h2>Popular Topics</h2>
-                  <p>Choose an area and let us guide you further.</p>
-              </div>
-              <div className="faq-topics__grid">
-                  {[
-                      { icon: "ri:hotel-line", title: "University Selector", desc: "Guide to choosing colleges" },
-                      { icon: "ri:file-list-3-line", title: "Admissions Process", desc: "How entries works" },
-                      { icon: "ri:passport-line", title: "Visa Requirements", desc: "Documents & Interview" },
-                      { icon: "ri:money-dollar-circle-line", title: "Financial Aid", desc: "Costs & Loans" },
-                      { icon: "ri:global-line", title: "English Tests", desc: "IELTS, TOEFL & more" },
-                      { icon: "ri:home-gear-line", title: "Accommodation", desc: "Finding places to stay" }
-                  ].map((topic, i) => (
-                      <div key={i} className="topic-card anim-hidden anim-pop">
-                          <div className="topic-icon">
-                              <iconify-icon icon={topic.icon} width="24"></iconify-icon>
-                          </div>
-                          <h3>{topic.title}</h3>
-                          <p>{topic.desc}</p>
-                      </div>
-                  ))}
-              </div>
+        <div className="container">
+          <div className="faq-topics__header anim-hidden anim-up">
+            <h2>Popular Topics</h2>
+            <p>Choose an area and let us guide you further.</p>
           </div>
+          <div className="faq-topics__grid">
+            {[
+              { icon: "ri:hotel-line", title: "University Selector", desc: "Guide to choosing colleges" },
+              { icon: "ri:file-list-3-line", title: "Admissions Process", desc: "How entries works" },
+              { icon: "ri:passport-line", title: "Visa Requirements", desc: "Documents & Interview" },
+              { icon: "ri:money-dollar-circle-line", title: "Financial Aid", desc: "Costs & Loans" },
+              { icon: "ri:global-line", title: "English Tests", desc: "IELTS, TOEFL & more" },
+              { icon: "ri:home-gear-line", title: "Accommodation", desc: "Finding places to stay" }
+            ].map((topic, i) => (
+              <div key={i} className="topic-card anim-hidden anim-pop">
+                <div className="topic-icon">
+                  <iconify-icon icon={topic.icon} width="24"></iconify-icon>
+                </div>
+                <h3>{topic.title}</h3>
+                <p>{topic.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* RELATED RESOURCES */}
       <section className="faq-resources">
-          <div className="container">
-              <div className="faq-resources__header anim-hidden anim-up">
-                  <h2>Related Resources</h2>
-              </div>
-              <div className="faq-resources__grid">
-                  {[
-                      { icon: "ri:service-line", title: "Services Overview", link: "View Services" },
-                      { icon: "ri:earth-line", title: "Study Destinations", link: "View Destinations" },
-                      { icon: "ri:mail-line", title: "Contact Us", link: "Contact support" }
-                  ].map((res, i) => (
-                      <div key={i} className="resource-card anim-hidden anim-up">
-                          <div className="res-icon">
-                              <iconify-icon icon={res.icon} width="24"></iconify-icon>
-                          </div>
-                          <div className="res-info">
-                              <h3>{res.title}</h3>
-                              <a href="#">{res.link} &rsaquo;</a>
-                          </div>
-                      </div>
-                  ))}
-              </div>
+        <div className="container">
+          <div className="faq-resources__header anim-hidden anim-up">
+            <h2>Related Resources</h2>
           </div>
+          <div className="faq-resources__grid">
+            {[
+              { icon: "ri:service-line", title: "Services Overview", link: "View Services" },
+              { icon: "ri:earth-line", title: "Study Destinations", link: "View Destinations" },
+              { icon: "ri:mail-line", title: "Contact Us", link: "Contact support" }
+            ].map((res, i) => (
+              <div key={i} className="resource-card anim-hidden anim-up">
+                <div className="res-icon">
+                  <iconify-icon icon={res.icon} width="24"></iconify-icon>
+                </div>
+                <div className="res-info">
+                  <h3>{res.title}</h3>
+                  <Link to={res.title === 'Services Overview' ? '/what-we-offer' : res.title === 'Study Destinations' ? '/universities' : '/free-consultation'}>{res.link} &rsaquo;</Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* FOOTER CTA */}
       <section className="faq-final-talk">
-          <div className="container">
-              <div className="final-talk-box">
-                  <div className="talk-content">
-                      <h2>Still have questions? Let's talk.</h2>
-                      <p>Get a personalized assessment from our education experts.</p>
-                      <div className="talk-meta">
-                          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=100&q=80" alt="Advisor" />
-                          <p>Ready to secure your future today</p>
-                      </div>
-                  </div>
-                  <div className="talk-actions">
-                      <button className="btn btn-dark">Analyze your success with us today</button>
-                      <button className="btn btn-outline">Contact us</button>
-                  </div>
+        <div className="container">
+          <div className="final-talk-box">
+            <div className="talk-content">
+              <h2>Still have questions? Let's talk.</h2>
+              <p>Get a personalized assessment from our education experts.</p>
+              <div className="talk-meta">
+                <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=100&q=80" alt="Advisor" />
+                <p>Ready to secure your future today</p>
               </div>
+            </div>
+            <div className="talk-actions">
+              <Link to="/free-consultation" className="btn btn-dark">Analyze your success with us today</Link>
+              <Link to="/free-consultation" className="btn btn-outline">Contact us</Link>
+            </div>
           </div>
+        </div>
       </section>
 
       <Footer />

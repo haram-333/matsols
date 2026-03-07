@@ -9,10 +9,10 @@ const FreeConsultation = () => {
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [messages, setMessages] = useState([
-        { 
-            id: 1, 
-            sender: "bot", 
-            text: "Hello! I'm your MATSOLS AI Advisor. I can help you with university matching, visa requirements, or general study abroad questions. How can I assist you today?" 
+        {
+            id: 1,
+            sender: "bot",
+            text: "Hello! I'm your MATSOLS AI Advisor. I can help you with university matching, visa requirements, or general study abroad questions. How can I assist you today?"
         }
     ]);
 
@@ -33,8 +33,9 @@ const FreeConsultation = () => {
         setIsTyping(true);
 
         try {
-            // Get Real/Simulated Response from Backend
-            const data = await apiService.getAIChatResponse(text, sessionId);
+            // Get Real Response from Backend (passing history for context)
+            const historyToPass = [...messages];
+            const data = await apiService.getAIChatResponse(text, historyToPass);
             const botMsg = { id: Date.now() + 1, sender: "bot", text: data.content || data.reply };
             setMessages(prev => [...prev, botMsg]);
         } catch (error) {
@@ -51,25 +52,6 @@ const FreeConsultation = () => {
             e.preventDefault();
             handleSend();
         }
-    };
-
-    // Simple Rule-Based Response Logic (Placeholder for Real AI)
-    const getBotResponse = (input) => {
-        const lowerInput = input.toLowerCase();
-        
-        if (lowerInput.includes("university") || lowerInput.includes("college")) {
-            return "We partner with over 100+ universities globally. Could you tell me your preferred destination (e.g., UK, USA, Canada) and your current GPA/grades?";
-        }
-        if (lowerInput.includes("visa")) {
-            return "Visa requirements vary by country. For example, the UK requires a Tier 4 Student Visa. Are you looking for information on a specific country's visa process?";
-        }
-        if (lowerInput.includes("scholarship") || lowerInput.includes("cost") || lowerInput.includes("fee")) {
-            return "We can definitely help with scholarships! Many of our partner universities offer merit-based aid. What is your intended major?";
-        }
-        if (lowerInput.includes("agent") || lowerInput.includes("human") || lowerInput.includes("contact")) {
-            return "I can connect you with a senior counselor. Please provide your email or phone number, and someone from our team will reach out within 24 hours.";
-        }
-        return "That's a great question. To give you the most accurate advice, could you tell me a bit more about your academic background?";
     };
 
     return (
@@ -90,13 +72,13 @@ const FreeConsultation = () => {
                     MATSOLS AI Advisor
                 </Link>
                 <div className="header-controls">
-                    <button 
-                        className="btn-close" 
-                        onClick={() => window.location.href = '/'} 
+                    <button
+                        className="btn-close"
+                        onClick={() => window.location.href = '/'}
                         title="Close Chat"
-                        style={{cursor: 'pointer'}}
+                        style={{ cursor: 'pointer' }}
                     >
-                        <iconify-icon icon="ri:close-line" style={{fontSize: '24px'}}></iconify-icon>
+                        <iconify-icon icon="ri:close-line" style={{ fontSize: '24px' }}></iconify-icon>
                     </button>
                 </div>
             </header>
@@ -114,7 +96,7 @@ const FreeConsultation = () => {
                             </div>
                         </div>
                     ))}
-                    
+
                     {isTyping && (
                         <div className="typing-indicator">
                             <div className="dot"></div>
@@ -137,7 +119,7 @@ const FreeConsultation = () => {
                 {/* Input Area */}
                 <div className="chat-input-area">
                     <div className="chat-input-wrapper">
-                        <input 
+                        <input
                             className="chat-input"
                             placeholder="Type your question here..."
                             value={input}
@@ -145,12 +127,12 @@ const FreeConsultation = () => {
                             onKeyDown={handleKeyDown}
                         />
                     </div>
-                    <button 
-                        className="btn-send" 
-                        onClick={() => handleSend()} 
+                    <button
+                        className="btn-send"
+                        onClick={() => handleSend()}
                         disabled={!input.trim()}
                     >
-                        <iconify-icon icon="ri:send-plane-fill" style={{fontSize: '20px'}}></iconify-icon>
+                        <iconify-icon icon="ri:send-plane-fill" style={{ fontSize: '20px' }}></iconify-icon>
                     </button>
                 </div>
             </div>

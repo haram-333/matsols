@@ -28,162 +28,180 @@ const UniversityDetail = () => {
     }, [id, navigate]);
 
     if (loading) return (
-        <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f172a' }}>
-            <iconify-icon icon="line-md:loading-twotone-loop" style={{ fontSize: '64px', color: '#06b6d4' }}></iconify-icon>
+        <div className="fuckin-loader-overlay">
+            <div className="fuckin-loader"></div>
+            <div className="loader-text">Loading Excellence...</div>
         </div>
     );
 
     if (!university) return null;
 
     return (
-        <div className="uni-discovery-page" style={{ background: '#f8fafc' }}>
-            <Header />
+        <div className="export-wrapper">
+            <div className="uni-discovery-page uni-detail-page" style={{ overflowX: 'hidden', paddingTop: 0 }}>
+                <Header />
 
-            <div className="detail-hero-section" style={{
-                background: `linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95)), url(${university.image || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=1080'})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                padding: '120px 0 60px',
-                color: 'white'
-            }}>
-                <div className="uni-container">
-                    <Link to="/universities" style={{ color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '30px', textDecoration: 'none', fontWeight: '600' }}>
-                        <iconify-icon icon="ri:arrow-left-line"></iconify-icon>
-                        Back to Institutions
-                    </Link>
-                    <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-end' }}>
-                        <div style={{ width: '180px', height: '180px', borderRadius: '24px', overflow: 'hidden', border: '4px solid rgba(255,255,255,0.1)', background: 'white' }}>
-                            <img src={university.image || 'https://placehold.co/180x180?text=Logo'} alt={university.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div className="detail-hero-section" style={{
+                    backgroundImage: `url(${university.image || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=1080'})`
+                }}>
+                    <div className="fluid-hero-container" style={{ position: 'relative', zIndex: 10 }}>
+                        <div className="back-link-wrapper">
+                            <Link to="/universities" className="back-link-modern">
+                                <iconify-icon icon="ri:arrow-left-s-line"></iconify-icon>
+                                <span>Back to Institutions</span>
+                            </Link>
                         </div>
-                        <div style={{ paddingBottom: '10px' }}>
-                            <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-                                <span style={{ background: 'rgba(6,182,212,0.2)', color: '#06b6d4', padding: '6px 16px', borderRadius: '100px', fontSize: '14px', fontWeight: '700', border: '1px solid rgba(6,182,212,0.3)' }}>
-                                    {university.country}
-                                </span>
-                                {university.rank && (
-                                    <span style={{ background: 'rgba(16,185,129,0.2)', color: '#10b981', padding: '6px 16px', borderRadius: '100px', fontSize: '14px', fontWeight: '700', border: '1px solid rgba(16,185,129,0.3)' }}>
-                                        World Rank {university.rank}
+
+                        <div className="detail-hero-content">
+                            <div className="detail-logo-wrapper">
+                                <img src={university.image || 'https://placehold.co/180x180?text=Logo'} alt={university.name} />
+                            </div>
+                            <div className="detail-hero-text">
+                                <div className="detail-badges">
+                                    <span className="badge-country">
+                                        <iconify-icon icon="ri:map-pin-user-line"></iconify-icon>
+                                        {university.country}
                                     </span>
-                                )}
+                                    {university.rank && (
+                                        <span className="badge-rank">
+                                            <iconify-icon icon="ri:trophy-line"></iconify-icon>
+                                            World Rank #{university.rank}
+                                        </span>
+                                    )}
+                                </div>
+                                <h1 className="detail-title">{university.name}</h1>
+                                <p className="detail-desc">{university.description}</p>
+
+                                <div className="quick-stats-bar">
+                                    <div className="stat-item">
+                                        <span className="stat-label">Institution Type</span>
+                                        <span className="stat-value">Public University</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Est. Year</span>
+                                        <span className="stat-value">1965</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Students</span>
+                                        <span className="stat-value">25,000+</span>
+                                    </div>
+                                </div>
                             </div>
-                            <h1 style={{ fontSize: '48px', fontWeight: '800', fontFamily: 'Playfair Display, serif', marginBottom: '10px' }}>{university.name}</h1>
-                            <p style={{ opacity: 0.7, fontSize: '18px', maxWidth: '700px' }}>{university.description}</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="uni-container" style={{ marginTop: '40px', paddingBottom: '100px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '40px' }}>
-                    <div className="detail-main-content">
-                        <div className="tab-navigation" style={{ display: 'flex', gap: '30px', borderBottom: '1px solid #e2e8f0', marginBottom: '30px' }}>
-                            {['about', 'campus', 'admission'].map(tab => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    style={{
-                                        padding: '15px 0',
-                                        background: 'none',
-                                        border: 'none',
-                                        fontSize: '16px',
-                                        fontWeight: '700',
-                                        color: activeTab === tab ? '#0f172a' : '#94a3b8',
-                                        borderBottom: activeTab === tab ? '3px solid #06b6d4' : '3px solid transparent',
-                                        cursor: 'pointer',
-                                        textTransform: 'capitalize'
-                                    }}
-                                >
-                                    {tab === 'about' ? 'Overview' : tab === 'campus' ? 'Campus Life' : 'Admission'}
-                                </button>
-                            ))}
-                        </div>
+                <div className="uni-container detail-main-container">
+                    <div className="detail-grid-layout">
+                        <div className="detail-main-content">
+                            <div className="tab-navigation">
+                                {[
+                                    { id: 'about', label: 'Overview', icon: 'ri:book-open-line' },
+                                    { id: 'campus', label: 'Campus Life', icon: 'ri:community-line' },
+                                    { id: 'admission', label: 'Admission', icon: 'ri:graduation-cap-line' },
+                                    { id: 'specs', label: 'Key Stats', icon: 'ri:bar-chart-2-line' }
+                                ].map(tab => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                                    >
+                                        <iconify-icon icon={tab.icon} style={{ marginRight: '8px', verticalAlign: 'middle' }}></iconify-icon>
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
 
-                        <div className="tab-content" style={{ background: 'white', padding: '40px', borderRadius: '24px', border: '1px solid #e2e8f0' }}>
-                            {activeTab === 'about' && (
-                                <div className="fade-in">
-                                    <h3 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '20px' }}>About the Institution</h3>
-                                    <p style={{ lineHeight: '1.8', color: '#475569', whiteSpace: 'pre-wrap' }}>
-                                        {university.about || "Detailed overview coming soon. This institution provides world-class education with a focus on global excellence."}
-                                    </p>
-                                </div>
-                            )}
-                            {activeTab === 'campus' && (
-                                <div className="fade-in">
-                                    <h3 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '20px' }}>Campus Experience</h3>
-                                    <p style={{ lineHeight: '1.8', color: '#475569', whiteSpace: 'pre-wrap' }}>
-                                        {university.campusLife || "Campus life details are being updated. Expect a vibrant atmosphere with numerous student clubs, state-of-the-art facilities, and a diverse community."}
-                                    </p>
-                                </div>
-                            )}
-                            {activeTab === 'admission' && (
-                                <div className="fade-in">
-                                    <h3 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '20px' }}>Admission Requirements</h3>
-                                    <p style={{ lineHeight: '1.8', color: '#475569', whiteSpace: 'pre-wrap' }}>
-                                        {university.admissionCriteria || "Admission details vary by program. Generally requires academic transcripts, English proficiency (IELTS/TOEFL), and a Statement of Purpose."}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <aside className="detail-sidebar">
-                        <div style={{ background: '#1e293b', padding: '30px', borderRadius: '24px', color: 'white', position: 'sticky', top: '100px' }}>
-                            <h4 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <iconify-icon icon="ri:send-plane-fill" style={{ color: '#06b6d4' }}></iconify-icon>
-                                Interested?
-                            </h4>
-                            <p style={{ opacity: 0.8, fontSize: '15px', marginBottom: '25px', lineHeight: '1.6' }}>
-                                Start your journey today. Our expert advisors will guide you through the entire application process.
-                            </p>
-                            <Link to="/register" style={{
-                                display: 'block',
-                                background: 'white',
-                                color: '#1e293b',
-                                padding: '16px',
-                                borderRadius: '12px',
-                                textAlign: 'center',
-                                textDecoration: 'none',
-                                fontWeight: '700',
-                                marginBottom: '12px'
-                            }}>
-                                Apply Now
-                            </Link>
-                            <Link to="/free-consultation" style={{
-                                display: 'block',
-                                background: 'rgba(255,255,255,0.1)',
-                                color: 'white',
-                                padding: '16px',
-                                borderRadius: '12px',
-                                textAlign: 'center',
-                                textDecoration: 'none',
-                                fontWeight: '700',
-                                border: '1px solid rgba(255,255,255,0.2)'
-                            }}>
-                                Book Free Consultation
-                            </Link>
-
-                            <hr style={{ margin: '30px 0', opacity: 0.1 }} />
-
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', opacity: 0.8 }}>
-                                    <iconify-icon icon="ri:map-pin-2-fill"></iconify-icon>
-                                    <span style={{ fontSize: '14px' }}>{university.location || university.country}</span>
-                                </div>
-                                {university.websiteUrl && (
-                                    <a href={university.websiteUrl.startsWith('http') ? university.websiteUrl : `https://${university.websiteUrl}`}
-                                        target="_blank" rel="noreferrer"
-                                        style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#06b6d4', textDecoration: 'none', fontSize: '14px' }}>
-                                        <iconify-icon icon="ri:global-line"></iconify-icon>
-                                        Official Website
-                                    </a>
+                            <div className="tab-pane-card">
+                                {activeTab === 'about' && (
+                                    <div className="fade-in">
+                                        <h3 className="tab-pane-title">About the Institution</h3>
+                                        <p className="tab-pane-text">
+                                            {university.about || "Detailed overview coming soon. This institution provides world-class education with a focus on global excellence."}
+                                        </p>
+                                    </div>
+                                )}
+                                {activeTab === 'campus' && (
+                                    <div className="fade-in">
+                                        <h3 className="tab-pane-title">Campus Experience</h3>
+                                        <p className="tab-pane-text">
+                                            {university.campusLife || "Campus life details are being updated. Expect a vibrant atmosphere with numerous student clubs, state-of-the-art facilities, and a diverse community."}
+                                        </p>
+                                    </div>
+                                )}
+                                {activeTab === 'admission' && (
+                                    <div className="fade-in">
+                                        <h3 className="tab-pane-title">Admission Requirements</h3>
+                                        <p className="tab-pane-text">
+                                            {university.admissionCriteria || "Admission details vary by program. Generally requires academic transcripts, English proficiency (IELTS/TOEFL), and a Statement of Purpose."}
+                                        </p>
+                                    </div>
+                                )}
+                                {activeTab === 'specs' && (
+                                    <div className="fade-in">
+                                        <h3 className="tab-pane-title">Institutional Specifications</h3>
+                                        <div className="specs-grid">
+                                            {JSON.parse(university.additionalInfo || '[]').length > 0 ? (
+                                                JSON.parse(university.additionalInfo || '[]').map((info, idx) => (
+                                                    <div key={idx} className="spec-item">
+                                                        <div className="spec-label">{info.label}</div>
+                                                        <div className="spec-value">{info.value}</div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p style={{ color: '#94a3b8' }}>No extra details available for this institution.</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 )}
                             </div>
                         </div>
-                    </aside>
-                </div>
-            </div>
 
-            <Footer />
+                        <aside className="detail-sidebar">
+                            <div className="sidebar-sticky-card">
+                                <h4 className="sidebar-title">
+                                    <iconify-icon icon="ri:send-plane-fill"></iconify-icon>
+                                    Interested?
+                                </h4>
+                                <p className="sidebar-text">
+                                    Start your journey today. Our expert advisors will guide you through the entire application process.
+                                </p>
+                                <Link to="/register" className="btn-sidebar-apply">
+                                    Apply Now
+                                </Link>
+                                <Link to="/free-consultation" className="btn-sidebar-consult">
+                                    Book Free Consultation
+                                </Link>
+
+                                <hr className="sidebar-divider" />
+
+                                <div className="sidebar-info-list">
+                                    <div className="sidebar-info-item">
+                                        <iconify-icon icon="ri:map-pin-2-fill"></iconify-icon>
+                                        <span>{university.location || university.country}</span>
+                                    </div>
+                                    {university.websiteUrl && (
+                                        <a href={university.websiteUrl.startsWith('http') ? university.websiteUrl : `https://${university.websiteUrl}`}
+                                            target="_blank" rel="noreferrer"
+                                            className="sidebar-link">
+                                            <iconify-icon icon="ri:global-line"></iconify-icon>
+                                            Official Website
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+
+                <div className="mobile-sticky-cta">
+                    <Link to="/register" className="btn-apply pulse-glow">
+                        Apply Now
+                    </Link>
+                </div>
+
+                <Footer />
+            </div>
         </div>
     );
 };

@@ -10,7 +10,7 @@ import Footer from "../components/Footer";
 
 // Assets
 import heroBg from "../assets/images/about_hero_bg_1769858183540.png";
-import why1 from "../assets/images/about_map_section_1769858199696.png"; 
+import why1 from "../assets/images/about_map_section_1769858199696.png";
 import why2 from "../assets/images/about_team_members_1769858217358.png";
 import why3 from "../assets/images/path-3.webp";
 import partner1 from "../assets/images/story-1.webp";
@@ -43,7 +43,7 @@ const FAQItem = ({ item, isActive, onClick, idx }) => {
           {item.q}
           <iconify-icon icon={isActive ? "ri:subtract-line" : "ri:add-line"}></iconify-icon>
         </div>
-        <div 
+        <div
           className="ir-faq-answer-wrapper"
           style={{
             height: isActive ? (answerRef.current?.scrollHeight || 'auto') : 0,
@@ -101,7 +101,7 @@ function InstitutionalRepresentation() {
 
       {/* HERO SECTION */}
       <section className="ir-hero">
-        <div className="ir-hero__bg" style={{backgroundImage: `url(${heroBg})`}}></div>
+        <div className="ir-hero__bg" style={{ backgroundImage: `url(${heroBg})` }}></div>
         <div className="ir-hero__overlay"></div>
         <div className="ir-hero__content">
           <span className="ir-hero__tag anim-hidden anim-up">INSTITUTIONAL PARTNERS</span>
@@ -114,8 +114,8 @@ function InstitutionalRepresentation() {
             Bridging the gap between global institutions and the brightest minds.
           </p>
           <div className="ir-hero__actions anim-hidden anim-up delay-300">
-            <button className="btn btn-primary">Partner With Us</button>
-            <button className="btn btn-outline-white">Our Network</button>
+            <Link to="/free-consultation" className="btn btn-primary">Partner With Us</Link>
+            <Link to="/universities" className="btn btn-outline-white">Our Network</Link>
           </div>
         </div>
       </section>
@@ -151,18 +151,18 @@ function InstitutionalRepresentation() {
           <h2 className="ir-section-title anim-hidden anim-up">Global University Partners</h2>
           <div className="ir-partners__grid">
             {[
-              { 
-                name: "University of London", 
+              {
+                name: "University of London",
                 desc: "Strategic representation for undergraduate and post-graduate excellence across the UK.",
                 img: univLogo1
               },
-              { 
-                name: "Liberty University", 
+              {
+                name: "Liberty University",
                 desc: "Direct access to premiere North American academic opportunities and research.",
                 img: univLogo2
               },
-              { 
-                name: "Innovation Research Univ", 
+              {
+                name: "Innovation Research Univ",
                 desc: "Specialized pathways for STEM and research-led institutions in Canada.",
                 img: univLogo3
               }
@@ -172,7 +172,7 @@ function InstitutionalRepresentation() {
                 <div className="ir-partner-info">
                   <h3>{univ.name}</h3>
                   <p>{univ.desc}</p>
-                  <a href="#">Learn More &rarr;</a>
+                  <Link to="/universities">Learn More &rarr;</Link>
                 </div>
               </div>
             ))}
@@ -210,22 +210,22 @@ function InstitutionalRepresentation() {
 
       {/* SUCCESS STORIES (Alternating) */}
       <section className="ir-stories">
-         <div className="vs-container">
-            <div className="ir-story anim-hidden anim-up">
-               <div className="ir-story__img">
-                  <img src={studentImg} alt="University Success" />
-               </div>
-               <div className="ir-story__content">
-                  <h3>Strategic Growth in MENA Region</h3>
-                  <p>Our partnership helped [University Name] increase their international student intake from the MENA region by 40% in just two academic cycles through targeted representation.</p>
-                  <ul className="ir-check-list">
-                    <li>Custom Marketing Strategy</li>
-                    <li>Direct Faculty Engagement</li>
-                  </ul>
-               </div>
+        <div className="vs-container">
+          <div className="ir-story anim-hidden anim-up">
+            <div className="ir-story__img">
+              <img src={studentImg} alt="University Success" />
             </div>
-            {/* Repeat blocks for other stories if needed */}
-         </div>
+            <div className="ir-story__content">
+              <h3>Strategic Growth in MENA Region</h3>
+              <p>Our partnership helped [University Name] increase their international student intake from the MENA region by 40% in just two academic cycles through targeted representation.</p>
+              <ul className="ir-check-list">
+                <li>Custom Marketing Strategy</li>
+                <li>Direct Faculty Engagement</li>
+              </ul>
+            </div>
+          </div>
+          {/* Repeat blocks for other stories if needed */}
+        </div>
       </section>
 
       {/* WHY UNIVERSITIES TRUST (Image + List) */}
@@ -298,18 +298,18 @@ function InstitutionalRepresentation() {
       {/* FAQ */}
       <section className="ir-faq">
         <div className="vs-container">
-           <h2 className="ir-section-title anim-hidden anim-up" style={{color: 'white'}}>Partnership FAQ</h2>
-           <div className="ir-faq__list">
-             {faqData.map((f, i) => (
-               <FAQItem 
-                 key={i} 
-                 item={f} 
-                 idx={i}
-                 isActive={faqActive === i} 
-                 onClick={() => setFaqActive(faqActive === i ? null : i)} 
-               />
-             ))}
-           </div>
+          <h2 className="ir-section-title anim-hidden anim-up" style={{ color: 'white' }}>Partnership FAQ</h2>
+          <div className="ir-faq__list">
+            {faqData.map((f, i) => (
+              <FAQItem
+                key={i}
+                item={f}
+                idx={i}
+                isActive={faqActive === i}
+                onClick={() => setFaqActive(faqActive === i ? null : i)}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -320,8 +320,8 @@ function InstitutionalRepresentation() {
             <h2>Ready to Secure Exclusive Opportunities?</h2>
             <p>Join our elite network of global institutional partners today.</p>
             <div className="ir-cta__btns">
-              <button className="btn btn-primary">Start Partnership</button>
-              <button className="btn btn-outline-white">Book a Meeting</button>
+              <Link to="/free-consultation" className="btn btn-primary">Start Partnership</Link>
+              <Link to="/free-consultation" className="btn btn-outline-white">Book a Meeting</Link>
             </div>
           </div>
         </div>

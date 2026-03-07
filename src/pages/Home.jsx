@@ -1030,12 +1030,12 @@ function Home() {
               future that aligns with your career goals.
             </p>
             <div className="hero-btns">
-              <a href="#" className="btn btn-primary">
+              <Link to="/register" className="btn btn-primary">
                 Start Your Journey
-              </a>
-              <a href="#" className="btn btn-outline">
+              </Link>
+              <Link to="/degrees" className="btn btn-outline">
                 Explore Programs
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -1113,23 +1113,23 @@ function Home() {
       <section className="section-student-selector">
         <div className="container">
           <div className="student-selector-wrap anim-hidden anim-up">
-            <a href="#" className="student-type-btn">
+            <Link to="/universities" className="student-type-btn">
               <span className="btn-label">UK AND EU</span>
               <span className="btn-type">STUDENTS</span>
               <iconify-icon
                 icon="ri:arrow-right-up-line"
                 className="btn-arrow"
               ></iconify-icon>
-            </a>
+            </Link>
             <div className="selector-divider"></div>
-            <a href="#" className="student-type-btn">
+            <Link to="/universities" className="student-type-btn">
               <span className="btn-label">INTERNATIONAL</span>
               <span className="btn-type">STUDENTS</span>
               <iconify-icon
                 icon="ri:arrow-right-up-line"
                 className="btn-arrow"
               ></iconify-icon>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -1226,13 +1226,13 @@ function Home() {
                 </div>
                 <h3>{offer.title}</h3>
                 <p>{offer.desc}</p>
-                <a
-                  href="#"
+                <Link
+                  to={offer.cta === 'Get Advice' ? '/free-consultation' : '/register'}
                   className="btn btn-primary"
                   style={{ marginTop: "auto" }}
                 >
                   {offer.cta}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -1683,13 +1683,13 @@ function Home() {
                   pathway. The principles that drive our excellence and
                   innovation ensure your success every step of the way.
                 </p>
-                <a
-                  href="#"
+                <Link
+                  to="/register"
                   className="btn btn-primary anim-hidden anim-up delay-300"
                   style={{ marginTop: "30px", alignSelf: "flex-start" }}
                 >
                   Start Your Journey
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -2185,9 +2185,9 @@ function Home() {
                   experts ensure you choose the best program for your
                   aspirations.
                 </p>
-                <a href="#" className="btn-path">
+                <Link to="/degrees" className="btn-path">
                   Our Programmes <span className="arrow">›</span>
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -2209,9 +2209,9 @@ function Home() {
                   one-to-one guidance, help strengthen your profile, and ensure
                   you meet global standards for your dream institutions.
                 </p>
-                <a href="#" className="btn-path">
+                <Link to="/what-we-offer" className="btn-path">
                   How we support you <span className="arrow">›</span>
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -2233,9 +2233,9 @@ function Home() {
                   pre-departure prep, MATSOLS ensures your education becomes a
                   foundation for professional growth and global opportunities.
                 </p>
-                <a href="#" className="btn-path">
+                <Link to="/universities" className="btn-path">
                   Explore universities <span className="arrow">›</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

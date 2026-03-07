@@ -61,6 +61,37 @@ const LeadManagement = () => {
     }
   };
 
+  const [exportRange, setExportRange] = useState({ from: '', to: '' });
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async (preset = null) => {
+    setIsExporting(true);
+    let from = exportRange.from;
+    let to = exportRange.to;
+
+    if (preset === '7d') {
+      const d = new Date();
+      d.setDate(d.getDate() - 7);
+      from = d.toISOString().split('T')[0];
+      to = new Date().toISOString().split('T')[0];
+    } else if (preset === '30d') {
+      const d = new Date();
+      d.setDate(d.getDate() - 30);
+      from = d.toISOString().split('T')[0];
+      to = new Date().toISOString().split('T')[0];
+    }
+
+    await apiService.exportLeads(from, to);
+    setIsExporting(false);
+  };
+
+  if (loading) return (
+    <div className="fuckin-loader-overlay">
+      <div className="fuckin-loader"></div>
+      <div className="loader-text">Loading Lead Pipelines...</div>
+    </div>
+  );
+
   return (
     <div className="lead-management">
       <div className="admin-header leads-header">
@@ -78,6 +109,58 @@ const LeadManagement = () => {
           >
             + Add Lead
           </button>
+        </div>
+      </div>
+
+      <div className="admin-chart-card" style={{ marginBottom: '24px', padding: '20px' }}>
+        <h4 style={{ marginBottom: '15px' }}>Export Leads Report</h4>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'flex-end' }}>
+          <div className="form-group" style={{ flex: 1, minWidth: '150px' }}>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', marginBottom: '4px' }}>From Date</label>
+            <input
+              type="date"
+              className="ai-input"
+              style={{ height: '35px', padding: '5px 10px' }}
+              value={exportRange.from}
+              onChange={(e) => setExportRange({ ...exportRange, from: e.target.value })}
+            />
+          </div>
+          <div className="form-group" style={{ flex: 1, minWidth: '150px' }}>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', marginBottom: '4px' }}>To Date</label>
+            <input
+              type="date"
+              className="ai-input"
+              style={{ height: '35px', padding: '5px 10px' }}
+              value={exportRange.to}
+              onChange={(e) => setExportRange({ ...exportRange, to: e.target.value })}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={() => handleExport()}
+              disabled={isExporting}
+              className="btn-apply"
+              style={{ height: '35px', padding: '0 15px', fontSize: '12px' }}
+            >
+              {isExporting ? 'Exporting...' : 'Export Selected Range'}
+            </button>
+            <button
+              onClick={() => handleExport('7d')}
+              disabled={isExporting}
+              className="btn-outline"
+              style={{ height: '35px', padding: '0 15px', fontSize: '12px' }}
+            >
+              Last 7 Days
+            </button>
+            <button
+              onClick={() => handleExport('30d')}
+              disabled={isExporting}
+              className="btn-outline"
+              style={{ height: '35px', padding: '0 15px', fontSize: '12px' }}
+            >
+              Last 30 Days
+            </button>
+          </div>
         </div>
       </div>
 

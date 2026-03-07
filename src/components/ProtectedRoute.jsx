@@ -19,10 +19,16 @@ const ProtectedRoute = ({ children, requiredRole }) => {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    if (requiredRole && user?.role !== requiredRole) {
-        // If logged in but role doesn't match
-        console.warn(`Access denied. Required: ${requiredRole}, Current: ${user?.role}`);
-        return <Navigate to="/" replace />;
+    if (requiredRole) {
+        const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+        if (!allowedRoles.includes(user?.role)) {
+            // If logged in but role doesn't match, send them to their correct "home"
+            const staffRoles = ["ADMIN", "EDITOR", "MARKETING"];
+            if (staffRoles.includes(user?.role)) {
+                return <Navigate to="/admin" replace />;
+            }
+            return <Navigate to="/dashboard" replace />;
+        }
     }
 
     return children;

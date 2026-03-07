@@ -1,26 +1,34 @@
-import { spawnSync } from "child_process";
+import { execSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 try {
-  console.log("🚀 Syncing SQLite database (Shell-less mode)...");
+  console.log("🚀 Syncing Database with Neon (Cloud)...");
 
-  // Find npx path carefully (it's usually in the same dir as node)
-  const npxCmd = process.platform === "win32" ? "npx.cmd" : "npx";
+  const backendDir = path.join(__dirname, "..");
 
-  const result = spawnSync(npxCmd, ["prisma", "db", "push"], {
-    cwd: path.join(__dirname, ".."), // backend root
+  // Find the exact prisma binary to avoid npx/shell path issues with spaces
+  const prismaBin = path.join(backendDir, "node_modules", ".bin", "prisma.cmd");
+
+  if (!fs.existsSync(prismaBin)) {
+    throw new Error(
+      "Prisma binary not found in node_modules. Please run npm install.",
+    );
+  }
+
+  // Wrap the path in quotes for Windows
+  const command = `"${prismaBin}" db push`;
+
+  execSync(command, {
+    cwd: backendDir,
     stdio: "inherit",
-    shell: true, // Try shell:true with quoted args first, if that fails, we'll try something else
+    shell: true,
   });
 
-  if (result.status === 0) {
-    console.log("✅ Database synced successfully!");
-  } else {
-    throw new Error(`Process exited with code ${result.status}`);
-  }
+  console.log("✅ Database synchronized successfully!");
 } catch (error) {
   console.error("❌ Sync failed:", error.message);
   process.exit(1);

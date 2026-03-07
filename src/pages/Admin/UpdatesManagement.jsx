@@ -71,8 +71,9 @@ const UpdatesManagement = () => {
 
   if (loading) {
     return (
-      <div className="admin-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-        <iconify-icon icon="eos-icons:loading" width="48" style={{ color: '#06b6d4' }}></iconify-icon>
+      <div className="fuckin-loader-overlay">
+        <div className="fuckin-loader"></div>
+        <div className="loader-text">Loading Content Management...</div>
       </div>
     );
   }
@@ -92,62 +93,60 @@ const UpdatesManagement = () => {
         </button>
       </div>
 
-      <div className="admin-card-list">
-        <div className="admin-chart-card">
-          <div className="admin-table-responsive" style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #e2e8f0', textAlign: 'left' }}>
-                  <th style={{ padding: '12px' }}>Important?</th>
-                  <th style={{ padding: '12px' }}>Title</th>
-                  <th style={{ padding: '12px' }}>Category</th>
-                  <th style={{ padding: '12px' }}>Expires</th>
-                  <th style={{ padding: '12px' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {updates.map(item => {
-                  const isExpired = item.expiryDate && new Date(item.expiryDate) < new Date();
+      <div className="admin-table-wrapper">
+        <table className="modern-table">
+          <thead>
+            <tr>
+              <th>Important?</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Expires</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {updates.map(item => {
+              const isExpired = item.expiryDate && new Date(item.expiryDate) < new Date();
 
-                  return (
-                    <tr key={item.id} style={{ borderBottom: '1px solid #e2e8f0', opacity: isExpired && !item.isImportant ? 0.6 : 1 }}>
-                      <td style={{ padding: '12px' }}>
-                        {item.isImportant ? (
-                          <span style={{ background: '#f59e0b', color: 'white', padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>IMPORTANT</span>
-                        ) : (
-                          <span style={{ color: '#94a3b8', fontSize: '12px' }}>Standard</span>
-                        )}
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        <strong>{item.title}</strong>
-                        {isExpired && !item.isImportant && <span style={{ marginLeft: '10px', color: '#ef4444', fontSize: '12px' }}>(Expired - Hidden)</span>}
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        <span style={{ background: '#e0f2fe', color: '#0284c7', padding: '2px 8px', borderRadius: '4px', fontSize: '12px', textTransform: 'uppercase' }}>
-                          {item.category}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        {item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : 'Never'}
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <button onClick={() => handleEdit(item)} style={{ background: 'none', border: 'none', color: '#06b6d4', cursor: 'pointer' }}>Edit</button>
-                          <button onClick={() => handleDelete(item.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>Delete</button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-                {updates.length === 0 && (
-                  <tr>
-                    <td colSpan="5" style={{ padding: '20px', textAlign: 'center', color: '#64748b' }}>No events found. Create one above!</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              return (
+                <tr key={item.id} style={{ opacity: isExpired && !item.isImportant ? 0.6 : 1 }}>
+                  <td>
+                    {item.isImportant ? (
+                      <span className="status-tag marketing" style={{ padding: '4px 12px', fontSize: '10px' }}>IMPORTANT</span>
+                    ) : (
+                      <span className="status-tag user" style={{ padding: '4px 12px', fontSize: '10px' }}>Standard</span>
+                    )}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <strong>{item.title}</strong>
+                      {isExpired && !item.isImportant && <span style={{ color: '#ef4444', fontSize: '11px' }}>Expired - Hidden</span>}
+                    </div>
+                  </td>
+                  <td>
+                    <span className="status-tag editor" style={{ padding: '4px 12px', fontSize: '10px' }}>
+                      {item.category}
+                    </span>
+                  </td>
+                  <td>
+                    {item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : 'Never'}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', gap: '15px' }}>
+                      <button onClick={() => handleEdit(item)} style={{ background: 'none', border: 'none', color: '#06b6d4', cursor: 'pointer', fontWeight: '600' }}>Edit</button>
+                      <button onClick={() => handleDelete(item.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontWeight: '600' }}>Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+            {updates.length === 0 && (
+              <tr>
+                <td colSpan="5" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>No events found. Create one above!</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
       {editingItem && (
@@ -184,7 +183,7 @@ const UpdatesManagement = () => {
                 </div>
 
                 {/* Category & Status Row */}
-                <div style={{ display: 'flex', gap: '15px' }}>
+                <div className="form-responsive-row">
                   <div style={{ flex: 1 }}>
                     <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Category Badge</label>
                     <input
@@ -212,7 +211,7 @@ const UpdatesManagement = () => {
                 </div>
 
                 {/* Settings Row */}
-                <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: '#f8fafc', padding: '15px', borderRadius: '8px' }}>
+                <div className="form-responsive-row" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px' }}>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <input
                       type="checkbox"
@@ -239,7 +238,7 @@ const UpdatesManagement = () => {
                 </div>
 
                 {/* CTA Row */}
-                <div style={{ display: 'flex', gap: '15px' }}>
+                <div className="form-responsive-row">
                   <div style={{ flex: 1 }}>
                     <label style={{ display: 'block', fontSize: '13px', marginBottom: '5px' }}>Button Text</label>
                     <input
@@ -280,14 +279,31 @@ const UpdatesManagement = () => {
 
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '30px' }}>
+              <div className="form-responsive-row" style={{ marginTop: '30px' }}>
                 <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Save Event</button>
-                <button type="button" onClick={() => setEditingItem(null)} style={{ flex: 1, background: '#f1f5f9', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>Cancel</button>
+                <button type="button" onClick={() => setEditingItem(null)} style={{ flex: 1, background: '#f1f5f9', border: 'none', borderRadius: '10px', cursor: 'pointer', padding: '12px' }}>Cancel</button>
               </div>
             </form>
           </div>
         </div>
       )}
+      <style>{`
+        .form-responsive-row {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+          .modal-content {
+            width: 95% !important;
+            padding: 20px !important;
+          }
+          .form-responsive-row {
+            flex-direction: column;
+            gap: 15px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

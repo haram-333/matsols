@@ -6,7 +6,7 @@ import "./Auth.css";
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { login } = useAuth();
+    const { login, logout } = useAuth();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -19,6 +19,11 @@ const Login = () => {
     // Initial simple fade-in effect
     useEffect(() => {
         window.scrollTo(0, 0);
+        // Force cleanup when visiting login page to prevent "storing last person"
+        // Pass false to avoid redirect loop back to this page
+        if (typeof logout === 'function') {
+            logout(false);
+        }
     }, []);
 
     const handleChange = (e) => {
@@ -38,7 +43,8 @@ const Login = () => {
                 // Determine redirect path
                 const from = location.state?.from?.pathname;
 
-                if (result.role === "ADMIN") {
+                const staffRoles = ["ADMIN", "EDITOR", "MARKETING"];
+                if (staffRoles.includes(result.role)) {
                     navigate(from && from.startsWith("/admin") ? from : "/admin");
                 } else {
                     navigate(from && from.startsWith("/dashboard") ? from : "/dashboard");
