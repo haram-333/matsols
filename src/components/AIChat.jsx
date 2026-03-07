@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { apiService } from '../services/api';
 import './AIChat.css';
 
 const AIChat = () => {
@@ -24,22 +25,42 @@ const AIChat = () => {
     setMessages(prev => [...prev, userMsg]);
     setInputValue('');
 
-    // Mock bot response
-    setTimeout(() => {
-      let botContent = "That's interesting! I'm analyzing university data for you now. Would you like to see elligibility requirements for that?";
-      if (inputValue.toLowerCase().includes('hi') || inputValue.toLowerCase().includes('hello')) {
-        botContent = "Hi there! I can help you browse universities in the UK, USA, Canada, and Australia. Which country interests you most?";
-      } else if (inputValue.toLowerCase().includes('uk')) {
-        botContent = "Excellent choice. The UK has top-tier institutions like Imperial College and Oxford. What course are you looking to study?";
+    // Real API Call
+    const fetchBotResponse = async () => {
+      try {
+        const response = await fetch(`${apiService.getBaseUrl()}/chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            content: inputValue,
+            history: messages.slice(-5) // Send last 5 messages for context
+          })
+        });
+        const data = await response.json();
+
+        if (data.content) {
+          setMessages(prev => [...prev, { role: 'bot', content: data.content }]);
+        } else {
+          throw new Error(data.error || 'Failed to get response');
+        }
+      } catch (error) {
+        console.error('Chat Error:', error);
+        setMessages(prev => [...prev, {
+          role: 'bot',
+          content: "I'm having trouble connecting to my brain right now. Please try again or check your internet connection."
+        }]);
       }
-      
-      setMessages(prev => [...prev, { role: 'bot', content: botContent }]);
-    }, 1000);
+    };
+
+    fetchBotResponse();
   };
 
   return (
     <div className="ai-agent-wrapper">
-      <div 
+      <div
         className={`ai-chat-window ${isOpen ? 'open' : ''}`}
       >
         <div className="ai-chat-header">
@@ -53,7 +74,7 @@ const AIChat = () => {
               Online & Ready
             </div>
           </div>
-          <button 
+          <button
             style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}
             onClick={() => setIsOpen(false)}
           >
@@ -71,10 +92,10 @@ const AIChat = () => {
         </div>
 
         <div className="ai-input-wrapper">
-          <input 
-            type="text" 
-            className="ai-input" 
-            placeholder="Type your message..." 
+          <input
+            type="text"
+            className="ai-input"
+            placeholder="Type your message..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
@@ -87,8 +108,8 @@ const AIChat = () => {
 
       <button className="ai-toggle-btn" onClick={() => setIsOpen(!isOpen)}>
         {!isOpen && <div className="pulse"></div>}
-        <iconify-icon 
-          icon={isOpen ? "ri:close-fill" : "ri:robot-3-line"} 
+        <iconify-icon
+          icon={isOpen ? "ri:close-fill" : "ri:robot-3-line"}
           width="30"
         ></iconify-icon>
       </button>
